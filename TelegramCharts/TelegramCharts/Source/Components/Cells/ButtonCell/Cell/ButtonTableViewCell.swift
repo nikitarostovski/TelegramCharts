@@ -18,6 +18,7 @@ class ButtonTableViewCell: BaseTableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        selectionStyle = .none
     }
 
     override func setup(with model: BaseTableViewCellModel) {

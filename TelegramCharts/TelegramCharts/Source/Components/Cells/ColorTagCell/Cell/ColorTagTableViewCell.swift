@@ -19,7 +19,6 @@ class ColorTagTableViewCell: BaseTableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.separatorInset = .zero
         tagView.layer.cornerRadius = 3
         tagView.layer.masksToBounds = true
     }
@@ -40,6 +39,8 @@ class ColorTagTableViewCell: BaseTableViewCell {
         } else {
             accessoryType = .none
         }
+        model.topSeparatorStyle.inset = titleLabel.frame.origin.x
+        model.bottomSeparatorStyle.inset = titleLabel.frame.origin.x
         tintColor = theme.tintColor
         titleLabel.text = model.titleText
         tagView.backgroundColor = model.tagColor
@@ -50,6 +51,8 @@ class ColorTagTableViewCell: BaseTableViewCell {
             return
         }
         super.setSelected(selected, animated: animated)
+        model.hasCheckmark = selected
+        updateAppearance()
         model.cellTapAction?()
     }
 }

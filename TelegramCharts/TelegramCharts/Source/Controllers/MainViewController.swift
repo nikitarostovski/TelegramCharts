@@ -52,7 +52,7 @@ class MainViewController: UITableViewController {
     }
     private var chartCellModel: ChartTableViewCellModel {
         let model = ChartTableViewCellModel()
-        model.topSeparatorHidden = false
+        model.topSeparatorStyle.isHidden = false
         return model
     }
     private var joinedCellModel: ColorTagTableViewCellModel {
@@ -60,10 +60,9 @@ class MainViewController: UITableViewController {
         model.hasCheckmark = true
         model.tagColor = UIColor.green
         model.titleText = "Joined Channel"
-        model.topSeparatorHidden = false
-        model.topSeparatorInset = 0
-        model.bottomSeparatorHidden = false
-        model.bottomSeparatorInset = 16
+        model.topSeparatorStyle.isHidden = false
+        model.bottomSeparatorStyle.isHidden = false
+        model.bottomSeparatorStyle.clampToEdge = false
         return model
     }
     private var leftCellModel: ColorTagTableViewCellModel {
@@ -71,14 +70,13 @@ class MainViewController: UITableViewController {
         model.hasCheckmark = false
         model.tagColor = UIColor.red
         model.titleText = "Left Channel"
-        model.bottomSeparatorHidden = false
-        model.bottomSeparatorInset = 0
+        model.bottomSeparatorStyle.isHidden = false
         return model
     }
     private var themeCellModel: ButtonTableViewCellModel {
         let model = ButtonTableViewCellModel()
-        model.topSeparatorHidden = false
-        model.bottomSeparatorHidden = false
+        model.topSeparatorStyle.isHidden = false
+        model.bottomSeparatorStyle.isHidden = false
         let dayModeTitle = "Switch to Night Mode".localized()
         let nightModeTitle = "Switch to Day Mode".localized()
         if self.theme.style == .day {

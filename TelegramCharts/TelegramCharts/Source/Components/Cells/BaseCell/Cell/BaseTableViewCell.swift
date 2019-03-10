@@ -63,12 +63,12 @@ class BaseTableViewCell: UITableViewCell {
         topSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
         bottomSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
         
-        topSeparatorLayer?.isHidden = model.topSeparatorHidden
-        bottomSeparatorLayer?.isHidden = model.bottomSeparatorHidden
+        topSeparatorLayer?.isHidden = model.topSeparatorStyle.isHidden
+        bottomSeparatorLayer?.isHidden = model.bottomSeparatorStyle.isHidden
         
         let height = 1.0 / UIScreen.main.scale
-        let topInset = model.topSeparatorInset
-        let bottomInset = model.bottomSeparatorInset
+        let topInset = model.topSeparatorStyle.clampToEdge ? 0 : model.topSeparatorStyle.inset
+        let bottomInset = model.bottomSeparatorStyle.clampToEdge ? 0 : model.bottomSeparatorStyle.inset
         topSeparatorLayer?.frame = CGRect(x: topInset,
                                           y: 0.0,
                                           width: frame.size.width - topInset,

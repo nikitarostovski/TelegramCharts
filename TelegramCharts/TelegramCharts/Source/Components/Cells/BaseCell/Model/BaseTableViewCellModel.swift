@@ -8,6 +8,12 @@
 
 import UIKit
 
+struct SeparatorStyle {
+    var isHidden: Bool = true
+    var inset: CGFloat = 0
+    var clampToEdge = true
+}
+
 class BaseTableViewCellModel {
     
     class var cellIdentifier: String {
@@ -21,9 +27,6 @@ class BaseTableViewCellModel {
     static func registerNib(for tableView: UITableView) {
         tableView.register(UINib(nibName: cellIdentifier, bundle: .main), forCellReuseIdentifier: cellIdentifier)
     }
-    
-    var topSeparatorHidden = true
-    var bottomSeparatorHidden = true
-    var topSeparatorInset: CGFloat = 0
-    var bottomSeparatorInset: CGFloat = 0
+    var topSeparatorStyle = SeparatorStyle()
+    var bottomSeparatorStyle = SeparatorStyle()
 }
