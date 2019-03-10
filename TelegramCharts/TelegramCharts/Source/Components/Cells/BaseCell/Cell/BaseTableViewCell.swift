@@ -60,6 +60,8 @@ class BaseTableViewCell: UITableViewCell {
             let model = model else {
             return
         }
+        backgroundColor = theme.cellBackgroundColor
+        
         topSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
         bottomSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
         

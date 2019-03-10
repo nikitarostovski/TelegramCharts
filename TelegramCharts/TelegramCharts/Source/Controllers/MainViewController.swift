@@ -29,7 +29,7 @@ class MainViewController: UITableViewController {
     
     private func updateAppearance() {
         UIView.animate(withDuration: 0.15) {
-            self.tableView.backgroundColor = self.theme.backgroundColor
+            self.tableView.backgroundColor = self.theme.viewBackgroundColor
             self.tableView.separatorColor = self.theme.tableSeparatorColor
             
             self.tableView.visibleCells.forEach { [weak self] in

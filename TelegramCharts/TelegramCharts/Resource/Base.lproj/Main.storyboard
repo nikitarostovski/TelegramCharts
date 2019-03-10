@@ -30,12 +30,11 @@
         <!--Statistics-->
         <scene sceneID="bJO-qx-fRW">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4i9-aw-z4z" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="w6o-U4-wbH" customClass="MainViewController" customModule="TelegramCharts" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Ywk-Kw-mAI">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Ywk-Kw-mAI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections/>
                         <connections>
                             <outlet property="dataSource" destination="w6o-U4-wbH" id="Us7-f2-y0c"/>
@@ -44,6 +43,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Statistics" id="y4A-nd-ZLN"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4i9-aw-z4z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1026" y="134"/>
         </scene>

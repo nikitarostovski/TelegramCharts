@@ -21,12 +21,21 @@ struct Theme {
         self.style = style
     }
     
-    var backgroundColor: UIColor {
+    var viewBackgroundColor: UIColor {
         switch style {
         case .day:
             return Colors.mediumGray
         case .night:
-            return .red
+            return Colors.darkBlue
+        }
+    }
+    
+    var cellBackgroundColor: UIColor {
+        switch style {
+        case .day:
+            return Colors.white
+        case .night:
+            return Colors.mediumBlue
         }
     }
     
@@ -35,7 +44,7 @@ struct Theme {
         case .day:
             return Colors.lightBlue
         case .night:
-            return .red
+            return Colors.lightBlue
         }
     }
     
@@ -44,7 +53,7 @@ struct Theme {
         case .day:
             return Colors.gray
         case .night:
-            return .red
+            return Colors.veryDarkBlue
         }
     }
     
@@ -53,7 +62,34 @@ struct Theme {
         case .day:
             return Colors.darkGray
         case .night:
-            return .red
+            return Colors.blue
+        }
+    }
+    
+    var cellTextColor: UIColor {
+        switch style {
+        case .day:
+            return Colors.black
+        case .night:
+            return Colors.white
+        }
+    }
+    
+    var navigationTintColor: UIColor {
+        switch style {
+        case .day:
+            return Colors.black
+        case .night:
+            return Colors.white
+        }
+    }
+    
+    var navigationBackgroundColor: UIColor {
+        switch style {
+        case .day:
+            return Colors.white
+        case .night:
+            return Colors.mediumBlue
         }
     }
 }

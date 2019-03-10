@@ -52,6 +52,7 @@ class ColorTagTableViewCell: BaseTableViewCell {
         model.bottomSeparatorStyle.inset = titleLabel.frame.origin.x
         tintColor = theme.tintColor
         titleLabel.text = model.titleText
+        titleLabel.textColor = theme.cellTextColor
         tagView.backgroundColor = model.tagColor
     }
     

@@ -42,6 +42,6 @@ class TableViewHeaderView: UITableViewHeaderFooterView {
             return
         }
         titleLabel.textColor = theme.sectionTextColor
-        bacKView.backgroundColor = theme.backgroundColor
+        bacKView.backgroundColor = theme.viewBackgroundColor
     }
 }
