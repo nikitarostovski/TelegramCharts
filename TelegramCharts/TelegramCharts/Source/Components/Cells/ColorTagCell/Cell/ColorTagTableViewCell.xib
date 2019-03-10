@@ -19,16 +19,38 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="color label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BBE-BF-HkU">
-                        <rect key="frame" x="61" y="11" width="79" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="color label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BBE-BF-HkU">
+                        <rect key="frame" x="44" y="11.5" width="244" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="tLM-Bk-KuN"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vsy-fZ-enR">
+                        <rect key="frame" x="16" y="16" width="12" height="12"/>
+                        <color key="backgroundColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="12" id="4LX-GC-ICS"/>
+                            <constraint firstAttribute="height" constant="12" id="n3Z-7F-bFI"/>
+                        </constraints>
+                    </view>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="Vsy-fZ-enR" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Brl-Be-uxh"/>
+                    <constraint firstItem="BBE-BF-HkU" firstAttribute="leading" secondItem="Vsy-fZ-enR" secondAttribute="trailing" constant="16" id="IOa-Gi-hfw"/>
+                    <constraint firstItem="Vsy-fZ-enR" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="rY7-Q6-ZqI"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="BBE-BF-HkU" secondAttribute="trailing" constant="16" id="sDI-Ie-oak"/>
+                    <constraint firstItem="BBE-BF-HkU" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="yLY-zk-kCb"/>
+                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="tagView" destination="Vsy-fZ-enR" id="vo9-lX-wiR"/>
+                <outlet property="titleLabel" destination="BBE-BF-HkU" id="dzl-cb-FLr"/>
+            </connections>
+            <point key="canvasLocation" x="154" y="153"/>
         </tableViewCell>
     </objects>
 </document>

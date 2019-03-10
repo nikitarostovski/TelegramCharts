@@ -8,6 +8,8 @@
 
 import UIKit
 
+typealias CellTapAction = () -> Void
+
 class ColorTagTableViewCellModel: BaseTableViewCellModel {
 
     override class var cellIdentifier: String {
@@ -17,4 +19,9 @@ class ColorTagTableViewCellModel: BaseTableViewCellModel {
     override func cellHeight() -> CGFloat {
         return ColorTagTableViewCell.cellHeight
     }
+    
+    var titleText = ""
+    var tagColor: UIColor = .clear
+    var hasCheckmark = false
+    var cellTapAction: CellTapAction?
 }

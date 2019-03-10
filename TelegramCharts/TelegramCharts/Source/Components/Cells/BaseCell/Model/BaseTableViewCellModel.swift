@@ -21,4 +21,9 @@ class BaseTableViewCellModel {
     static func registerNib(for tableView: UITableView) {
         tableView.register(UINib(nibName: cellIdentifier, bundle: .main), forCellReuseIdentifier: cellIdentifier)
     }
+    
+    var topSeparatorHidden = true
+    var bottomSeparatorHidden = true
+    var topSeparatorInset: CGFloat = 0
+    var bottomSeparatorInset: CGFloat = 0
 }

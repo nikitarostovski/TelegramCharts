@@ -17,6 +17,7 @@ class MainViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateAppearance()
+        tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
         ChartTableViewCellModel.registerNib(for: tableView)
         ColorTagTableViewCellModel.registerNib(for: tableView)
@@ -37,7 +38,6 @@ class MainViewController: UITableViewController {
                 cell.theme = self?.theme
             }
         }
-        
     }
     
     // MARK: - Structure
@@ -52,18 +52,33 @@ class MainViewController: UITableViewController {
     }
     private var chartCellModel: ChartTableViewCellModel {
         let model = ChartTableViewCellModel()
+        model.topSeparatorHidden = false
         return model
     }
     private var joinedCellModel: ColorTagTableViewCellModel {
         let model = ColorTagTableViewCellModel()
+        model.hasCheckmark = true
+        model.tagColor = UIColor.green
+        model.titleText = "Joined Channel"
+        model.topSeparatorHidden = false
+        model.topSeparatorInset = 0
+        model.bottomSeparatorHidden = false
+        model.bottomSeparatorInset = 16
         return model
     }
     private var leftCellModel: ColorTagTableViewCellModel {
         let model = ColorTagTableViewCellModel()
+        model.hasCheckmark = false
+        model.tagColor = UIColor.red
+        model.titleText = "Left Channel"
+        model.bottomSeparatorHidden = false
+        model.bottomSeparatorInset = 0
         return model
     }
     private var themeCellModel: ButtonTableViewCellModel {
         let model = ButtonTableViewCellModel()
+        model.topSeparatorHidden = false
+        model.bottomSeparatorHidden = false
         let dayModeTitle = "Switch to Night Mode".localized()
         let nightModeTitle = "Switch to Day Mode".localized()
         if self.theme.style == .day {
