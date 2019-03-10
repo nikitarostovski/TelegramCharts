@@ -9,8 +9,8 @@
 import UIKit
 
 struct TableViewSection {
-    var title: String
-    var cellsModels: [BaseTableViewCellModel]
+    var headerModel: TableViewHeaderViewModel?
+    var cellModels: [BaseTableViewCellModel]
 }
 
 class TableViewStructure {
@@ -29,6 +29,6 @@ class TableViewStructure {
         let sectionIndex = indexPath.section
         let rowIndex = indexPath.row
         let section = sections[sectionIndex]
-        return section.cellsModels[rowIndex]
+        return section.cellModels[rowIndex]
     }
 }

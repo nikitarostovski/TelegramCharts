@@ -18,13 +18,20 @@ class MainViewController: UITableViewController {
         ChartTableViewCellModel.registerNib(for: tableView)
         ColorTagTableViewCellModel.registerNib(for: tableView)
         ButtonTableViewCellModel.registerNib(for: tableView)
-        
+        TableViewHeaderViewModel.registerNib(for: tableView)
         createStructure()
     }
     
     // MARK: - Structure
     
     private var structure = TableViewStructure()
+    
+    
+    private var followersHeaderModel: TableViewHeaderViewModel {
+        let model = TableViewHeaderViewModel()
+        model.titleText = "Followers".localizedUppercase
+        return model
+    }
     private var chartCellModel: ChartTableViewCellModel {
         let model = ChartTableViewCellModel()
         return model
@@ -45,14 +52,12 @@ class MainViewController: UITableViewController {
     private func createStructure() {
         structure.clear()
         
-        let chartSectionTitle = "Followers".localizedUppercase
-        let chartSectionModels = [chartCellModel, joinedCellModel, leftCellModel]
-        let chartSection = TableViewSection(title: chartSectionTitle, cellsModels: chartSectionModels)
+        let chartModels = [chartCellModel, joinedCellModel, leftCellModel]
+        let chartSection = TableViewSection(headerModel: followersHeaderModel, cellModels: chartModels)
         structure.addSection(section: chartSection)
         
-        let settingsSectionTitle = ""
-        let settingsSectionModels = [themeCellModel]
-        let settingsSection = TableViewSection(title: settingsSectionTitle, cellsModels: settingsSectionModels)
+        let settingsModels = [themeCellModel]
+        let settingsSection = TableViewSection(headerModel: nil, cellModels: settingsModels)
         structure.addSection(section: settingsSection)
     }
     
@@ -67,13 +72,16 @@ extension MainViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return structure.sections[section].cellsModels.count
+        return structure.sections[section].cellModels.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellModel = structure.cellModel(for: indexPath)
         let identifier = type(of: cellModel).cellIdentifier
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+        if let baseCell = cell as? BaseTableViewCell {
+            baseCell.setup(with: cellModel)
+        }
         return cell
     }
 }
@@ -81,6 +89,10 @@ extension MainViewController {
 // MARK: - UITableView Delegate
 
 extension MainViewController {
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return TableViewHeaderViewModel.cellHeight
+    }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return structure.cellModel(for: indexPath).cellHeight()
@@ -91,10 +103,14 @@ extension MainViewController {
             return nil
         }
         let sectionModel = structure.sections[section]
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
-        let label = UILabel(frame: view.bounds)
-        label.text = sectionModel.title
-        
+        guard let headerModel = sectionModel.headerModel else {
+            return nil
+        }
+        let identifier = type(of: headerModel).reuseIdentifier
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
+        if let headerView = view as? TableViewHeaderView {
+            headerView.setup(with: headerModel)
+        }
         return view
     }
 }
