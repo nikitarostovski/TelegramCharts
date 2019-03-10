@@ -21,6 +21,15 @@ struct Theme {
         self.style = style
     }
     
+    var statusBarStyle: UIStatusBarStyle {
+        switch style {
+        case .day:
+            return .default
+        case .night:
+            return .lightContent
+        }
+    }
+    
     var viewBackgroundColor: UIColor {
         switch style {
         case .day:

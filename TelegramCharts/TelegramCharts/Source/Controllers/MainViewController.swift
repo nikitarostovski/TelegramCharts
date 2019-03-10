@@ -29,6 +29,9 @@ class MainViewController: UITableViewController {
     
     private func updateAppearance() {
         UIView.animate(withDuration: 0.15) {
+            if let navController = self.navigationController as? RootNavigationController {
+                navController.theme = self.theme
+            }
             self.tableView.backgroundColor = self.theme.viewBackgroundColor
             self.tableView.separatorColor = self.theme.tableSeparatorColor
             

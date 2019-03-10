@@ -32,6 +32,7 @@
 		11649FEB223542B60081ABA1 /* TableViewStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FE9223542B60081ABA1 /* TableViewStructure.swift */; };
 		11649FEC223542B60081ABA1 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FEA223542B60081ABA1 /* Theme.swift */; };
 		11649FEE223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */; };
+		11AD8659223593C8003B150A /* RootNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD8658223593C8003B150A /* RootNavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		11649FE9223542B60081ABA1 /* TableViewStructure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewStructure.swift; sourceTree = "<group>"; };
 		11649FEA223542B60081ABA1 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+VisibleSectionHeaders.swift"; sourceTree = "<group>"; };
+		11AD8658223593C8003B150A /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +138,7 @@
 		11649F2E223502E00081ABA1 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				11AD8658223593C8003B150A /* RootNavigationController.swift */,
 				11649F2F223502E00081ABA1 /* MainViewController.swift */,
 			);
 			path = Controllers;
@@ -403,6 +406,7 @@
 				11649FD2223533C30081ABA1 /* TableViewHeaderViewModel.swift in Sources */,
 				11649FEC223542B60081ABA1 /* Theme.swift in Sources */,
 				11649F35223502E00081ABA1 /* MainViewController.swift in Sources */,
+				11AD8659223593C8003B150A /* RootNavigationController.swift in Sources */,
 				11649FEE223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift in Sources */,
 				11649FE222353DF10081ABA1 /* String+Localized.swift in Sources */,
 				11649FDC223533C30081ABA1 /* ChartTableViewCellModel.swift in Sources */,
