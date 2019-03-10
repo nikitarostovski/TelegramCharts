@@ -10,7 +10,7 @@ import UIKit
 
 class MainViewController: UITableViewController {
 
-    private var theme = Theme()
+    private var theme = Theme(style: .day)
     
     // MARK: - Lifecycle
     
@@ -26,8 +26,18 @@ class MainViewController: UITableViewController {
     }
     
     private func updateAppearance() {
-        tableView.backgroundColor = theme.backgroundColor
-        view.tintColor = theme.tintColor
+        UIView.animate(withDuration: 0.15) {
+            self.tableView.backgroundColor = self.theme.backgroundColor
+            self.tableView.separatorColor = self.theme.tableSeparatorColor
+            
+            self.tableView.visibleCells.forEach { [weak self] in
+                guard let cell = $0 as? BaseTableViewCell else {
+                    return
+                }
+                cell.theme = self?.theme
+            }
+        }
+        
     }
     
     // MARK: - Structure
@@ -37,7 +47,7 @@ class MainViewController: UITableViewController {
     
     private var followersHeaderModel: TableViewHeaderViewModel {
         let model = TableViewHeaderViewModel()
-        model.titleText = "Followers".localizedUppercase
+        model.titleText = "Followers".localized().uppercased()
         return model
     }
     private var chartCellModel: ChartTableViewCellModel {
@@ -54,6 +64,10 @@ class MainViewController: UITableViewController {
     }
     private var themeCellModel: ButtonTableViewCellModel {
         let model = ButtonTableViewCellModel()
+        model.buttonTitle = "Switch to Night Mode".localized()
+        model.buttonTouchUpInsideAction = { [weak self] in
+            self?.changeThemeStyle()
+        }
         return model
     }
     
@@ -69,6 +83,16 @@ class MainViewController: UITableViewController {
         structure.addSection(section: settingsSection)
     }
     
+    // MARK: - Actions
+    
+    private func changeThemeStyle() {
+        if theme.style == .day {
+            theme.style = .night
+        } else {
+            theme.style = .day
+        }
+        updateAppearance()
+    }
 }
 
 // MARK: - UITableView DataSource
@@ -89,6 +113,7 @@ extension MainViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         if let baseCell = cell as? BaseTableViewCell {
             baseCell.setup(with: cellModel)
+            baseCell.theme = theme
         }
         return cell
     }
@@ -118,6 +143,7 @@ extension MainViewController {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
         if let headerView = view as? TableViewHeaderView {
             headerView.setup(with: headerModel)
+            headerView.theme = theme
         }
         return view
     }

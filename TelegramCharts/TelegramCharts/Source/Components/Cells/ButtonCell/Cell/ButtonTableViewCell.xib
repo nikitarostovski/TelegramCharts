@@ -19,16 +19,25 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="91.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cas-z4-CNB">
-                        <rect key="frame" x="81" y="12" width="51" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ftd-DS-ivZ">
+                        <rect key="frame" x="16" y="0.0" width="288" height="91.5"/>
+                        <state key="normal" title="Button"/>
+                        <connections>
+                            <action selector="buttonAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="ptf-2v-klT"/>
+                        </connections>
+                    </button>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="Ftd-DS-ivZ" secondAttribute="bottom" id="Xg1-RM-hyF"/>
+                    <constraint firstAttribute="trailing" secondItem="Ftd-DS-ivZ" secondAttribute="trailing" constant="16" id="d7Y-A6-amT"/>
+                    <constraint firstItem="Ftd-DS-ivZ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="eru-Dv-0Em"/>
+                    <constraint firstItem="Ftd-DS-ivZ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="poe-IE-BTi"/>
+                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="button" destination="Ftd-DS-ivZ" id="6eS-zk-d88"/>
+            </connections>
             <point key="canvasLocation" x="41.600000000000001" y="68.365817091454275"/>
         </tableViewCell>
     </objects>

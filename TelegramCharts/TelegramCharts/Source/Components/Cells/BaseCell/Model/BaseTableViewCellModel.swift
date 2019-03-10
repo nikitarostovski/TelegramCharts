@@ -9,6 +9,7 @@
 import UIKit
 
 class BaseTableViewCellModel {
+    
     class var cellIdentifier: String {
         return ""
     }
@@ -18,6 +19,6 @@ class BaseTableViewCellModel {
     }
     
     static func registerNib(for tableView: UITableView) {
-        tableView.register(UINib(nibName: cellIdentifier, bundle: nil), forCellReuseIdentifier: cellIdentifier)
+        tableView.register(UINib(nibName: cellIdentifier, bundle: .main), forCellReuseIdentifier: cellIdentifier)
     }
 }

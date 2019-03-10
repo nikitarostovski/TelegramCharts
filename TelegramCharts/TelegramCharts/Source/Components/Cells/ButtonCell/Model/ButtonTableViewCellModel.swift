@@ -8,6 +8,8 @@
 
 import UIKit
 
+typealias ButtonTouchUpInsideAction = () -> Void
+
 class ButtonTableViewCellModel: BaseTableViewCellModel {
 
     override class var cellIdentifier: String {
@@ -17,4 +19,8 @@ class ButtonTableViewCellModel: BaseTableViewCellModel {
     override func cellHeight() -> CGFloat {
         return ButtonTableViewCell.cellHeight
     }
+    
+    var buttonTitle: String = ""
+    
+    var buttonTouchUpInsideAction: ButtonTouchUpInsideAction?
 }

@@ -10,7 +10,12 @@ import UIKit
 
 class BaseTableViewCell: UITableViewCell {
     
-    private weak var model: BaseTableViewCellModel?
+    var theme: Theme? {
+        didSet {
+            updateAppearance()
+        }
+    }
+    weak var model: BaseTableViewCellModel?
     
     class var cellHeight: CGFloat {
         return 44
@@ -30,5 +35,9 @@ class BaseTableViewCell: UITableViewCell {
     
     func setup(with model: BaseTableViewCellModel) {
         self.model = model
+    }
+    
+    func updateAppearance() {
+        
     }
 }

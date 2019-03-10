@@ -10,6 +10,11 @@ import UIKit
 
 class TableViewHeaderView: UITableViewHeaderFooterView {
     
+    var theme: Theme? {
+        didSet {
+            updateAppearance()
+        }
+    }
     static func reuseIdentifier() -> String {
         return String(describing: self)
     }
@@ -21,5 +26,13 @@ class TableViewHeaderView: UITableViewHeaderFooterView {
     func setup(with model: TableViewHeaderViewModel) {
         self.model = model
         titleLabel.text = model.titleText
+    }
+    
+    func updateAppearance() {
+        guard let theme = theme else {
+            return
+        }
+        titleLabel.textColor = theme.sectionTextColor
+        titleLabel.backgroundColor = theme.backgroundColor
     }
 }

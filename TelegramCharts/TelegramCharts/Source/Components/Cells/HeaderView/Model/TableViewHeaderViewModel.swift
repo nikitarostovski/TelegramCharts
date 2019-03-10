@@ -19,7 +19,7 @@ class TableViewHeaderViewModel {
     }
     
     static func registerNib(for tableView: UITableView) {
-        tableView.register(UINib(nibName: reuseIdentifier, bundle: nil),
+        tableView.register(UINib(nibName: reuseIdentifier, bundle: .main),
                            forHeaderFooterViewReuseIdentifier: reuseIdentifier)
     }
     
