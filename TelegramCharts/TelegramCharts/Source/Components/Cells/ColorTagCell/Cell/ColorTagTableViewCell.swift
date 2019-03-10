@@ -17,10 +17,18 @@ class ColorTagTableViewCell: BaseTableViewCell {
     @IBOutlet weak var tagView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     
+    private var highlightLayer = CALayer()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         tagView.layer.cornerRadius = 3
         tagView.layer.masksToBounds = true
+        selectionStyle = .none
+        
+        highlightLayer.removeFromSuperlayer()
+        highlightLayer.backgroundColor = UIColor.black.withAlphaComponent(0.1).cgColor
+        highlightLayer.opacity = 0.0
+        layer.addSublayer(highlightLayer)
     }
     
     override func setup(with model: BaseTableViewCellModel) {
@@ -34,6 +42,7 @@ class ColorTagTableViewCell: BaseTableViewCell {
             let model = model as? ColorTagTableViewCellModel else {
                 return
         }
+        highlightLayer.frame = bounds
         if model.hasCheckmark {
             accessoryType = .checkmark
         } else {
@@ -46,13 +55,45 @@ class ColorTagTableViewCell: BaseTableViewCell {
         tagView.backgroundColor = model.tagColor
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        guard let model = model as? ColorTagTableViewCellModel else {
-            return
-        }
-        super.setSelected(selected, animated: animated)
-        model.hasCheckmark = selected
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        highlightOn()
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        highlightOff()
+        guard let model = model as? ColorTagTableViewCellModel else { return }
+        model.hasCheckmark = !model.hasCheckmark
         updateAppearance()
         model.cellTapAction?()
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        highlightOff()
+    }
+    
+    // MARK: - Highlight animation
+    
+    private func highlightOn() {
+        let newOpacity: Float = 1
+        highlightLayer.removeAllAnimations()
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = highlightLayer.opacity
+        animation.toValue = newOpacity
+        animation.duration = 0.1
+        animation.autoreverses = false
+        highlightLayer.opacity = newOpacity
+        highlightLayer.add(animation, forKey: "opacityOn")
+    }
+    
+    private func highlightOff() {
+        let newOpacity: Float = 0
+        highlightLayer.removeAllAnimations()
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = highlightLayer.opacity
+        animation.toValue = newOpacity
+        animation.duration = 0.1
+        animation.autoreverses = false
+        highlightLayer.opacity = newOpacity
+        highlightLayer.add(animation, forKey: "opacityOff")
     }
 }
