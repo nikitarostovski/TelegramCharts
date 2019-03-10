@@ -33,6 +33,8 @@
 		11649FEC223542B60081ABA1 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FEA223542B60081ABA1 /* Theme.swift */; };
 		11649FEE223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */; };
 		11AD8659223593C8003B150A /* RootNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD8658223593C8003B150A /* RootNavigationController.swift */; };
+		11AD865B22359B2C003B150A /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD865A22359B2C003B150A /* ThemeManager.swift */; };
+		11AD865F2235A614003B150A /* NSObject+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD865E2235A614003B150A /* NSObject+Theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +66,8 @@
 		11649FEA223542B60081ABA1 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+VisibleSectionHeaders.swift"; sourceTree = "<group>"; };
 		11AD8658223593C8003B150A /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationController.swift; sourceTree = "<group>"; };
+		11AD865A22359B2C003B150A /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		11AD865E2235A614003B150A /* NSObject+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Theme.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +154,7 @@
 				11649FDD2235386C0081ABA1 /* Colors.swift */,
 				11649FE122353DF10081ABA1 /* String+Localized.swift */,
 				11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */,
+				11AD865E2235A614003B150A /* NSObject+Theme.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -157,6 +162,7 @@
 		11649F372235033B0081ABA1 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				11AD865A22359B2C003B150A /* ThemeManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -404,12 +410,14 @@
 				11649FD6223533C30081ABA1 /* ButtonTableViewCell.swift in Sources */,
 				11649FD9223533C30081ABA1 /* BaseTableViewCellModel.swift in Sources */,
 				11649FD2223533C30081ABA1 /* TableViewHeaderViewModel.swift in Sources */,
+				11AD865F2235A614003B150A /* NSObject+Theme.swift in Sources */,
 				11649FEC223542B60081ABA1 /* Theme.swift in Sources */,
 				11649F35223502E00081ABA1 /* MainViewController.swift in Sources */,
 				11AD8659223593C8003B150A /* RootNavigationController.swift in Sources */,
 				11649FEE223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift in Sources */,
 				11649FE222353DF10081ABA1 /* String+Localized.swift in Sources */,
 				11649FDC223533C30081ABA1 /* ChartTableViewCellModel.swift in Sources */,
+				11AD865B22359B2C003B150A /* ThemeManager.swift in Sources */,
 				11649F34223502E00081ABA1 /* AppDelegate.swift in Sources */,
 				11649FD8223533C30081ABA1 /* BaseTableViewCell.swift in Sources */,
 				11649FD7223533C30081ABA1 /* ButtonTableViewCellModel.swift in Sources */,

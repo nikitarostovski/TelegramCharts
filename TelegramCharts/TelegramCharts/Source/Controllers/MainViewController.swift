@@ -29,9 +29,6 @@ class MainViewController: UITableViewController {
     
     private func updateAppearance() {
         UIView.animate(withDuration: 0.15) {
-            if let navController = self.navigationController as? RootNavigationController {
-                navController.theme = self.theme
-            }
             self.tableView.backgroundColor = self.theme.viewBackgroundColor
             self.tableView.separatorColor = self.theme.tableSeparatorColor
             
@@ -101,7 +98,7 @@ class MainViewController: UITableViewController {
         
         model.buttonTouchUpInsideAction = { [weak self] in
             guard let self = self else { return }
-            if self.theme.style == .day {
+            if ThemeManager.shared.currentTheme.style == .day {
                 self.setNightTheme()
                 model.buttonTitle = nightModeTitle
             } else {
@@ -127,13 +124,15 @@ class MainViewController: UITableViewController {
     // MARK: - Actions
     
     private func setDayTheme() {
-        theme.style = .day
-        updateAppearance()
+//        theme.style = .day
+//        updateAppearance()
+        ThemeManager.shared.currentTheme = Theme(style: .day)
     }
     
     private func setNightTheme() {
-        theme.style = .night
-        updateAppearance()
+//        theme.style = .night
+//        updateAppearance()
+        ThemeManager.shared.currentTheme = Theme(style: .night)
     }
 }
 

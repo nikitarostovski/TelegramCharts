@@ -16,16 +16,6 @@ class ButtonTableViewCell: BaseTableViewCell {
         return 46
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectionStyle = .none
-    }
-
-    override func setup(with model: BaseTableViewCellModel) {
-        super.setup(with: model)
-        updateAppearance()
-    }
-    
     override func updateAppearance() {
         super.updateAppearance()
         guard let theme = theme,

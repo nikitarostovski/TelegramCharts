@@ -8,24 +8,23 @@
 
 import UIKit
 
-class RootNavigationController: UINavigationController {
-    
-    var theme = Theme(style: .day) {
-        didSet {
-            updateAppearance()
-        }
-    }
+class RootNavigationController: UINavigationController, Stylable {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return theme.statusBarStyle
+        return ThemeManager.shared.currentTheme.statusBarStyle
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        startReceivingThemeUpdates()
         navigationBar.isTranslucent = false
     }
     
-    func updateAppearance() {
+    deinit {
+        stopReceivingThemeUpdates()
+    }
+    
+    func themeDidUpdate(theme: Theme) {
         setNeedsStatusBarAppearanceUpdate()
         navigationBar.tintColor = theme.navigationTintColor
         navigationBar.barTintColor = theme.navigationBackgroundColor

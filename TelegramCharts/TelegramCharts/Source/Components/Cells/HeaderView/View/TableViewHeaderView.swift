@@ -34,13 +34,15 @@ class TableViewHeaderView: UITableViewHeaderFooterView {
     
     func setup(with model: TableViewHeaderViewModel) {
         self.model = model
-        titleLabel.text = model.titleText
+        updateAppearance()
     }
     
     func updateAppearance() {
-        guard let theme = theme else {
+        guard let theme = theme,
+            let model = model else {
             return
         }
+        titleLabel.text = model.titleText
         titleLabel.textColor = theme.sectionTextColor
         bacKView.backgroundColor = theme.viewBackgroundColor
     }

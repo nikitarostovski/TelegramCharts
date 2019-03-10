@@ -23,17 +23,11 @@ class ColorTagTableViewCell: BaseTableViewCell {
         super.awakeFromNib()
         tagView.layer.cornerRadius = 3
         tagView.layer.masksToBounds = true
-        selectionStyle = .none
         
         highlightLayer.removeFromSuperlayer()
         highlightLayer.backgroundColor = UIColor.black.withAlphaComponent(0.1).cgColor
         highlightLayer.opacity = 0.0
         layer.addSublayer(highlightLayer)
-    }
-    
-    override func setup(with model: BaseTableViewCellModel) {
-        super.setup(with: model)
-        updateAppearance()
     }
     
     override func updateAppearance() {

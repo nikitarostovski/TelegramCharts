@@ -13,11 +13,6 @@ class ChartTableViewCell: BaseTableViewCell {
     override class var cellHeight: CGFloat {
         return 273
     }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectionStyle = .none
-    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

@@ -33,6 +33,7 @@ class BaseTableViewCell: UITableViewCell {
     }
     
     override func awakeFromNib() {
+        selectionStyle = .none
         super.awakeFromNib()
         topSeparatorLayer?.removeFromSuperlayer()
         topSeparatorLayer = CALayer()
@@ -53,6 +54,7 @@ class BaseTableViewCell: UITableViewCell {
     
     func setup(with model: BaseTableViewCellModel) {
         self.model = model
+        updateAppearance()
     }
     
     func updateAppearance() {

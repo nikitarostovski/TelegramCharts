@@ -8,9 +8,9 @@
 
 import UIKit
 
-enum ThemeStyle {
-    case day
-    case night
+enum ThemeStyle: Int {
+    case day = 100
+    case night = 101
 }
 
 struct Theme {
