@@ -53,5 +53,6 @@ class ButtonTableViewCell: BaseTableViewCell {
             return
         }
         model.buttonTouchUpInsideAction?()
+        button.setTitle(model.buttonTitle, for: .normal)
     }
 }

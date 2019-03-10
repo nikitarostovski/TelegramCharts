@@ -64,9 +64,23 @@ class MainViewController: UITableViewController {
     }
     private var themeCellModel: ButtonTableViewCellModel {
         let model = ButtonTableViewCellModel()
-        model.buttonTitle = "Switch to Night Mode".localized()
+        let dayModeTitle = "Switch to Night Mode".localized()
+        let nightModeTitle = "Switch to Day Mode".localized()
+        if self.theme.style == .day {
+            model.buttonTitle = dayModeTitle
+        } else {
+            model.buttonTitle = nightModeTitle
+        }
+        
         model.buttonTouchUpInsideAction = { [weak self] in
-            self?.changeThemeStyle()
+            guard let self = self else { return }
+            if self.theme.style == .day {
+                self.setNightTheme()
+                model.buttonTitle = nightModeTitle
+            } else {
+                self.setDayTheme()
+                model.buttonTitle = dayModeTitle
+            }
         }
         return model
     }
@@ -85,12 +99,13 @@ class MainViewController: UITableViewController {
     
     // MARK: - Actions
     
-    private func changeThemeStyle() {
-        if theme.style == .day {
-            theme.style = .night
-        } else {
-            theme.style = .day
-        }
+    private func setDayTheme() {
+        theme.style = .day
+        updateAppearance()
+    }
+    
+    private func setNightTheme() {
+        theme.style = .night
         updateAppearance()
     }
 }
