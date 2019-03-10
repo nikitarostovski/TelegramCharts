@@ -11,7 +11,7 @@ import UIKit
 class ColorTagTableViewCell: BaseTableViewCell {
 
     override class var cellHeight: CGFloat {
-        return 372
+        return 44
     }
     
     override func awakeFromNib() {

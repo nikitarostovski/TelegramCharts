@@ -11,7 +11,7 @@ import UIKit
 class ChartTableViewCell: BaseTableViewCell {
 
     override class var cellHeight: CGFloat {
-        return 44
+        return 273
     }
     
     override func awakeFromNib() {

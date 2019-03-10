@@ -27,6 +27,8 @@
 		11649FDA223533C30081ABA1 /* ChartTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 11649FCB223533C30081ABA1 /* ChartTableViewCell.xib */; };
 		11649FDB223533C30081ABA1 /* ChartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FCC223533C30081ABA1 /* ChartTableViewCell.swift */; };
 		11649FDC223533C30081ABA1 /* ChartTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FCE223533C30081ABA1 /* ChartTableViewCellModel.swift */; };
+		11649FDE2235386C0081ABA1 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FDD2235386C0081ABA1 /* Colors.swift */; };
+		11649FE0223539DD0081ABA1 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FDF223539DD0081ABA1 /* Theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		11649FCB223533C30081ABA1 /* ChartTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChartTableViewCell.xib; sourceTree = "<group>"; };
 		11649FCC223533C30081ABA1 /* ChartTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartTableViewCell.swift; sourceTree = "<group>"; };
 		11649FCE223533C30081ABA1 /* ChartTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartTableViewCellModel.swift; sourceTree = "<group>"; };
+		11649FDD2235386C0081ABA1 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		11649FDF223539DD0081ABA1 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				11649F87223518590081ABA1 /* TableViewStructure.swift */,
+				11649FDD2235386C0081ABA1 /* Colors.swift */,
+				11649FDF223539DD0081ABA1 /* Theme.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -371,6 +377,7 @@
 				11649FDB223533C30081ABA1 /* ChartTableViewCell.swift in Sources */,
 				11649FD3223533C30081ABA1 /* TableViewHeaderView.swift in Sources */,
 				11649FD0223533C30081ABA1 /* ColorTagTableViewCell.swift in Sources */,
+				11649FDE2235386C0081ABA1 /* Colors.swift in Sources */,
 				11649FD1223533C30081ABA1 /* ColorTagTableViewCellModel.swift in Sources */,
 				11649FD6223533C30081ABA1 /* ButtonTableViewCell.swift in Sources */,
 				11649FD9223533C30081ABA1 /* BaseTableViewCellModel.swift in Sources */,
@@ -379,6 +386,7 @@
 				11649F35223502E00081ABA1 /* MainViewController.swift in Sources */,
 				11649FDC223533C30081ABA1 /* ChartTableViewCellModel.swift in Sources */,
 				11649F34223502E00081ABA1 /* AppDelegate.swift in Sources */,
+				11649FE0223539DD0081ABA1 /* Theme.swift in Sources */,
 				11649FD8223533C30081ABA1 /* BaseTableViewCell.swift in Sources */,
 				11649FD7223533C30081ABA1 /* ButtonTableViewCellModel.swift in Sources */,
 			);

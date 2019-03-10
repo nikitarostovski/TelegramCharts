@@ -10,16 +10,24 @@ import UIKit
 
 class MainViewController: UITableViewController {
 
+    private var theme = Theme()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateAppearance()
         tableView.tableFooterView = UIView()
         ChartTableViewCellModel.registerNib(for: tableView)
         ColorTagTableViewCellModel.registerNib(for: tableView)
         ButtonTableViewCellModel.registerNib(for: tableView)
         TableViewHeaderViewModel.registerNib(for: tableView)
         createStructure()
+    }
+    
+    private func updateAppearance() {
+        tableView.backgroundColor = theme.backgroundColor
+        view.tintColor = theme.tintColor
     }
     
     // MARK: - Structure
