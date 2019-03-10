@@ -13,30 +13,39 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TableViewHeaderView" customModule="TelegramCharts" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="54"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oPM-5D-LbL">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lRN-cm-leS">
-                    <rect key="frame" x="16" y="25" width="343" height="21"/>
+                    <rect key="frame" x="16" y="15" width="343" height="21"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="21" id="oHO-UQ-JvN"/>
+                        <constraint firstAttribute="height" constant="21" id="aDl-Bp-pi5"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="lRN-cm-leS" secondAttribute="trailing" constant="16" id="IKL-0o-DRF"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="lRN-cm-leS" secondAttribute="bottom" constant="8" id="VLg-Aa-eRa"/>
-                <constraint firstItem="lRN-cm-leS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="rbr-Gb-m2z"/>
+                <constraint firstItem="oPM-5D-LbL" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="6QV-wB-gLJ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="lRN-cm-leS" secondAttribute="trailing" constant="16" id="7W0-Ux-5xM"/>
+                <constraint firstItem="oPM-5D-LbL" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="9aA-uc-uLG"/>
+                <constraint firstItem="oPM-5D-LbL" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="Phf-OS-e2i"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="lRN-cm-leS" secondAttribute="bottom" constant="8" id="cKO-eD-ka6"/>
+                <constraint firstItem="oPM-5D-LbL" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="eqa-OX-Mrm"/>
+                <constraint firstItem="lRN-cm-leS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="pkV-Ox-I4e"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
+                <outlet property="bacKView" destination="oPM-5D-LbL" id="qdD-6g-clU"/>
                 <outlet property="titleLabel" destination="lRN-cm-leS" id="5oP-rN-rdN"/>
             </connections>
             <point key="canvasLocation" x="36" y="-218.59070464767618"/>

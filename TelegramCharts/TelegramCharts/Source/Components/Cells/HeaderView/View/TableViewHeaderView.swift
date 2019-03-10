@@ -18,10 +18,19 @@ class TableViewHeaderView: UITableViewHeaderFooterView {
     static func reuseIdentifier() -> String {
         return String(describing: self)
     }
+    class var cellHeight: CGFloat {
+        return 44
+    }
     
     private weak var model: TableViewHeaderViewModel?
     
+    @IBOutlet weak var bacKView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateAppearance()
+    }
     
     func setup(with model: TableViewHeaderViewModel) {
         self.model = model
@@ -33,6 +42,6 @@ class TableViewHeaderView: UITableViewHeaderFooterView {
             return
         }
         titleLabel.textColor = theme.sectionTextColor
-        titleLabel.backgroundColor = theme.backgroundColor
+        bacKView.backgroundColor = theme.backgroundColor
     }
 }

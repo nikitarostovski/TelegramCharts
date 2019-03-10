@@ -17,6 +17,7 @@ class MainViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateAppearance()
+        tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
         ChartTableViewCellModel.registerNib(for: tableView)
@@ -36,6 +37,12 @@ class MainViewController: UITableViewController {
                     return
                 }
                 cell.theme = self?.theme
+            }
+            self.tableView.visibleSectionHeaders.forEach { [weak self] in
+                guard let header = $0 as? TableViewHeaderView else {
+                    return
+                }
+                header.theme = self?.theme
             }
         }
     }
@@ -73,6 +80,10 @@ class MainViewController: UITableViewController {
         model.bottomSeparatorStyle.isHidden = false
         return model
     }
+    private var settingsHeaderModel: TableViewHeaderViewModel {
+        let model = TableViewHeaderViewModel()
+        return model
+    }
     private var themeCellModel: ButtonTableViewCellModel {
         let model = ButtonTableViewCellModel()
         model.topSeparatorStyle.isHidden = false
@@ -106,7 +117,7 @@ class MainViewController: UITableViewController {
         structure.addSection(section: chartSection)
         
         let settingsModels = [themeCellModel]
-        let settingsSection = TableViewSection(headerModel: nil, cellModels: settingsModels)
+        let settingsSection = TableViewSection(headerModel: settingsHeaderModel, cellModels: settingsModels)
         structure.addSection(section: settingsSection)
     }
     

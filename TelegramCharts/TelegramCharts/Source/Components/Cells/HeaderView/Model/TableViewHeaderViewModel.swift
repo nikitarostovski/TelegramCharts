@@ -15,7 +15,7 @@ class TableViewHeaderViewModel {
     }
     
     class var cellHeight: CGFloat {
-        return 34
+        return TableViewHeaderView.cellHeight
     }
     
     static func registerNib(for tableView: UITableView) {

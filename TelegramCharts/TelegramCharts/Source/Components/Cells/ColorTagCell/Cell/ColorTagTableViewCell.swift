@@ -55,6 +55,8 @@ class ColorTagTableViewCell: BaseTableViewCell {
         tagView.backgroundColor = model.tagColor
     }
     
+    // MARK: - Touches
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         highlightOn()
     }
