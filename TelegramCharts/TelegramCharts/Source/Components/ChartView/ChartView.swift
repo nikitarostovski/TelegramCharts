@@ -15,7 +15,7 @@ struct ChartData {
     var color: UIColor
 }
 
-class ChartView: UIView {
+class ChartView: UIView, Stylable {
     
     var charts = [ChartData]() {
         didSet {
@@ -29,16 +29,33 @@ class ChartView: UIView {
         }
     }
     
+    var lineWidth: CGFloat = 4.0 {
+        didSet {
+            chartLayers.forEach {
+                $0.lineWidth = lineWidth
+            }
+            redraw()
+        }
+    }
+    
     private var chartLayers = [CAShapeLayer]()
+    
+    // MARK: - Lifecycle
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupView()
+        startReceivingThemeUpdates()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        startReceivingThemeUpdates()
+    }
+    
+    deinit {
+        stopReceivingThemeUpdates()
     }
     
     override func layoutSubviews() {
@@ -46,12 +63,14 @@ class ChartView: UIView {
         redraw()
     }
     
+    // MARK: - Private
+    
     private func setupView() {
         chartLayers.forEach { $0.removeFromSuperlayer() }
         chartLayers = [CAShapeLayer]()
         charts.forEach { [weak self] (chart) in
             let layer = CAShapeLayer()
-            layer.lineWidth = 4
+            layer.lineWidth = lineWidth
             layer.lineJoin = .round
             layer.lineCap = .round
             layer.fillColor = UIColor.clear.cgColor
@@ -69,15 +88,38 @@ class ChartView: UIView {
             let startPosition = CGFloat(chart.values.count - 1) * CGFloat(visibleRange.lowerBound)
             let endPosition = CGFloat(chart.values.count - 1) * CGFloat(visibleRange.upperBound)
             
+            var startIndex: Int?
+            var endIndex: Int?
+            
             var viewPositions = [CGFloat]()
             for i in 0 ..< chart.values.count {
-                viewPositions.append((CGFloat(i) - startPosition) / (endPosition - startPosition) * self.frame.size.width)
+                let newPos = (CGFloat(i) - startPosition) / (endPosition - startPosition) * self.frame.size.width
+                viewPositions.append(newPos)
+                
+                if newPos < 0 {
+                    startIndex = i
+                }
+                if newPos > self.frame.size.width && endIndex == nil {
+                    endIndex = i
+                }
+            }
+            
+            if startIndex == nil {
+                startIndex = 0
+            }
+            if endIndex == nil {
+                endIndex = chart.values.count - 1
+            }
+            
+            var maxY: Int64 = 0
+            for i in startIndex! ... endIndex! {
+                maxY = max(maxY, chart.values[i])
             }
             
             let path = UIBezierPath()
-            for i in 0 ..< chart.values.count {
+            for i in startIndex! ..< endIndex! {
                 let viewX = viewPositions[i]
-                let viewY = self.frame.size.height - CGFloat(chart.values[i]) * self.frame.size.height / CGFloat(10)
+                let viewY = self.frame.size.height - CGFloat(chart.values[i]) * self.frame.size.height / CGFloat(maxY)
                 let point = CGPoint(x: viewX, y: viewY)
                 
                 if i == 0 {
@@ -90,5 +132,9 @@ class ChartView: UIView {
             let layer = chartLayers[chartIndex]
             layer.path = path.cgPath
         }
+    }
+    
+    func themeDidUpdate(theme: Theme) {
+        backgroundColor = theme.cellBackgroundColor
     }
 }

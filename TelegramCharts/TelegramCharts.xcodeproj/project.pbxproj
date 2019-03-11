@@ -35,8 +35,8 @@
 		11649FEE223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */; };
 		1187981B2236CC4E000A5E72 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1187981A2236CC4E000A5E72 /* ChartView.swift */; };
 		118798212236E667000A5E72 /* RangeTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118798202236E667000A5E72 /* RangeTableViewCellModel.swift */; };
-		118798232236E677000A5E72 /* RangeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118798222236E677000A5E72 /* RangeTableViewCell.swift */; };
-		118798252236E681000A5E72 /* RangeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 118798242236E681000A5E72 /* RangeTableViewCell.xib */; };
+		118798232236E677000A5E72 /* ChartRangeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118798222236E677000A5E72 /* ChartRangeTableViewCell.swift */; };
+		118798252236E681000A5E72 /* ChartRangeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 118798242236E681000A5E72 /* ChartRangeTableViewCell.xib */; };
 		11AD8659223593C8003B150A /* RootNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD8658223593C8003B150A /* RootNavigationController.swift */; };
 		11AD865B22359B2C003B150A /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD865A22359B2C003B150A /* ThemeManager.swift */; };
 		11AD865F2235A614003B150A /* NSObject+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD865E2235A614003B150A /* NSObject+Theme.swift */; };
@@ -73,8 +73,8 @@
 		11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+VisibleSectionHeaders.swift"; sourceTree = "<group>"; };
 		1187981A2236CC4E000A5E72 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		118798202236E667000A5E72 /* RangeTableViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeTableViewCellModel.swift; sourceTree = "<group>"; };
-		118798222236E677000A5E72 /* RangeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeTableViewCell.swift; sourceTree = "<group>"; };
-		118798242236E681000A5E72 /* RangeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RangeTableViewCell.xib; sourceTree = "<group>"; };
+		118798222236E677000A5E72 /* ChartRangeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartRangeTableViewCell.swift; sourceTree = "<group>"; };
+		118798242236E681000A5E72 /* ChartRangeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChartRangeTableViewCell.xib; sourceTree = "<group>"; };
 		11AD8658223593C8003B150A /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationController.swift; sourceTree = "<group>"; };
 		11AD865A22359B2C003B150A /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		11AD865E2235A614003B150A /* NSObject+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Theme.swift"; sourceTree = "<group>"; };
@@ -192,7 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				11649FC4223533C30081ABA1 /* BaseCell */,
-				1187981D2236E63B000A5E72 /* RangeCell */,
+				1187981D2236E63B000A5E72 /* ChartRangeCell */,
 				11649FB2223533C30081ABA1 /* CheckCell */,
 				11649FBE223533C30081ABA1 /* ButtonCell */,
 				11649FC9223533C30081ABA1 /* ChartCell */,
@@ -354,20 +354,20 @@
 			path = RangeSlider;
 			sourceTree = "<group>";
 		};
-		1187981D2236E63B000A5E72 /* RangeCell */ = {
+		1187981D2236E63B000A5E72 /* ChartRangeCell */ = {
 			isa = PBXGroup;
 			children = (
 				1187981E2236E64B000A5E72 /* Cell */,
 				1187981F2236E64B000A5E72 /* Model */,
 			);
-			path = RangeCell;
+			path = ChartRangeCell;
 			sourceTree = "<group>";
 		};
 		1187981E2236E64B000A5E72 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				118798242236E681000A5E72 /* RangeTableViewCell.xib */,
-				118798222236E677000A5E72 /* RangeTableViewCell.swift */,
+				118798242236E681000A5E72 /* ChartRangeTableViewCell.xib */,
+				118798222236E677000A5E72 /* ChartRangeTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -446,7 +446,7 @@
 				11649FE522353E180081ABA1 /* Localizable.strings in Resources */,
 				11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */,
 				11649FD4223533C30081ABA1 /* TableViewHeaderView.xib in Resources */,
-				118798252236E681000A5E72 /* RangeTableViewCell.xib in Resources */,
+				118798252236E681000A5E72 /* ChartRangeTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +476,7 @@
 				11649FE222353DF10081ABA1 /* String+Localized.swift in Sources */,
 				10E86EEC223684220051F133 /* UITableView+Structure.swift in Sources */,
 				11649FDC223533C30081ABA1 /* ChartTableViewCellModel.swift in Sources */,
-				118798232236E677000A5E72 /* RangeTableViewCell.swift in Sources */,
+				118798232236E677000A5E72 /* ChartRangeTableViewCell.swift in Sources */,
 				11AD865B22359B2C003B150A /* ThemeManager.swift in Sources */,
 				11649F34223502E00081ABA1 /* AppDelegate.swift in Sources */,
 				11649FD8223533C30081ABA1 /* BaseTableViewCell.swift in Sources */,

@@ -12,14 +12,29 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RangeTableViewCell" rowHeight="92" id="z4L-fu-WN5" customClass="RangeTableViewCell" customModule="TelegramCharts" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ChartRangeTableViewCell" rowHeight="92" id="z4L-fu-WN5" customClass="ChartRangeTableViewCell" customModule="TelegramCharts" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="z4L-fu-WN5" id="vxH-IC-5wj">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="91.5"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kMr-Ps-opD" customClass="ChartView" customModule="TelegramCharts" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="91.5"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="kMr-Ps-opD" secondAttribute="bottom" id="E97-LR-OEY"/>
+                    <constraint firstAttribute="trailing" secondItem="kMr-Ps-opD" secondAttribute="trailing" id="Lzu-Ti-Jgh"/>
+                    <constraint firstItem="kMr-Ps-opD" firstAttribute="top" secondItem="vxH-IC-5wj" secondAttribute="top" id="Te0-DD-uYl"/>
+                    <constraint firstItem="kMr-Ps-opD" firstAttribute="leading" secondItem="vxH-IC-5wj" secondAttribute="leading" id="hu3-T6-Liw"/>
+                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="Lke-nw-xCm"/>
+            <connections>
+                <outlet property="chartView" destination="kMr-Ps-opD" id="gck-CP-Cvi"/>
+            </connections>
             <point key="canvasLocation" x="64" y="66"/>
         </tableViewCell>
     </objects>

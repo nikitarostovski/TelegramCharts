@@ -13,13 +13,14 @@ class TableViewHeaderView: UITableViewHeaderFooterView, Stylable {
     static func reuseIdentifier() -> String {
         return String(describing: self)
     }
+    
     class var cellHeight: CGFloat {
-        return 44
+        return 37
     }
     
     private weak var model: TableViewHeaderViewModel?
     
-    @IBOutlet weak var bacKView: UIView!
+    @IBOutlet weak var backView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
 
     override func awakeFromNib() {
@@ -49,7 +50,7 @@ class TableViewHeaderView: UITableViewHeaderFooterView, Stylable {
     }
 
     func themeDidUpdate(theme: Theme) {
-        bacKView.backgroundColor = theme.viewBackgroundColor
+        backView.backgroundColor = theme.viewBackgroundColor
         titleLabel.textColor = theme.sectionTextColor
     }
 }
