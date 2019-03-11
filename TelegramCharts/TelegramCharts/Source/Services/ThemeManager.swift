@@ -18,7 +18,7 @@ class ThemeManager {
     var currentTheme: Theme {
         didSet {
             let defaults = UserDefaults.standard
-            defaults.set(currentTheme.style.rawValue, forKey: currentThemeKey)
+            defaults.set(currentTheme.rawValue, forKey: currentThemeKey)
             defaults.synchronize()
             
             let name = NSNotification.Name(rawValue: ThemeManager.themeChangeNotificationKey)
@@ -29,10 +29,10 @@ class ThemeManager {
     init() {
         let defaults = UserDefaults.standard
         let savedValue = defaults.integer(forKey: currentThemeKey)
-        if let style = ThemeStyle(rawValue: savedValue) {
-            currentTheme = Theme(style: style)
+        if let theme = Theme(rawValue: savedValue) {
+            currentTheme = theme
         } else {
-            currentTheme = Theme(style: .day)
+            currentTheme = .day
         }
     }
 }

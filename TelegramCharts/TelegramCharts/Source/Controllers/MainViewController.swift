@@ -73,7 +73,7 @@ class MainViewController: UITableViewController {
         model.bottomSeparatorStyle.isHidden = false
         let dayModeTitle = "Switch to Night Mode".localized()
         let nightModeTitle = "Switch to Day Mode".localized()
-        if ThemeManager.shared.currentTheme.style == .day {
+        if ThemeManager.shared.currentTheme == .day {
             model.buttonTitle = dayModeTitle
         } else {
             model.buttonTitle = nightModeTitle
@@ -81,7 +81,7 @@ class MainViewController: UITableViewController {
         
         model.buttonTouchUpInsideAction = { [weak self] in
             guard let self = self else { return }
-            if ThemeManager.shared.currentTheme.style == .day {
+            if ThemeManager.shared.currentTheme == .day {
                 self.setNightTheme()
                 model.buttonTitle = nightModeTitle
             } else {
@@ -107,11 +107,11 @@ class MainViewController: UITableViewController {
     // MARK: - Actions
     
     private func setDayTheme() {
-        ThemeManager.shared.currentTheme = Theme(style: .day)
+        ThemeManager.shared.currentTheme = .day
     }
     
     private func setNightTheme() {
-        ThemeManager.shared.currentTheme = Theme(style: .night)
+        ThemeManager.shared.currentTheme = .night
     }
 }
 

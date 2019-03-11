@@ -8,93 +8,84 @@
 
 import UIKit
 
-enum ThemeStyle: Int {
+enum Theme: Int {
     case day = 100
     case night = 101
-}
 
-struct Theme {
-    
-    var style: ThemeStyle
-    
-    init(style: ThemeStyle) {
-        self.style = style
-    }
-    
     var statusBarStyle: UIStatusBarStyle {
-        switch style {
+        switch self {
         case .day:
             return .default
         case .night:
             return .lightContent
         }
     }
-    
+
     var viewBackgroundColor: UIColor {
-        switch style {
+        switch self {
         case .day:
             return Colors.mediumGray
         case .night:
             return Colors.darkBlue
         }
     }
-    
+
     var cellBackgroundColor: UIColor {
-        switch style {
+        switch self {
         case .day:
             return Colors.white
         case .night:
             return Colors.mediumBlue
         }
     }
-    
+
     var tintColor: UIColor {
-        switch style {
+        switch self {
         case .day:
             return Colors.lightBlue
         case .night:
             return Colors.lightBlue
         }
     }
-    
+
     var tableSeparatorColor: UIColor {
-        switch style {
+        switch self {
         case .day:
             return Colors.gray
         case .night:
             return Colors.veryDarkBlue
         }
     }
-    
+
     var sectionTextColor: UIColor {
-        switch style {
+        switch self {
         case .day:
             return Colors.darkGray
         case .night:
             return Colors.blue
         }
     }
-    
+
     var cellTextColor: UIColor {
-        switch style {
+        switch self {
         case .day:
             return Colors.black
         case .night:
             return Colors.white
         }
     }
-    
+
     var navigationTintColor: UIColor {
-        switch style {
+        switch self {
         case .day:
             return Colors.black
         case .night:
             return Colors.white
         }
     }
-    
+
     var navigationBackgroundColor: UIColor {
-        switch style {
+        switch self {
         case .day:
             return Colors.white
         case .night:
