@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RootNavigationController: UINavigationController, Stylable {
+class RootNavigationController: UINavigationController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return ThemeManager.shared.currentTheme.statusBarStyle
@@ -16,14 +16,22 @@ class RootNavigationController: UINavigationController, Stylable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        startReceivingThemeUpdates()
         navigationBar.isTranslucent = false
     }
-    
-    deinit {
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startReceivingThemeUpdates()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         stopReceivingThemeUpdates()
     }
-    
+}
+
+extension RootNavigationController: Stylable {
+
     func themeDidUpdate(theme: Theme) {
         setNeedsStatusBarAppearanceUpdate()
         navigationBar.tintColor = theme.navigationTintColor

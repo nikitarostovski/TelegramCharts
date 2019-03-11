@@ -26,6 +26,9 @@ extension NSObject {
                 })
             }
         }
+        if let stylableSelf = self as? Stylable {
+            stylableSelf.themeDidUpdate(theme: ThemeManager.shared.currentTheme)
+        }
     }
     
     func stopReceivingThemeUpdates() {
