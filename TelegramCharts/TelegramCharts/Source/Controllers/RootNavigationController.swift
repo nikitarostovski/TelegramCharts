@@ -37,5 +37,6 @@ extension RootNavigationController: Stylable {
         navigationBar.tintColor = theme.navigationTintColor
         navigationBar.barTintColor = theme.navigationBackgroundColor
         navigationBar.titleTextAttributes = [.foregroundColor: theme.navigationTintColor]
+        navigationBar.layoutIfNeeded()
     }
 }
