@@ -17,4 +17,6 @@ class ChartTableViewCellModel: BaseTableViewCellModel {
     override func cellHeight() -> CGFloat {
         return ChartTableViewCell.cellHeight
     }
+    
+    var chartData = [ChartData]()
 }

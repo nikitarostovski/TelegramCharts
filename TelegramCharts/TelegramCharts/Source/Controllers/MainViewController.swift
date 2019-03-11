@@ -10,6 +10,12 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
+    private var chartData: [ChartData] {
+        let testDataA = ChartData(values: [3,7,3,9,2,1,6], color: .red)
+        let testDataB = ChartData(values: [9,6,7,0,5,4,4], color: .green)
+        return [testDataA, testDataB]
+    }
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -42,21 +48,25 @@ class MainViewController: UITableViewController {
     }
     private var chartCellModel: ChartTableViewCellModel {
         let model = ChartTableViewCellModel()
+        model.chartData = chartData
         model.topSeparatorStyle.isHidden = false
         return model
     }
-    private var joinedCellModel: ColorTagTableViewCellModel {
-        let model = ColorTagTableViewCellModel()
+    private var chartRangeCellModel: RangeTableViewCellModel {
+        let model = RangeTableViewCellModel()
+        return model
+    }
+    private var joinedCellModel: CheckTableViewCellModel {
+        let model = CheckTableViewCellModel()
         model.hasCheckmark = true
         model.tagColor = UIColor.green
         model.titleText = "Joined Channel"
-        model.topSeparatorStyle.isHidden = false
         model.bottomSeparatorStyle.isHidden = false
         model.bottomSeparatorStyle.clampToEdge = false
         return model
     }
-    private var leftCellModel: ColorTagTableViewCellModel {
-        let model = ColorTagTableViewCellModel()
+    private var leftCellModel: CheckTableViewCellModel {
+        let model = CheckTableViewCellModel()
         model.hasCheckmark = false
         model.tagColor = UIColor.red
         model.titleText = "Left Channel"
@@ -95,7 +105,7 @@ class MainViewController: UITableViewController {
     private func createStructure() {
         structure.clear()
         
-        let chartModels = [chartCellModel, joinedCellModel, leftCellModel]
+        let chartModels = [chartCellModel, chartRangeCellModel, joinedCellModel, leftCellModel]
         let chartSection = TableViewSection(headerModel: followersHeaderModel, cellModels: chartModels)
         structure.addSection(section: chartSection)
         

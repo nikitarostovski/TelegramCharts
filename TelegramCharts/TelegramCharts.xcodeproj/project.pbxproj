@@ -13,9 +13,9 @@
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
 		11649F34223502E00081ABA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649F2C223502E00081ABA1 /* AppDelegate.swift */; };
 		11649F35223502E00081ABA1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649F2F223502E00081ABA1 /* MainViewController.swift */; };
-		11649FCF223533C30081ABA1 /* ColorTagTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 11649FB4223533C30081ABA1 /* ColorTagTableViewCell.xib */; };
-		11649FD0223533C30081ABA1 /* ColorTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FB5223533C30081ABA1 /* ColorTagTableViewCell.swift */; };
-		11649FD1223533C30081ABA1 /* ColorTagTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FB7223533C30081ABA1 /* ColorTagTableViewCellModel.swift */; };
+		11649FCF223533C30081ABA1 /* CheckTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 11649FB4223533C30081ABA1 /* CheckTableViewCell.xib */; };
+		11649FD0223533C30081ABA1 /* CheckTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FB5223533C30081ABA1 /* CheckTableViewCell.swift */; };
+		11649FD1223533C30081ABA1 /* CheckTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FB7223533C30081ABA1 /* CheckTableViewCellModel.swift */; };
 		11649FD2223533C30081ABA1 /* TableViewHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FBA223533C30081ABA1 /* TableViewHeaderViewModel.swift */; };
 		11649FD3223533C30081ABA1 /* TableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FBC223533C30081ABA1 /* TableViewHeaderView.swift */; };
 		11649FD4223533C30081ABA1 /* TableViewHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 11649FBD223533C30081ABA1 /* TableViewHeaderView.xib */; };
@@ -33,6 +33,10 @@
 		11649FEB223542B60081ABA1 /* TableViewStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FE9223542B60081ABA1 /* TableViewStructure.swift */; };
 		11649FEC223542B60081ABA1 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FEA223542B60081ABA1 /* Theme.swift */; };
 		11649FEE223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */; };
+		1187981B2236CC4E000A5E72 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1187981A2236CC4E000A5E72 /* ChartView.swift */; };
+		118798212236E667000A5E72 /* RangeTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118798202236E667000A5E72 /* RangeTableViewCellModel.swift */; };
+		118798232236E677000A5E72 /* RangeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118798222236E677000A5E72 /* RangeTableViewCell.swift */; };
+		118798252236E681000A5E72 /* RangeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 118798242236E681000A5E72 /* RangeTableViewCell.xib */; };
 		11AD8659223593C8003B150A /* RootNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD8658223593C8003B150A /* RootNavigationController.swift */; };
 		11AD865B22359B2C003B150A /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD865A22359B2C003B150A /* ThemeManager.swift */; };
 		11AD865F2235A614003B150A /* NSObject+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AD865E2235A614003B150A /* NSObject+Theme.swift */; };
@@ -47,9 +51,9 @@
 		11649F29223502E00081ABA1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11649F2C223502E00081ABA1 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		11649F2F223502E00081ABA1 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		11649FB4223533C30081ABA1 /* ColorTagTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorTagTableViewCell.xib; sourceTree = "<group>"; };
-		11649FB5223533C30081ABA1 /* ColorTagTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTagTableViewCell.swift; sourceTree = "<group>"; };
-		11649FB7223533C30081ABA1 /* ColorTagTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTagTableViewCellModel.swift; sourceTree = "<group>"; };
+		11649FB4223533C30081ABA1 /* CheckTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckTableViewCell.xib; sourceTree = "<group>"; };
+		11649FB5223533C30081ABA1 /* CheckTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckTableViewCell.swift; sourceTree = "<group>"; };
+		11649FB7223533C30081ABA1 /* CheckTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckTableViewCellModel.swift; sourceTree = "<group>"; };
 		11649FBA223533C30081ABA1 /* TableViewHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderViewModel.swift; sourceTree = "<group>"; };
 		11649FBC223533C30081ABA1 /* TableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderView.swift; sourceTree = "<group>"; };
 		11649FBD223533C30081ABA1 /* TableViewHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewHeaderView.xib; sourceTree = "<group>"; };
@@ -67,6 +71,10 @@
 		11649FE9223542B60081ABA1 /* TableViewStructure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewStructure.swift; sourceTree = "<group>"; };
 		11649FEA223542B60081ABA1 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		11649FED223561F80081ABA1 /* UITableView+VisibleSectionHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+VisibleSectionHeaders.swift"; sourceTree = "<group>"; };
+		1187981A2236CC4E000A5E72 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		118798202236E667000A5E72 /* RangeTableViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeTableViewCellModel.swift; sourceTree = "<group>"; };
+		118798222236E677000A5E72 /* RangeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeTableViewCell.swift; sourceTree = "<group>"; };
+		118798242236E681000A5E72 /* RangeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RangeTableViewCell.xib; sourceTree = "<group>"; };
 		11AD8658223593C8003B150A /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationController.swift; sourceTree = "<group>"; };
 		11AD865A22359B2C003B150A /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		11AD865E2235A614003B150A /* NSObject+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Theme.swift"; sourceTree = "<group>"; };
@@ -173,6 +181,8 @@
 		11649F53223505B30081ABA1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1187981C2236E626000A5E72 /* RangeSlider */,
+				118798192236CC3F000A5E72 /* ChartView */,
 				11649FB1223533C30081ABA1 /* Cells */,
 			);
 			path = Components;
@@ -182,7 +192,8 @@
 			isa = PBXGroup;
 			children = (
 				11649FC4223533C30081ABA1 /* BaseCell */,
-				11649FB2223533C30081ABA1 /* ColorTagCell */,
+				1187981D2236E63B000A5E72 /* RangeCell */,
+				11649FB2223533C30081ABA1 /* CheckCell */,
 				11649FBE223533C30081ABA1 /* ButtonCell */,
 				11649FC9223533C30081ABA1 /* ChartCell */,
 				11649FB8223533C30081ABA1 /* HeaderView */,
@@ -190,20 +201,20 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		11649FB2223533C30081ABA1 /* ColorTagCell */ = {
+		11649FB2223533C30081ABA1 /* CheckCell */ = {
 			isa = PBXGroup;
 			children = (
 				11649FB3223533C30081ABA1 /* Cell */,
 				11649FB6223533C30081ABA1 /* Model */,
 			);
-			path = ColorTagCell;
+			path = CheckCell;
 			sourceTree = "<group>";
 		};
 		11649FB3223533C30081ABA1 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				11649FB4223533C30081ABA1 /* ColorTagTableViewCell.xib */,
-				11649FB5223533C30081ABA1 /* ColorTagTableViewCell.swift */,
+				11649FB4223533C30081ABA1 /* CheckTableViewCell.xib */,
+				11649FB5223533C30081ABA1 /* CheckTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -211,7 +222,7 @@
 		11649FB6223533C30081ABA1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				11649FB7223533C30081ABA1 /* ColorTagTableViewCellModel.swift */,
+				11649FB7223533C30081ABA1 /* CheckTableViewCellModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -328,6 +339,47 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		118798192236CC3F000A5E72 /* ChartView */ = {
+			isa = PBXGroup;
+			children = (
+				1187981A2236CC4E000A5E72 /* ChartView.swift */,
+			);
+			path = ChartView;
+			sourceTree = "<group>";
+		};
+		1187981C2236E626000A5E72 /* RangeSlider */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = RangeSlider;
+			sourceTree = "<group>";
+		};
+		1187981D2236E63B000A5E72 /* RangeCell */ = {
+			isa = PBXGroup;
+			children = (
+				1187981E2236E64B000A5E72 /* Cell */,
+				1187981F2236E64B000A5E72 /* Model */,
+			);
+			path = RangeCell;
+			sourceTree = "<group>";
+		};
+		1187981E2236E64B000A5E72 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				118798242236E681000A5E72 /* RangeTableViewCell.xib */,
+				118798222236E677000A5E72 /* RangeTableViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		1187981F2236E64B000A5E72 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				118798202236E667000A5E72 /* RangeTableViewCellModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -386,7 +438,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11649FCF223533C30081ABA1 /* ColorTagTableViewCell.xib in Resources */,
+				11649FCF223533C30081ABA1 /* CheckTableViewCell.xib in Resources */,
 				11649FD5223533C30081ABA1 /* ButtonTableViewCell.xib in Resources */,
 				11649F32223502E00081ABA1 /* Main.storyboard in Resources */,
 				11649F30223502E00081ABA1 /* Assets.xcassets in Resources */,
@@ -394,6 +446,7 @@
 				11649FE522353E180081ABA1 /* Localizable.strings in Resources */,
 				11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */,
 				11649FD4223533C30081ABA1 /* TableViewHeaderView.xib in Resources */,
+				118798252236E681000A5E72 /* RangeTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,11 +459,13 @@
 			files = (
 				11649FDB223533C30081ABA1 /* ChartTableViewCell.swift in Sources */,
 				11649FD3223533C30081ABA1 /* TableViewHeaderView.swift in Sources */,
-				11649FD0223533C30081ABA1 /* ColorTagTableViewCell.swift in Sources */,
+				11649FD0223533C30081ABA1 /* CheckTableViewCell.swift in Sources */,
 				11649FEB223542B60081ABA1 /* TableViewStructure.swift in Sources */,
+				118798212236E667000A5E72 /* RangeTableViewCellModel.swift in Sources */,
 				11649FDE2235386C0081ABA1 /* Colors.swift in Sources */,
-				11649FD1223533C30081ABA1 /* ColorTagTableViewCellModel.swift in Sources */,
+				11649FD1223533C30081ABA1 /* CheckTableViewCellModel.swift in Sources */,
 				11649FD6223533C30081ABA1 /* ButtonTableViewCell.swift in Sources */,
+				1187981B2236CC4E000A5E72 /* ChartView.swift in Sources */,
 				11649FD9223533C30081ABA1 /* BaseTableViewCellModel.swift in Sources */,
 				11649FD2223533C30081ABA1 /* TableViewHeaderViewModel.swift in Sources */,
 				11AD865F2235A614003B150A /* NSObject+Theme.swift in Sources */,
@@ -421,6 +476,7 @@
 				11649FE222353DF10081ABA1 /* String+Localized.swift in Sources */,
 				10E86EEC223684220051F133 /* UITableView+Structure.swift in Sources */,
 				11649FDC223533C30081ABA1 /* ChartTableViewCellModel.swift in Sources */,
+				118798232236E677000A5E72 /* RangeTableViewCell.swift in Sources */,
 				11AD865B22359B2C003B150A /* ThemeManager.swift in Sources */,
 				11649F34223502E00081ABA1 /* AppDelegate.swift in Sources */,
 				11649FD8223533C30081ABA1 /* BaseTableViewCell.swift in Sources */,

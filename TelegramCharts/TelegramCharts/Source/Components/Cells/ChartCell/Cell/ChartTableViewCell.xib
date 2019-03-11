@@ -19,16 +19,22 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="206.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="chart" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="09l-ez-lvT">
-                        <rect key="frame" x="49" y="11" width="41" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IAP-OI-7Fg" customClass="ChartView" customModule="TelegramCharts" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="206.5"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="IAP-OI-7Fg" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="FPB-91-bPo"/>
+                    <constraint firstAttribute="trailing" secondItem="IAP-OI-7Fg" secondAttribute="trailing" id="bJ6-Hk-vtC"/>
+                    <constraint firstAttribute="bottom" secondItem="IAP-OI-7Fg" secondAttribute="bottom" id="iQT-aw-bdU"/>
+                    <constraint firstItem="IAP-OI-7Fg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="mCc-xB-MLm"/>
+                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="chartView" destination="IAP-OI-7Fg" id="2Ae-Bf-8oq"/>
+            </connections>
             <point key="canvasLocation" x="132.80000000000001" y="228.03598200899552"/>
         </tableViewCell>
     </objects>

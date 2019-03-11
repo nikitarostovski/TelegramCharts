@@ -13,11 +13,12 @@ class ChartTableViewCell: BaseTableViewCell {
     override class var cellHeight: CGFloat {
         return 273
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
+    @IBOutlet weak var chartView: ChartView!
+    
+    override func updateAppearance() {
+        super.updateAppearance()
+        guard let model = model as? ChartTableViewCellModel else { return }
+        chartView.charts = model.chartData
+    }
 }
