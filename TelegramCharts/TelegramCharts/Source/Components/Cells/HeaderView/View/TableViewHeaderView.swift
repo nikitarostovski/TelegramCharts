@@ -8,13 +8,8 @@
 
 import UIKit
 
-class TableViewHeaderView: UITableViewHeaderFooterView {
-    
-    var theme: Theme? {
-        didSet {
-            updateAppearance()
-        }
-    }
+class TableViewHeaderView: UITableViewHeaderFooterView, Stylable {
+
     static func reuseIdentifier() -> String {
         return String(describing: self)
     }
@@ -26,7 +21,16 @@ class TableViewHeaderView: UITableViewHeaderFooterView {
     
     @IBOutlet weak var bacKView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
-    
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        startReceivingThemeUpdates()
+    }
+
+    deinit {
+        stopReceivingThemeUpdates()
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         updateAppearance()
@@ -38,12 +42,14 @@ class TableViewHeaderView: UITableViewHeaderFooterView {
     }
     
     func updateAppearance() {
-        guard let theme = theme,
-            let model = model else {
+        guard let model = model else {
             return
         }
         titleLabel.text = model.titleText
-        titleLabel.textColor = theme.sectionTextColor
+    }
+
+    func themeDidUpdate(theme: Theme) {
         bacKView.backgroundColor = theme.viewBackgroundColor
+        titleLabel.textColor = theme.sectionTextColor
     }
 }

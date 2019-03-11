@@ -18,12 +18,8 @@ class ButtonTableViewCell: BaseTableViewCell {
     
     override func updateAppearance() {
         super.updateAppearance()
-        guard let theme = theme,
-            let model = model as? ButtonTableViewCellModel else {
-            return
-        }
+        guard let model = model as? ButtonTableViewCellModel else { return }
         button.setTitle(model.buttonTitle, for: .normal)
-        button.tintColor = theme.tintColor
     }
     
     @IBAction func buttonAction(_ sender: Any) {
@@ -31,5 +27,10 @@ class ButtonTableViewCell: BaseTableViewCell {
             return
         }
         model.buttonTouchUpInsideAction?()
+    }
+
+    override func themeDidUpdate(theme: Theme) {
+        super.themeDidUpdate(theme: theme)
+        button.tintColor = theme.tintColor
     }
 }

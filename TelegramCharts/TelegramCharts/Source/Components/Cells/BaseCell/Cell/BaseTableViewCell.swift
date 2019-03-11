@@ -8,13 +8,8 @@
 
 import UIKit
 
-class BaseTableViewCell: UITableViewCell {
-    
-    var theme: Theme? {
-        didSet {
-            updateAppearance()
-        }
-    }
+class BaseTableViewCell: UITableViewCell, Stylable {
+
     weak var model: BaseTableViewCellModel?
     
     class var cellHeight: CGFloat {
@@ -33,14 +28,19 @@ class BaseTableViewCell: UITableViewCell {
     }
     
     override func awakeFromNib() {
-        selectionStyle = .none
         super.awakeFromNib()
+        selectionStyle = .none
         topSeparatorLayer?.removeFromSuperlayer()
         topSeparatorLayer = CALayer()
         layer.addSublayer(topSeparatorLayer!)
         bottomSeparatorLayer?.removeFromSuperlayer()
         bottomSeparatorLayer = CALayer()
         layer.addSublayer(bottomSeparatorLayer!)
+        startReceivingThemeUpdates()
+    }
+
+    deinit {
+        stopReceivingThemeUpdates()
     }
     
     override func layoutSubviews() {
@@ -58,15 +58,8 @@ class BaseTableViewCell: UITableViewCell {
     }
     
     func updateAppearance() {
-        guard let theme = theme,
-            let model = model else {
-            return
-        }
-        backgroundColor = theme.cellBackgroundColor
-        
-        topSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
-        bottomSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
-        
+        guard let model = model else { return }
+
         topSeparatorLayer?.isHidden = model.topSeparatorStyle.isHidden
         bottomSeparatorLayer?.isHidden = model.bottomSeparatorStyle.isHidden
         
@@ -81,5 +74,13 @@ class BaseTableViewCell: UITableViewCell {
                                              y: frame.size.height - height,
                                              width: frame.size.width - bottomInset,
                                              height: height)
+    }
+
+    // MARK: - Stylable
+
+    func themeDidUpdate(theme: Theme) {
+        backgroundColor = theme.cellBackgroundColor
+        topSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
+        bottomSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
     }
 }

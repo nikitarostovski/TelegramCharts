@@ -32,10 +32,7 @@ class ColorTagTableViewCell: BaseTableViewCell {
     
     override func updateAppearance() {
         super.updateAppearance()
-        guard let theme = theme,
-            let model = model as? ColorTagTableViewCellModel else {
-                return
-        }
+        guard let model = model as? ColorTagTableViewCellModel else { return }
         highlightLayer.frame = bounds
         if model.hasCheckmark {
             accessoryType = .checkmark
@@ -44,9 +41,7 @@ class ColorTagTableViewCell: BaseTableViewCell {
         }
         model.topSeparatorStyle.inset = titleLabel.frame.origin.x
         model.bottomSeparatorStyle.inset = titleLabel.frame.origin.x
-        tintColor = theme.tintColor
         titleLabel.text = model.titleText
-        titleLabel.textColor = theme.cellTextColor
         tagView.backgroundColor = model.tagColor
     }
     
@@ -93,4 +88,14 @@ class ColorTagTableViewCell: BaseTableViewCell {
         highlightLayer.opacity = newOpacity
         highlightLayer.add(animation, forKey: "opacityOff")
     }
+
+    // MARK: - Stylable
+
+    override func themeDidUpdate(theme: Theme) {
+        super.themeDidUpdate(theme: theme)
+        tintColor = theme.tintColor
+        titleLabel.textColor = theme.cellTextColor
+    }
 }
+
+
