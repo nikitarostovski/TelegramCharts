@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		10E86EEC223684220051F133 /* UITableView+Structure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E86EEB223684220051F133 /* UITableView+Structure.swift */; };
+		1135E2252236F413005B9C0D /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1135E2242236F413005B9C0D /* RangeSlider.swift */; };
 		11649F30223502E00081ABA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11649F24223502E00081ABA1 /* Assets.xcassets */; };
 		11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F25223502E00081ABA1 /* LaunchScreen.storyboard */; };
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
@@ -44,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		10E86EEB223684220051F133 /* UITableView+Structure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Structure.swift"; sourceTree = "<group>"; };
+		1135E2242236F413005B9C0D /* RangeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 		11649F0E223502800081ABA1 /* TelegramCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TelegramCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11649F24223502E00081ABA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11649F26223502E00081ABA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 		1187981C2236E626000A5E72 /* RangeSlider */ = {
 			isa = PBXGroup;
 			children = (
+				1135E2242236F413005B9C0D /* RangeSlider.swift */,
 			);
 			path = RangeSlider;
 			sourceTree = "<group>";
@@ -478,6 +481,7 @@
 				11649FDC223533C30081ABA1 /* ChartTableViewCellModel.swift in Sources */,
 				118798232236E677000A5E72 /* ChartRangeTableViewCell.swift in Sources */,
 				11AD865B22359B2C003B150A /* ThemeManager.swift in Sources */,
+				1135E2252236F413005B9C0D /* RangeSlider.swift in Sources */,
 				11649F34223502E00081ABA1 /* AppDelegate.swift in Sources */,
 				11649FD8223533C30081ABA1 /* BaseTableViewCell.swift in Sources */,
 				11649FD7223533C30081ABA1 /* ButtonTableViewCellModel.swift in Sources */,
