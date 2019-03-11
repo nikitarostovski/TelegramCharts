@@ -12,7 +12,7 @@ typealias CellTapAction = () -> Void
 
 class ColorTagTableViewCellModel: BaseTableViewCellModel {
 
-    override class var cellIdentifier: String {
+    override var cellIdentifier: String {
         return ColorTagTableViewCell.cellIdentifier()
     }
     

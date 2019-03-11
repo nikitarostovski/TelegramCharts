@@ -20,10 +20,6 @@ class MainViewController: UITableViewController {
         tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
-        ChartTableViewCellModel.registerNib(for: tableView)
-        ColorTagTableViewCellModel.registerNib(for: tableView)
-        ButtonTableViewCellModel.registerNib(for: tableView)
-        TableViewHeaderViewModel.registerNib(for: tableView)
         createStructure()
     }
     
@@ -141,22 +137,15 @@ class MainViewController: UITableViewController {
 extension MainViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return structure.sections.count
+        return tableView.numberOfSections(in: structure)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return structure.sections[section].cellModels.count
+        return tableView.numberOfRows(in: structure, section: section)
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellModel = structure.cellModel(for: indexPath)
-        let identifier = type(of: cellModel).cellIdentifier
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
-        if let baseCell = cell as? BaseTableViewCell {
-            baseCell.setup(with: cellModel)
-            baseCell.theme = theme
-        }
-        return cell
+        return tableView.dequeueReusableCell(with: structure, indexPath: indexPath)
     }
 }
 
@@ -165,27 +154,14 @@ extension MainViewController {
 extension MainViewController {
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return TableViewHeaderViewModel.cellHeight
+        return tableView.heightForHeaderInSection(structure: structure, section: section)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return structure.cellModel(for: indexPath).cellHeight()
+        return tableView.heightForRow(structure: structure, indexPath: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard section >= 0 && section < structure.sections.count else {
-            return nil
-        }
-        let sectionModel = structure.sections[section]
-        guard let headerModel = sectionModel.headerModel else {
-            return nil
-        }
-        let identifier = type(of: headerModel).reuseIdentifier
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
-        if let headerView = view as? TableViewHeaderView {
-            headerView.setup(with: headerModel)
-            headerView.theme = theme
-        }
-        return view
+        return tableView.viewForHeader(structure: structure, section: section)
     }
 }

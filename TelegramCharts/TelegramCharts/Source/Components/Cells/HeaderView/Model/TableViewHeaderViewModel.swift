@@ -10,17 +10,12 @@ import UIKit
 
 class TableViewHeaderViewModel {
 
-    class var reuseIdentifier: String {
+    var reuseIdentifier: String {
         return TableViewHeaderView.reuseIdentifier()
     }
     
-    class var cellHeight: CGFloat {
+    var cellHeight: CGFloat {
         return TableViewHeaderView.cellHeight
-    }
-    
-    static func registerNib(for tableView: UITableView) {
-        tableView.register(UINib(nibName: reuseIdentifier, bundle: .main),
-                           forHeaderFooterViewReuseIdentifier: reuseIdentifier)
     }
     
     var titleText: String = ""

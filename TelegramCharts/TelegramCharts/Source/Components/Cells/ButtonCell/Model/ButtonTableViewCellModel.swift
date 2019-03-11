@@ -12,7 +12,7 @@ typealias ButtonTouchUpInsideAction = () -> Void
 
 class ButtonTableViewCellModel: BaseTableViewCellModel {
 
-    override class var cellIdentifier: String {
+    override var cellIdentifier: String {
         return ButtonTableViewCell.cellIdentifier()
     }
     

@@ -10,7 +10,7 @@ import UIKit
 
 class ChartTableViewCellModel: BaseTableViewCellModel {
 
-    override class var cellIdentifier: String {
+    override var cellIdentifier: String {
         return ChartTableViewCell.cellIdentifier()
     }
     

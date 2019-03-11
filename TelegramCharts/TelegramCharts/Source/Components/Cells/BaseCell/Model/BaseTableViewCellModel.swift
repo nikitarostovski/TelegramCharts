@@ -16,7 +16,7 @@ struct SeparatorStyle {
 
 class BaseTableViewCellModel {
     
-    class var cellIdentifier: String {
+    var cellIdentifier: String {
         return ""
     }
     
@@ -24,9 +24,6 @@ class BaseTableViewCellModel {
         return 0
     }
     
-    static func registerNib(for tableView: UITableView) {
-        tableView.register(UINib(nibName: cellIdentifier, bundle: .main), forCellReuseIdentifier: cellIdentifier)
-    }
     var topSeparatorStyle = SeparatorStyle()
     var bottomSeparatorStyle = SeparatorStyle()
 }
