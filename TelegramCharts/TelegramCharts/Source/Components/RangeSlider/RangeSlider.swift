@@ -40,6 +40,7 @@ class RangeSlider: UIControl {
     private var tintLayer = CAShapeLayer()
     private var unselectedTintColor: UIColor = UIColor.black.withAlphaComponent(0.9)
 
+    private var minValueDelta: CGFloat = 0
     private var previousLocation = CGPoint()
     private var touchResult = SliderThumbHitTestResult.none
 
@@ -88,6 +89,9 @@ class RangeSlider: UIControl {
         thumbView.leftBorder = thumbLeft
         thumbView.rightBorder = thumbRight
 
+        // TODO: think about minimum delta value
+        minValueDelta = 3 * thumbView.thumbWidth / thumbView.bounds.width
+        
         tintLayer.frame = bounds.inset(by: tintAreaInsets)
         drawTint()
     }
@@ -125,12 +129,24 @@ extension RangeSlider {
         let deltaValue = (maximumValue - minimumValue) * deltaLocation / bounds.width
         previousLocation = location
 
-        if touchResult == .left || touchResult == .center {
-            lowerValue += deltaValue
+        switch touchResult {
+        case .none:
+            break
+        case .left:
+            lowerValue = min(max(minimumValue, lowerValue + deltaValue), upperValue - minValueDelta)
+        case .right:
+            upperValue = max(min(maximumValue, upperValue + deltaValue), lowerValue + minValueDelta)
+        case .center:
+            var newDelta: CGFloat = deltaValue
+            if lowerValue + deltaValue < minimumValue {
+                newDelta = minimumValue - lowerValue
+            } else if upperValue + deltaValue > maximumValue {
+                newDelta = maximumValue - upperValue
+            }
+            lowerValue += newDelta
+            upperValue += newDelta
         }
-        if touchResult == .right || touchResult == .center {
-            upperValue += deltaValue
-        }
+        
         return true
     }
 

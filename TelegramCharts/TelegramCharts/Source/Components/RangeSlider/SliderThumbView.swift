@@ -28,10 +28,10 @@ class SliderThumbView: UIView {
         }
     }
 
+    let thumbWidth: CGFloat = 11.0
+    
     private let thumbTouchWidth: CGFloat = 44.0
-
-    private let thumbWidth: CGFloat = 11.0
-    private let cornerRadius: CGFloat = 4.0
+    private let cornerRadius: CGFloat = 2.0
     private let borderThickness: CGFloat = 1.0
     private let arrowWidth: CGFloat = 4.0
     private let arrowHeight: CGFloat = 11.0
