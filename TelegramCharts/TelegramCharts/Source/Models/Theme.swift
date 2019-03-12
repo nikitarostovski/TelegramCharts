@@ -92,4 +92,31 @@ enum Theme: Int {
             return Colors.mediumBlue
         }
     }
+    
+    var sliderThumbColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.mediumGrayBlue.withAlphaComponent(0.90)
+        case .night:
+            return Colors.grayBlue.withAlphaComponent(0.90)
+        }
+    }
+    
+    var sliderTintColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.lightGrayBlue.withAlphaComponent(0.75)
+        case .night:
+            return Colors.darkGrayBlue.withAlphaComponent(0.75)
+        }
+    }
+    
+    var sliderThumbArrowColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.white
+        case .night:
+            return Colors.white
+        }
+    }
 }

@@ -32,7 +32,8 @@ class RangeSlider: UIControl {
     }
 
     private var thumbView: SliderThumbView!
-    private var tintLayer: CAShapeLayer!
+    private var tintLayer = CAShapeLayer()
+    private var unselectedTintColor: UIColor = UIColor.black.withAlphaComponent(0.9)
 
     private var previousLocation = CGPoint()
     private var touchResult = SliderThumbHitTestResult.none
@@ -53,17 +54,22 @@ class RangeSlider: UIControl {
         super.layoutSubviews()
         updateLayout()
     }
+    
+    deinit {
+        stopReceivingThemeUpdates()
+    }
 
     // MARK: - Setup
 
     private func initialSetup() {
-        backgroundColor = UIColor.cyan.withAlphaComponent(0.5)
+        backgroundColor = .clear
 
         thumbView = SliderThumbView(frame: .zero)
         addSubview(thumbView)
 
-        tintLayer = CAShapeLayer()
         layer.addSublayer(tintLayer)
+        
+        startReceivingThemeUpdates()
     }
 
     // MARK: - Layout
@@ -76,16 +82,22 @@ class RangeSlider: UIControl {
         thumbView.leftBorder = thumbLeft
         thumbView.rightBorder = thumbRight
 
+        tintLayer.frame = bounds
         drawTint()
     }
 
     private func drawTint() {
+        let hollowRect = CGRect(x: thumbView.leftBorder,
+                                y: 0,
+                                width: thumbView.rightBorder - thumbView.leftBorder,
+                                height: bounds.height)
+        
         let path = UIBezierPath(rect: bounds)
-        let hollowPath = UIBezierPath(rect: thumbView.frame)
+        let hollowPath = UIBezierPath(rect: hollowRect)
         path.append(hollowPath)
         path.usesEvenOddFillRule = true
 
-        tintLayer.fillColor = UIColor.black.withAlphaComponent(0.25).cgColor
+        tintLayer.fillColor = unselectedTintColor.cgColor
         tintLayer.fillRule = .evenOdd
         tintLayer.path = path.cgPath
     }
@@ -118,5 +130,15 @@ extension RangeSlider {
 
     override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
         touchResult = .none
+    }
+}
+
+// MARK: - Themes
+
+extension RangeSlider: Stylable {
+    
+    func themeDidUpdate(theme: Theme) {
+        unselectedTintColor = theme.sliderTintColor
+        drawTint()
     }
 }
