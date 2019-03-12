@@ -30,6 +30,11 @@ class RangeSlider: UIControl {
             updateLayout()
         }
     }
+    var tintAreaInsets: UIEdgeInsets = .zero {
+        didSet {
+            updateLayout()
+        }
+    }
 
     private var thumbView: SliderThumbView!
     private var tintLayer = CAShapeLayer()
@@ -67,6 +72,7 @@ class RangeSlider: UIControl {
         thumbView = SliderThumbView(frame: .zero)
         addSubview(thumbView)
 
+        tintLayer.masksToBounds = true
         layer.addSublayer(tintLayer)
         
         startReceivingThemeUpdates()
@@ -82,7 +88,7 @@ class RangeSlider: UIControl {
         thumbView.leftBorder = thumbLeft
         thumbView.rightBorder = thumbRight
 
-        tintLayer.frame = bounds
+        tintLayer.frame = bounds.inset(by: tintAreaInsets)
         drawTint()
     }
 

@@ -78,8 +78,12 @@ class SliderThumbView: UIView {
     private func initialSetup() {
         backgroundColor = .clear
         isUserInteractionEnabled = false
+        
+        thumbLayer.masksToBounds = true
+        arrowsLayer.masksToBounds = true
         layer.addSublayer(thumbLayer)
         layer.addSublayer(arrowsLayer)
+        
         startReceivingThemeUpdates()
     }
 
@@ -95,6 +99,8 @@ class SliderThumbView: UIView {
     // MARK: - Draw
 
     private func redrawLayers() {
+        thumbLayer.frame = bounds
+        arrowsLayer.frame = bounds
         drawThumb()
         drawArrows()
     }
