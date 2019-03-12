@@ -32,6 +32,7 @@ class RangeSlider: UIControl {
     }
 
     private var thumbView: SliderThumbView!
+    private var tintLayer: CAShapeLayer!
 
     private var previousLocation = CGPoint()
     private var touchResult = SliderThumbHitTestResult.none
@@ -60,14 +61,33 @@ class RangeSlider: UIControl {
 
         thumbView = SliderThumbView(frame: .zero)
         addSubview(thumbView)
+
+        tintLayer = CAShapeLayer()
+        layer.addSublayer(tintLayer)
     }
 
     // MARK: - Layout
     
     private func updateLayout() {
-        let thumbX = lowerValue * bounds.width
-        let thumbWidth = (upperValue - lowerValue) * bounds.width
-        thumbView.frame = CGRect(x: thumbX, y: 0, width: thumbWidth, height: bounds.height)
+        thumbView.frame = bounds
+
+        let thumbLeft = lowerValue * thumbView.bounds.width
+        let thumbRight = upperValue * thumbView.bounds.width
+        thumbView.leftBorder = thumbLeft
+        thumbView.rightBorder = thumbRight
+
+        drawTint()
+    }
+
+    private func drawTint() {
+        let path = UIBezierPath(rect: bounds)
+        let hollowPath = UIBezierPath(rect: thumbView.frame)
+        path.append(hollowPath)
+        path.usesEvenOddFillRule = true
+
+        tintLayer.fillColor = UIColor.black.withAlphaComponent(0.25).cgColor
+        tintLayer.fillRule = .evenOdd
+        tintLayer.path = path.cgPath
     }
 }
 
