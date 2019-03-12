@@ -19,6 +19,7 @@ class ChartRangeTableViewCell: BaseTableViewCell {
             chartView.lineWidth = 1.0
         }
     }
+    @IBOutlet weak var rangeSlider: RangeSlider!
     
     override func updateAppearance() {
         super.updateAppearance()

@@ -23,17 +23,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="91.5"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vVr-tf-Wj9" customClass="RangeSlider" customModule="TelegramCharts" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="91.5"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="vVr-tf-Wj9" secondAttribute="bottom" id="3DN-2W-b8d"/>
+                    <constraint firstAttribute="trailing" secondItem="vVr-tf-Wj9" secondAttribute="trailing" id="BTQ-8r-1GS"/>
                     <constraint firstAttribute="bottom" secondItem="kMr-Ps-opD" secondAttribute="bottom" id="E97-LR-OEY"/>
                     <constraint firstAttribute="trailing" secondItem="kMr-Ps-opD" secondAttribute="trailing" id="Lzu-Ti-Jgh"/>
                     <constraint firstItem="kMr-Ps-opD" firstAttribute="top" secondItem="vxH-IC-5wj" secondAttribute="top" id="Te0-DD-uYl"/>
+                    <constraint firstItem="vVr-tf-Wj9" firstAttribute="top" secondItem="vxH-IC-5wj" secondAttribute="top" id="Xxg-0x-lhC"/>
+                    <constraint firstItem="vVr-tf-Wj9" firstAttribute="leading" secondItem="vxH-IC-5wj" secondAttribute="leading" id="eIC-bJ-6d7"/>
                     <constraint firstItem="kMr-Ps-opD" firstAttribute="leading" secondItem="vxH-IC-5wj" secondAttribute="leading" id="hu3-T6-Liw"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="Lke-nw-xCm"/>
             <connections>
                 <outlet property="chartView" destination="kMr-Ps-opD" id="gck-CP-Cvi"/>
+                <outlet property="rangeSlider" destination="vVr-tf-Wj9" id="4cW-BQ-TDZ"/>
             </connections>
             <point key="canvasLocation" x="64" y="66"/>
         </tableViewCell>
