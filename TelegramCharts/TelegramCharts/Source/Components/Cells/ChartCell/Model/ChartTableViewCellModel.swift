@@ -18,6 +18,6 @@ class ChartTableViewCellModel: BaseTableViewCellModel {
         return ChartTableViewCell.cellHeight
     }
     
-    var chartData = [ChartData]()
+    var chartsData = ChartsData()
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1
 }

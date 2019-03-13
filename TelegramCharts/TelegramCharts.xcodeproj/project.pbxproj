@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1074DA362237E41B006C1D51 /* SliderThumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1074DA352237E41B006C1D51 /* SliderThumbView.swift */; };
+		1074DA38223913B6006C1D51 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1074DA37223913B6006C1D51 /* chart_data.json */; };
 		10E86EEC223684220051F133 /* UITableView+Structure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E86EEB223684220051F133 /* UITableView+Structure.swift */; };
 		1135E2252236F413005B9C0D /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1135E2242236F413005B9C0D /* RangeSlider.swift */; };
 		11649F30223502E00081ABA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11649F24223502E00081ABA1 /* Assets.xcassets */; };
@@ -46,6 +47,7 @@
 
 /* Begin PBXFileReference section */
 		1074DA352237E41B006C1D51 /* SliderThumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderThumbView.swift; sourceTree = "<group>"; };
+		1074DA37223913B6006C1D51 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data.json; sourceTree = "<group>"; };
 		10E86EEB223684220051F133 /* UITableView+Structure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Structure.swift"; sourceTree = "<group>"; };
 		1135E2242236F413005B9C0D /* RangeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 		11649F0E223502800081ABA1 /* TelegramCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TelegramCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +130,7 @@
 				11649F27223502E00081ABA1 /* Main.storyboard */,
 				11649F29223502E00081ABA1 /* Info.plist */,
 				11649FE722353E180081ABA1 /* Localizable.strings */,
+				1074DA37223913B6006C1D51 /* chart_data.json */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1074DA38223913B6006C1D51 /* chart_data.json in Resources */,
 				11649FCF223533C30081ABA1 /* CheckTableViewCell.xib in Resources */,
 				11649FD5223533C30081ABA1 /* ButtonTableViewCell.xib in Resources */,
 				11649F32223502E00081ABA1 /* Main.storyboard in Resources */,

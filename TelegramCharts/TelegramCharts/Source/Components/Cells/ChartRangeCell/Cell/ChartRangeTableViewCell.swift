@@ -28,7 +28,7 @@ class ChartRangeTableViewCell: BaseTableViewCell {
     override func updateAppearance() {
         super.updateAppearance()
         guard let model = model as? ChartRangeTableViewCellModel else { return }
-        chartView.charts = model.chartData
+        chartView.charts = model.chartsData
         
         let insetTop = chartView.frame.minY - rangeSlider.frame.minY
         let insetBottom = rangeSlider.frame.maxY - chartView.frame.maxY

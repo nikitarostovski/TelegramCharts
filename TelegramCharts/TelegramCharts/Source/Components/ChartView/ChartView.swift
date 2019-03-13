@@ -10,14 +10,19 @@ import UIKit
 
 // TODO: shorten thousands to *k and so on
 
-struct ChartData {
+struct ChartsData {
+    var dates = [Date]()
+    var lines = [LineData]()
+}
+
+struct LineData {
     var values: [Int64]
     var color: UIColor
 }
 
 class ChartView: UIView, Stylable {
-    
-    var charts = [ChartData]() {
+
+    var charts = ChartsData() {
         didSet {
             setupView()
             redraw()
@@ -69,73 +74,107 @@ class ChartView: UIView, Stylable {
     private func setupView() {
         chartLayers.forEach { $0.removeFromSuperlayer() }
         chartLayers = [CAShapeLayer]()
-        charts.forEach { [weak self] (chart) in
+        charts.lines.forEach { [weak self] (line) in
             let layer = CAShapeLayer()
             layer.lineWidth = lineWidth
             layer.lineJoin = .round
             layer.lineCap = .round
             layer.fillColor = UIColor.clear.cgColor
-            layer.strokeColor = chart.color.cgColor
+            layer.strokeColor = line.color.cgColor
             self?.chartLayers.append(layer)
             self?.layer.addSublayer(layer)
         }
     }
-    
-    // TODO: split to recalc and redraw funcs
+
     private func redraw() {
-        for chartIndex in 0 ..< charts.count {
-            let chart = charts[chartIndex]
-            
-            let startPosition = CGFloat(chart.values.count - 1) * CGFloat(visibleRange.lowerBound)
-            let endPosition = CGFloat(chart.values.count - 1) * CGFloat(visibleRange.upperBound)
-            
-            var startIndex: Int?
-            var endIndex: Int?
-            
-            var viewPositions = [CGFloat]()
-            for i in 0 ..< chart.values.count {
-                let newPos = (CGFloat(i) - startPosition) / (endPosition - startPosition) * self.frame.size.width
-                viewPositions.append(newPos)
-                
-                if newPos < 0 {
-                    startIndex = i
+        let chartViewData = viewCharts
+
+        for lineIndex in 0 ..< chartViewData.lines.count {
+            let line = chartViewData.lines[lineIndex]
+
+            let linePath = UIBezierPath()
+            var isFirst = true
+            for valueIndex in 0 ..< line.values.count {
+                let value = line.values[valueIndex]
+                guard value.xPos >= 0 && value.xPos <= 1 else {
+                    continue
                 }
-                if newPos > self.frame.size.width && endIndex == nil {
-                    endIndex = i
-                }
-            }
-            
-            if startIndex == nil {
-                startIndex = 0
-            }
-            if endIndex == nil {
-                endIndex = chart.values.count - 1
-            }
-            
-            var maxY: Int64 = 0
-            for i in startIndex! ... endIndex! {
-                maxY = max(maxY, chart.values[i])
-            }
-            
-            let path = UIBezierPath()
-            for i in startIndex! ..< endIndex! {
-                let viewX = viewPositions[i]
-                let viewY = self.frame.size.height - CGFloat(chart.values[i]) * self.frame.size.height / CGFloat(maxY)
-                let point = CGPoint(x: viewX, y: viewY)
-                
-                if i == 0 {
-                    path.move(to: point)
+                let posX = value.xPos * bounds.width
+                let posY = value.yPos * bounds.height
+                let point = CGPoint(x: posX, y: posY)
+                if isFirst {
+                    linePath.move(to: point)
+                    isFirst = false
                 } else {
-                    path.addLine(to: point)
+                    linePath.addLine(to: point)
                 }
             }
-            
-            let layer = chartLayers[chartIndex]
-            layer.path = path.cgPath
+            let layer = chartLayers[lineIndex]
+            layer.path = linePath.cgPath
         }
     }
     
     func themeDidUpdate(theme: Theme) {
         backgroundColor = theme.cellBackgroundColor
+    }
+}
+
+// MARK: - dynamic calculations
+
+extension ChartView {
+
+    private struct ChartsViewData {
+        var dates = [DateViewData]()
+        var lines = [LineViewData]()
+    }
+
+    private struct LineViewData {
+        var values: [ValueViewData]
+        var color: UIColor
+    }
+
+    private struct ValueViewData {
+        var value: Int64
+        var xPos: CGFloat
+        var yPos: CGFloat
+    }
+
+    private struct DateViewData {
+        var value: Date
+        var xPos: CGFloat
+    }
+
+    private var viewCharts: ChartsViewData {
+        let scale = (visibleRange.upperBound - visibleRange.lowerBound) / CGFloat(charts.dates.count)
+
+        var dates = [DateViewData]()
+        for i in 0 ..< charts.dates.count {
+            let xPos: CGFloat = CGFloat(i) * scale - visibleRange.lowerBound
+            let dateViewData = DateViewData(value: charts.dates[i], xPos: xPos)
+            dates.append(dateViewData)
+        }
+
+        var lines = [LineViewData]()
+        charts.lines.forEach {
+            var values = [ValueViewData]()
+            var maxVisibleValue: Int64 = 0
+            for i in 0 ..< $0.values.count {
+                let normX = CGFloat(i) / CGFloat($0.values.count)
+                let xPos: CGFloat = (normX - visibleRange.lowerBound) / (visibleRange.upperBound - visibleRange.lowerBound)
+                let valueViewData = ValueViewData(value: $0.values[i], xPos: xPos, yPos: 0)
+                values.append(valueViewData)
+            }
+            values.forEach {
+                guard $0.xPos >= 0 && $0.xPos <= 1 else { return }
+                maxVisibleValue = max(maxVisibleValue, $0.value)
+            }
+            values = values.map {
+                let yPos = CGFloat($0.value) / CGFloat(maxVisibleValue)
+                return ValueViewData(value: $0.value, xPos: $0.xPos, yPos: yPos)
+            }
+            let lineViewData = LineViewData(values: values, color: $0.color)
+            lines.append(lineViewData)
+        }
+        return ChartsViewData(dates: dates, lines: lines)
     }
 }

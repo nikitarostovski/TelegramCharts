@@ -23,7 +23,7 @@ class ChartTableViewCell: BaseTableViewCell {
     override func updateAppearance() {
         super.updateAppearance()
         guard let model = model as? ChartTableViewCellModel else { return }
-        chartView.charts = model.chartData
+        chartView.charts = model.chartsData
         chartView.visibleRange = model.visibleRange
     }
 }
