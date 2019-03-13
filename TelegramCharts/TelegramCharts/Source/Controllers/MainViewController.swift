@@ -56,6 +56,9 @@ class MainViewController: UITableViewController {
     private var chartRangeCellModel: ChartRangeTableViewCellModel {
         let model = ChartRangeTableViewCellModel()
         model.chartData = chartData
+        model.rangeChangeAction = { [weak self] range in
+            self?.chartRangeChange(range: range)
+        }
         return model
     }
     private var joinedCellModel: CheckTableViewCellModel {
@@ -117,6 +120,24 @@ class MainViewController: UITableViewController {
     }
     
     // MARK: - Actions
+
+    private func chartRangeChange(range: ClosedRange<CGFloat>) {
+        var chartCellModels = [ChartTableViewCellModel]()
+        structure.sections.forEach { section in
+            section.cellModels.forEach { model in
+                if model is ChartTableViewCellModel {
+                    chartCellModels.append(model as! ChartTableViewCellModel)
+                }
+            }
+        }
+        chartCellModels.forEach {
+            $0.visibleRange = range
+        }
+        tableView.visibleCells.forEach {
+            guard let chartCell = $0 as? ChartTableViewCell else { return }
+            chartCell.updateAppearance()
+        }
+    }
     
     private func setDayTheme() {
         ThemeManager.shared.currentTheme = .day

@@ -8,25 +8,35 @@
 
 import UIKit
 
+protocol RangeSliderDelegate {
+    func rangeDidChange(sender: RangeSlider)
+}
+
 class RangeSlider: UIControl {
-    
+
+    var delegate: RangeSliderDelegate?
+
     var minimumValue: CGFloat = 0 {
         didSet {
+            delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }
     var maximumValue: CGFloat = 1 {
         didSet {
+            delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }
     var lowerValue: CGFloat = 0.2 {
         didSet {
+            delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }
     var upperValue: CGFloat = 0.8 {
         didSet {
+            delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }

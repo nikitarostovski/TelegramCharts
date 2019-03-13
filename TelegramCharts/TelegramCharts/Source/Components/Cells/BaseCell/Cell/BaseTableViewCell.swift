@@ -8,6 +8,7 @@
 
 import UIKit
 
+// TODO: remove "TableView" from cell names
 class BaseTableViewCell: UITableViewCell, Stylable {
 
     weak var model: BaseTableViewCellModel?

@@ -23,7 +23,7 @@ class ChartView: UIView, Stylable {
             redraw()
         }
     }
-    var visibleRange = 0.0...1.0 {
+    var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
             redraw()
         }

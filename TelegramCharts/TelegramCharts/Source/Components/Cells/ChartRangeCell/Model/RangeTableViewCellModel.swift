@@ -8,6 +8,8 @@
 
 import UIKit
 
+typealias RangeChangeAction = (ClosedRange<CGFloat>) -> Void
+
 class ChartRangeTableViewCellModel: BaseTableViewCellModel {
     
     override var cellIdentifier: String {
@@ -19,4 +21,5 @@ class ChartRangeTableViewCellModel: BaseTableViewCellModel {
     }
     
     var chartData = [ChartData]()
+    var rangeChangeAction: RangeChangeAction?
 }

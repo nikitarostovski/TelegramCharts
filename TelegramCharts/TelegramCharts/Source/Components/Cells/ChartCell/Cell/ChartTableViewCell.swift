@@ -24,5 +24,6 @@ class ChartTableViewCell: BaseTableViewCell {
         super.updateAppearance()
         guard let model = model as? ChartTableViewCellModel else { return }
         chartView.charts = model.chartData
+        chartView.visibleRange = model.visibleRange
     }
 }

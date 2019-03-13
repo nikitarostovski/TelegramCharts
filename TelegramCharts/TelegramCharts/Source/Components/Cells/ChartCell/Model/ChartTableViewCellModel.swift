@@ -19,4 +19,5 @@ class ChartTableViewCellModel: BaseTableViewCellModel {
     }
     
     var chartData = [ChartData]()
+    var visibleRange: ClosedRange<CGFloat> = 0 ... 1
 }
