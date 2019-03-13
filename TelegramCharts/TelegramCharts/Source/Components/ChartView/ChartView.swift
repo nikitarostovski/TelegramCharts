@@ -20,6 +20,19 @@ struct LineData {
     var color: UIColor
 }
 
+class ChartLineLayer: CAShapeLayer {
+
+    override func action(forKey event: String) -> CAAction? {
+        guard event == "path" else {
+            return super.action(forKey: event)
+        }
+        let animation = CABasicAnimation(keyPath: event)
+        animation.duration = CATransaction.animationDuration()
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        return animation
+    }
+}
+
 class ChartView: UIView, Stylable {
 
     var charts = ChartsData() {
@@ -43,7 +56,7 @@ class ChartView: UIView, Stylable {
         }
     }
     
-    private var chartLayers = [CAShapeLayer]()
+    private var chartLayers = [ChartLineLayer]()
     
     // MARK: - Lifecycle
     
@@ -70,19 +83,26 @@ class ChartView: UIView, Stylable {
     }
     
     // MARK: - Private
-    
+
     private func setupView() {
         chartLayers.forEach { $0.removeFromSuperlayer() }
-        chartLayers = [CAShapeLayer]()
-        charts.lines.forEach { [weak self] (line) in
-            let layer = CAShapeLayer()
-            layer.lineWidth = lineWidth
-            layer.lineJoin = .round
-            layer.lineCap = .round
-            layer.fillColor = UIColor.clear.cgColor
-            layer.strokeColor = line.color.cgColor
-            self?.chartLayers.append(layer)
-            self?.layer.addSublayer(layer)
+        chartLayers = [ChartLineLayer]()
+        charts.lines.forEach { [weak self] line in
+            var isFirst = true
+            line.values.forEach { value in
+                guard !isFirst else {
+                    isFirst = false
+                    return
+                }
+                let layer = ChartLineLayer()
+                layer.lineWidth = lineWidth
+                layer.lineJoin = .round
+                layer.lineCap = .round
+                layer.fillColor = UIColor.clear.cgColor
+                layer.strokeColor = line.color.cgColor
+                self?.chartLayers.append(layer)
+                self?.layer.addSublayer(layer)
+            }
         }
     }
 
@@ -92,25 +112,33 @@ class ChartView: UIView, Stylable {
         for lineIndex in 0 ..< chartViewData.lines.count {
             let line = chartViewData.lines[lineIndex]
 
-            let linePath = UIBezierPath()
-            var isFirst = true
+            var lastPoint = CGPoint.zero
             for valueIndex in 0 ..< line.values.count {
                 let value = line.values[valueIndex]
-                guard value.xPos >= 0 && value.xPos <= 1 else {
-                    continue
-                }
                 let posX = value.xPos * bounds.width
                 let posY = value.yPos * bounds.height
                 let point = CGPoint(x: posX, y: posY)
-                if isFirst {
-                    linePath.move(to: point)
-                    isFirst = false
-                } else {
-                    linePath.addLine(to: point)
+
+                if valueIndex == 0 {
+                    lastPoint = point
+                    continue
                 }
+
+                let linePath = UIBezierPath()
+                linePath.move(to: lastPoint)
+                linePath.addLine(to: point)
+
+                let layer = chartLayers[lineIndex * (line.values.count - 1) + valueIndex - 1]
+
+                let animation = CABasicAnimation(keyPath: "path")
+                animation.duration = 0.5
+                animation.toValue = linePath.cgPath
+
+                layer.path = linePath.cgPath
+                layer.add(animation, forKey: "pathAnimation")
+
+                lastPoint = point
             }
-            let layer = chartLayers[lineIndex]
-            layer.path = linePath.cgPath
         }
     }
     
