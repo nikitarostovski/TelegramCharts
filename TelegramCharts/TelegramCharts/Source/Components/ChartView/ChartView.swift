@@ -60,6 +60,7 @@ class ChartView: UIView, Stylable {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        layer.masksToBounds = true
         redraw()
     }
     
