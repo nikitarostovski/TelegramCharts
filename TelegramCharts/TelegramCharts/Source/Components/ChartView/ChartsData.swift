@@ -50,7 +50,7 @@ class ChartsData {
                 let newX = value.newNormalizedX
                 let oldY = value.oldNormalizedY
                 let newY = value.newNormalizedY
-                value.currentNormalizedX = newX//oldX + (newX - oldX) * phase
+                value.currentNormalizedX = oldX + (newX - oldX) * phase
                 value.currentNormalizedY = oldY + (newY - oldY) * phase
             }
         }

@@ -33,15 +33,19 @@ class ChartRangeTableViewCell: BaseTableViewCell {
         let insetTop = chartView.frame.minY - rangeSlider.frame.minY
         let insetBottom = rangeSlider.frame.maxY - chartView.frame.maxY
         rangeSlider.tintAreaInsets = UIEdgeInsets(top: insetTop, left: 0, bottom: insetBottom, right: 0)
+        rangeSlider.lowerValue = model.initialRange?.lowerBound ?? 0
+        rangeSlider.upperValue = model.initialRange?.upperBound ?? 1
     }
 }
 
 extension ChartRangeTableViewCell: RangeSliderDelegate {
 
     func rangeDidChange(sender: RangeSlider) {
-        guard let model = model as? ChartRangeTableViewCellModel else {
+        guard let model = model as? ChartRangeTableViewCellModel,
+            let low = sender.lowerValue,
+            let up = sender.upperValue else {
             return
         }
-        model.rangeChangeAction?(sender.lowerValue ... sender.upperValue)
+        model.rangeChangeAction?(low ... up)
     }
 }

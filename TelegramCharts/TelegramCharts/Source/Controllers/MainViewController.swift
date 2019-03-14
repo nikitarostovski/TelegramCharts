@@ -390,6 +390,7 @@ class MainViewController: UITableViewController {
     private var chartRangeCellModel: ChartRangeTableViewCellModel {
         let model = ChartRangeTableViewCellModel()
         model.chartsData = chartsData
+        model.initialRange = 0.75 ... 1.0
         model.rangeChangeAction = { [weak self] range in
             self?.chartRangeChange(range: range)
         }

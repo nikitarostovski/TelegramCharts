@@ -22,4 +22,5 @@ class ChartRangeTableViewCellModel: BaseTableViewCellModel {
     
     var chartsData = ChartsData()
     var rangeChangeAction: RangeChangeAction?
+    var initialRange: ClosedRange<CGFloat>?
 }

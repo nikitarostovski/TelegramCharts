@@ -28,13 +28,13 @@ class RangeSlider: UIControl {
             updateLayout()
         }
     }
-    var lowerValue: CGFloat = 0.2 {
+    var lowerValue: CGFloat? {
         didSet {
             delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }
-    var upperValue: CGFloat = 0.8 {
+    var upperValue: CGFloat? {
         didSet {
             delegate?.rangeDidChange(sender: self)
             updateLayout()
@@ -93,6 +93,10 @@ class RangeSlider: UIControl {
     
     private func updateLayout() {
         thumbView.frame = bounds
+        guard let lowerValue = lowerValue,
+            let upperValue = upperValue else {
+                return
+        }
 
         let thumbLeft = lowerValue * thumbView.bounds.width
         let thumbRight = upperValue * thumbView.bounds.width
@@ -133,6 +137,11 @@ extension RangeSlider {
     }
 
     override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        guard let lowerValue = lowerValue,
+            let upperValue = upperValue else {
+                return false
+        }
+        
         let location = touch.location(in: thumbView)
         let deltaLocation = location.x - previousLocation.x
         let deltaValue = (maximumValue - minimumValue) * deltaLocation / bounds.width
@@ -142,9 +151,9 @@ extension RangeSlider {
         case .none:
             break
         case .left:
-            lowerValue = min(max(minimumValue, lowerValue + deltaValue), upperValue - minValueDelta)
+            self.lowerValue = min(max(minimumValue, lowerValue + deltaValue), upperValue - minValueDelta)
         case .right:
-            upperValue = max(min(maximumValue, upperValue + deltaValue), lowerValue + minValueDelta)
+            self.upperValue = max(min(maximumValue, upperValue + deltaValue), lowerValue + minValueDelta)
         case .center:
             var newDelta: CGFloat = deltaValue
             if lowerValue + deltaValue < minimumValue {
@@ -152,8 +161,8 @@ extension RangeSlider {
             } else if upperValue + deltaValue > maximumValue {
                 newDelta = maximumValue - upperValue
             }
-            lowerValue += newDelta
-            upperValue += newDelta
+            self.lowerValue! += newDelta
+            self.upperValue! += newDelta
         }
         
         return true
