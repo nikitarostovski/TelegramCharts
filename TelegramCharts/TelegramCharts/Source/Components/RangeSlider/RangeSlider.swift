@@ -99,7 +99,6 @@ class RangeSlider: UIControl {
         thumbView.leftBorder = thumbLeft
         thumbView.rightBorder = thumbRight
 
-        // TODO: think about minimum delta value
         minValueDelta = 3 * thumbView.thumbWidth / thumbView.bounds.width
         
         tintLayer.frame = bounds.inset(by: tintAreaInsets)

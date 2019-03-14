@@ -8,8 +8,6 @@
 
 import UIKit
 
-// TODO: shorten thousands to *k and so on
-
 struct ChartsData {
     var dates = [Date]()
     var lines = [LineData]()

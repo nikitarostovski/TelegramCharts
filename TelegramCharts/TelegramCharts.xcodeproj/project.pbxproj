@@ -47,6 +47,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		106DC316223A3E1F00D6D6C2 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		1074DA37223913B6006C1D51 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data.json; sourceTree = "<group>"; };
 		115440E922397C0C00795743 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		115440EB22397C0C00795743 /* String+Localized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
@@ -389,6 +390,7 @@
 		11649F10223502800081ABA1 /* TelegramCharts */ = {
 			isa = PBXGroup;
 			children = (
+				106DC316223A3E1F00D6D6C2 /* TODO.md */,
 				11649F23223502E00081ABA1 /* Resource */,
 				115440E722397C0C00795743 /* Source */,
 			);
