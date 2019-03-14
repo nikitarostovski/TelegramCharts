@@ -28,12 +28,15 @@ class Animator {
                  easing: AnimationEasingType? = nil,
                  update: AnimationUpdateHandler?,
                  finish: AnimationFinishHandler?) {
-        
+
+        updateHandler = update
+        finishHandler = finish
         easingFunction = easingFunction(type: easing ?? .linear)
         startTime = CACurrentMediaTime()
         finishTime = startTime + duration
         finishAnimation()
         displayLink = CADisplayLink(target: self, selector: #selector(displayLinkFire))
+        displayLink!.add(to: .main, forMode: .common)
     }
     
     func finishAnimation() {
@@ -42,16 +45,17 @@ class Animator {
         displayLink.remove(from: .main, forMode: .common)
         self.displayLink = nil
         
-        if phase != 1 {
+        /*if phase != 1 {
             phase = 1
             updateHandler?(phase)
-        }
+        }*/
         finishHandler?()
     }
     
     @objc private func displayLinkFire() {
         let currentTime: TimeInterval = CACurrentMediaTime()
         updatePhase(currentTime: currentTime)
+        updateHandler?(phase)
         
         if currentTime >= finishTime {
             finishAnimation()

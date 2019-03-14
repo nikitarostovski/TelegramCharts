@@ -8,52 +8,30 @@
 
 import UIKit
 
-struct ChartsData {
-    var dates = [Date]()
-    var lines = [LineData]()
-}
-
-struct LineData {
-    var values: [Int64]
-    var color: UIColor
-}
-
-class ChartLineLayer: CAShapeLayer {
-
-    override func action(forKey event: String) -> CAAction? {
-        guard event == "path" else {
-            return super.action(forKey: event)
-        }
-        let animation = CABasicAnimation(keyPath: event)
-        animation.duration = CATransaction.animationDuration()
-        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        return animation
-    }
-}
-
-class ChartView: UIView, Stylable {
+class ChartView: UIView {
 
     var charts = ChartsData() {
         didSet {
-            preCalculatedNormalizedCharts = nil
-            setNeedsDisplay()
+            charts.normalize(range: visibleRange)
+            update()
         }
     }
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
-            preCalculatedNormalizedCharts = nil
-            setNeedsDisplay()
+            charts.normalize(range: visibleRange)
+            update()
         }
     }
     
     var lineWidth: CGFloat = 4.0 {
         didSet {
-            setNeedsDisplay()
+            update()
         }
     }
 
-    private var preCalculatedNormalizedCharts: ChartsViewData?
-    
+    private var animator = Animator()
+    private var currentDisplayCharts = ChartsData()
+
     // MARK: - Lifecycle
     
     required init?(coder aDecoder: NSCoder) {
@@ -76,90 +54,36 @@ class ChartView: UIView, Stylable {
         layer.masksToBounds = true
         startReceivingThemeUpdates()
     }
-    
-    func themeDidUpdate(theme: Theme) {
-        backgroundColor = theme.cellBackgroundColor
+
+    func update() {
+        animator.finishAnimation()
+        animator.animate(duration: 0.1, easing: .linear, update: { [weak self] phase in
+            guard let self = self else { return }
+
+            self.charts.updateCurrentPoints(phase: phase)
+            self.charts.calculateDisplayValues(viewport: self.frame)
+
+            self.setNeedsDisplay()
+
+            }, finish: nil)
     }
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-
-        let chartViewData = preCalculatedNormalizedCharts ?? normalizedCharts
-        for lineIndex in 0 ..< chartViewData.lines.count {
-            var linePointsToDraw = [CGPoint]()
-            let line = chartViewData.lines[lineIndex]
-            for valueIndex in 0 ..< line.values.count {
-                let value = line.values[valueIndex]
-                let posX = value.xPos * bounds.width
-                let posY = value.yPos * bounds.height
-                let point = CGPoint(x: posX, y: posY)
-                linePointsToDraw.append(point)
-            }
-            ChartDrawer.drawChart(points: linePointsToDraw,
-                                  context: context,
-                                  color: line.color.cgColor,
-                                  lineWidth: lineWidth)
+        self.charts.lines.forEach { [weak self] line in
+            guard let self = self else { return }
+            ChartDrawer.configureContext(context: context, lineWidth: self.lineWidth, color: line.color.cgColor)
+            ChartDrawer.drawChart(points: line.displayPoints, context: context)
         }
     }
 }
 
-// MARK: - dynamic calculations
+// MARK: - Stylable
 
-extension ChartView {
+extension ChartView: Stylable {
 
-    private struct ChartsViewData {
-        var dates = [DateViewData]()
-        var lines = [LineViewData]()
-    }
-
-    private struct LineViewData {
-        var values: [ValueViewData]
-        var color: UIColor
-    }
-
-    private struct ValueViewData {
-        var value: Int64
-        var xPos: CGFloat
-        var yPos: CGFloat
-    }
-
-    private struct DateViewData {
-        var value: Date
-        var xPos: CGFloat
-    }
-
-    private var normalizedCharts: ChartsViewData {
-        let scale = (visibleRange.upperBound - visibleRange.lowerBound) / CGFloat(charts.dates.count)
-
-        var dates = [DateViewData]()
-        for i in 0 ..< charts.dates.count {
-            let xPos: CGFloat = CGFloat(i) * scale - visibleRange.lowerBound
-            let dateViewData = DateViewData(value: charts.dates[i], xPos: xPos)
-            dates.append(dateViewData)
-        }
-
-        var lines = [LineViewData]()
-        charts.lines.forEach {
-            var values = [ValueViewData]()
-            var maxVisibleValue: Int64 = 0
-            for i in 0 ..< $0.values.count {
-                let normX = CGFloat(i) / CGFloat($0.values.count)
-                let xPos: CGFloat = (normX - visibleRange.lowerBound) / (visibleRange.upperBound - visibleRange.lowerBound)
-                let valueViewData = ValueViewData(value: $0.values[i], xPos: xPos, yPos: 0)
-                values.append(valueViewData)
-            }
-            values.forEach {
-                guard $0.xPos >= 0 && $0.xPos <= 1 else { return }
-                maxVisibleValue = max(maxVisibleValue, $0.value)
-            }
-            values = values.map {
-                let yPos = CGFloat($0.value) / CGFloat(maxVisibleValue)
-                return ValueViewData(value: $0.value, xPos: $0.xPos, yPos: yPos)
-            }
-            let lineViewData = LineViewData(values: values, color: $0.color)
-            lines.append(lineViewData)
-        }
-        return ChartsViewData(dates: dates, lines: lines)
+    func themeDidUpdate(theme: Theme) {
+        backgroundColor = theme.cellBackgroundColor
     }
 }
