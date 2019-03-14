@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		106DC318223A400B00D6D6C2 /* ChartDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106DC317223A400B00D6D6C2 /* ChartDrawer.swift */; };
 		1074DA38223913B6006C1D51 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1074DA37223913B6006C1D51 /* chart_data.json */; };
 		1154412422397C0D00795743 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440E922397C0C00795743 /* AppDelegate.swift */; };
 		1154412522397C0D00795743 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440EB22397C0C00795743 /* String+Localized.swift */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		106DC316223A3E1F00D6D6C2 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		106DC317223A400B00D6D6C2 /* ChartDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDrawer.swift; sourceTree = "<group>"; };
 		1074DA37223913B6006C1D51 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data.json; sourceTree = "<group>"; };
 		115440E922397C0C00795743 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		115440EB22397C0C00795743 /* String+Localized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 			isa = PBXGroup;
 			children = (
 				1154411722397C0C00795743 /* ChartView.swift */,
+				106DC317223A400B00D6D6C2 /* ChartDrawer.swift */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
@@ -491,6 +494,7 @@
 				1154413D22397C0D00795743 /* MainViewController.swift in Sources */,
 				1154414022397C0D00795743 /* Colors.swift in Sources */,
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
+				106DC318223A400B00D6D6C2 /* ChartDrawer.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
 				1154413522397C0D00795743 /* ChartTableViewCellModel.swift in Sources */,
 				1154412D22397C0D00795743 /* RangeTableViewCellModel.swift in Sources */,

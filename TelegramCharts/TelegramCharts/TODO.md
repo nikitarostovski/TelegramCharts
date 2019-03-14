@@ -7,3 +7,4 @@ Move to VIPER
 Fix RangeSlider jerking on touch (probably add animation)
 Make SliderThumbView a subclass of CALayer and move arrows to anoter class
 Make TableViewController with chart selection
+Make layout pixel-perfect

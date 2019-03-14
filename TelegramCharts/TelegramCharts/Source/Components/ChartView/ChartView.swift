@@ -35,22 +35,18 @@ class ChartView: UIView, Stylable {
 
     var charts = ChartsData() {
         didSet {
-            setupView()
-            redraw()
+            setNeedsDisplay()
         }
     }
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
-            redraw()
+            setNeedsDisplay()
         }
     }
     
     var lineWidth: CGFloat = 4.0 {
         didSet {
-            chartLayers.forEach {
-                $0.lineWidth = lineWidth
-            }
-            redraw()
+            setNeedsDisplay()
         }
     }
     
@@ -60,51 +56,26 @@ class ChartView: UIView, Stylable {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setupView()
-        startReceivingThemeUpdates()
+        initialSetup()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupView()
-        startReceivingThemeUpdates()
+        initialSetup()
     }
     
     deinit {
         stopReceivingThemeUpdates()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        layer.masksToBounds = true
-        redraw()
-    }
-    
     // MARK: - Private
 
-    private func setupView() {
-        chartLayers.forEach { $0.removeFromSuperlayer() }
-        chartLayers = [ChartLineLayer]()
-        charts.lines.forEach { [weak self] line in
-            var isFirst = true
-            line.values.forEach { value in
-                guard !isFirst else {
-                    isFirst = false
-                    return
-                }
-                let layer = ChartLineLayer()
-                layer.lineWidth = lineWidth
-                layer.lineJoin = .round
-                layer.lineCap = .round
-                layer.fillColor = UIColor.clear.cgColor
-                layer.strokeColor = line.color.cgColor
-                self?.chartLayers.append(layer)
-                self?.layer.addSublayer(layer)
-            }
-        }
+    private func initialSetup() {
+        layer.masksToBounds = true
+        startReceivingThemeUpdates()
     }
 
-    private func redraw() {
+    /*private func redraw() {
         let chartViewData = viewCharts
 
         for lineIndex in 0 ..< chartViewData.lines.count {
@@ -138,10 +109,32 @@ class ChartView: UIView, Stylable {
                 lastPoint = point
             }
         }
-    }
+    }*/
     
     func themeDidUpdate(theme: Theme) {
         backgroundColor = theme.cellBackgroundColor
+    }
+
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+
+        let chartViewData = viewCharts
+        for lineIndex in 0 ..< chartViewData.lines.count {
+            var linePointsToDraw = [CGPoint]()
+            let line = chartViewData.lines[lineIndex]
+            for valueIndex in 0 ..< line.values.count {
+                let value = line.values[valueIndex]
+                let posX = value.xPos * bounds.width
+                let posY = value.yPos * bounds.height
+                let point = CGPoint(x: posX, y: posY)
+                linePointsToDraw.append(point)
+            }
+            ChartDrawer.drawChart(points: linePointsToDraw,
+                                  context: context,
+                                  color: line.color.cgColor,
+                                  lineWidth: lineWidth)
+        }
     }
 }
 
