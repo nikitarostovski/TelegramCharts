@@ -57,7 +57,7 @@ class ChartView: UIView {
 
     func update() {
         animator.finishAnimation()
-        animator.animate(duration: 0.1, easing: .linear, update: { [weak self] phase in
+        animator.animate(duration: 0.05, easing: .linear, update: { [weak self] phase in
             guard let self = self else { return }
 
             self.charts.updateCurrentPoints(phase: phase)

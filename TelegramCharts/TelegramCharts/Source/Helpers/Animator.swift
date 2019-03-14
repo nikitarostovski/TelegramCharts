@@ -44,11 +44,11 @@ class Animator {
         
         displayLink.remove(from: .main, forMode: .common)
         self.displayLink = nil
-        
-        /*if phase != 1 {
-            phase = 1
-            updateHandler?(phase)
-        }*/
+
+//        if phase != 1 {
+//            phase = 1
+//            updateHandler?(phase)
+//        }
         finishHandler?()
     }
     
@@ -76,7 +76,6 @@ typealias EasingFunction = (TimeInterval, TimeInterval) -> CGFloat
 
 enum AnimationEasingType {
     case linear
-    case easeInOutQuart
 }
 
 extension Animator {
@@ -85,21 +84,10 @@ extension Animator {
         switch type {
         case .linear:
             return easingLinear
-        case .easeInOutQuart:
-            return easingInOutQuart
         }
     }
     
     private func easingLinear(elapsed: TimeInterval, duration: TimeInterval) -> CGFloat {
         return CGFloat(elapsed) / CGFloat(duration)
-    }
-    
-    private func easingInOutQuart(elapsed: TimeInterval, duration: TimeInterval) -> CGFloat {
-        var position = CGFloat(elapsed / (duration / 2.0))
-        if position < 1.0 {
-            return 0.5 * position * position * position * position
-        }
-        position -= 2.0
-        return -0.5 * (position * position * position * position - 2.0)
     }
 }
