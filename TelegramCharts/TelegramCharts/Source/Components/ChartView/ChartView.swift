@@ -61,7 +61,7 @@ class ChartView: UIView {
             guard let self = self else { return }
 
             self.charts.updateCurrentPoints(phase: phase)
-            self.charts.calculateDisplayValues(viewport: self.frame)
+            self.charts.calculateDisplayValues(viewport: self.bounds)
 
             self.setNeedsDisplay()
 
