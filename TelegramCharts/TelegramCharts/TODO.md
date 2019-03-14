@@ -8,3 +8,4 @@ Fix RangeSlider jerking on touch (probably add animation)
 Make SliderThumbView a subclass of CALayer and move arrows to anoter class
 Make TableViewController with chart selection
 Make layout pixel-perfect
+Think about value types in chart (maybe replace Int64 by Int or UInt)

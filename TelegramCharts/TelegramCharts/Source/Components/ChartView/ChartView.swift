@@ -35,11 +35,13 @@ class ChartView: UIView, Stylable {
 
     var charts = ChartsData() {
         didSet {
+            preCalculatedNormalizedCharts = nil
             setNeedsDisplay()
         }
     }
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
+            preCalculatedNormalizedCharts = nil
             setNeedsDisplay()
         }
     }
@@ -49,8 +51,8 @@ class ChartView: UIView, Stylable {
             setNeedsDisplay()
         }
     }
-    
-    private var chartLayers = [ChartLineLayer]()
+
+    private var preCalculatedNormalizedCharts: ChartsViewData?
     
     // MARK: - Lifecycle
     
@@ -74,42 +76,6 @@ class ChartView: UIView, Stylable {
         layer.masksToBounds = true
         startReceivingThemeUpdates()
     }
-
-    /*private func redraw() {
-        let chartViewData = viewCharts
-
-        for lineIndex in 0 ..< chartViewData.lines.count {
-            let line = chartViewData.lines[lineIndex]
-
-            var lastPoint = CGPoint.zero
-            for valueIndex in 0 ..< line.values.count {
-                let value = line.values[valueIndex]
-                let posX = value.xPos * bounds.width
-                let posY = value.yPos * bounds.height
-                let point = CGPoint(x: posX, y: posY)
-
-                if valueIndex == 0 {
-                    lastPoint = point
-                    continue
-                }
-
-                let linePath = UIBezierPath()
-                linePath.move(to: lastPoint)
-                linePath.addLine(to: point)
-
-                let layer = chartLayers[lineIndex * (line.values.count - 1) + valueIndex - 1]
-
-                let animation = CABasicAnimation(keyPath: "path")
-                animation.duration = 0.5
-                animation.toValue = linePath.cgPath
-
-                layer.path = linePath.cgPath
-                layer.add(animation, forKey: "pathAnimation")
-
-                lastPoint = point
-            }
-        }
-    }*/
     
     func themeDidUpdate(theme: Theme) {
         backgroundColor = theme.cellBackgroundColor
@@ -119,7 +85,7 @@ class ChartView: UIView, Stylable {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
 
-        let chartViewData = viewCharts
+        let chartViewData = preCalculatedNormalizedCharts ?? normalizedCharts
         for lineIndex in 0 ..< chartViewData.lines.count {
             var linePointsToDraw = [CGPoint]()
             let line = chartViewData.lines[lineIndex]
@@ -163,7 +129,7 @@ extension ChartView {
         var xPos: CGFloat
     }
 
-    private var viewCharts: ChartsViewData {
+    private var normalizedCharts: ChartsViewData {
         let scale = (visibleRange.upperBound - visibleRange.lowerBound) / CGFloat(charts.dates.count)
 
         var dates = [DateViewData]()
