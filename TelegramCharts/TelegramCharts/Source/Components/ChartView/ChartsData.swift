@@ -35,7 +35,7 @@ class ChartsData {
             }
             line.values.forEach { value in
                 let yPos = CGFloat(value.value) / CGFloat(maxVisibleValue)
-                value.oldNormalizedY = value.currentNormalizedX
+                value.oldNormalizedY = value.currentNormalizedY
                 value.newNormalizedY = yPos
             }
         }
