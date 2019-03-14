@@ -16,7 +16,7 @@ class ChartTableViewCell: BaseTableViewCell {
     
     @IBOutlet weak var chartView: ChartView! {
         didSet {
-            chartView.lineWidth = 3.0
+            chartView.lineWidth = 2.0
         }
     }
     
