@@ -43,15 +43,22 @@ class ChartsData {
         }
     }
 
-    func updateCurrentPoints(phase: CGFloat) {
+    func updateCurrentXPoints(phase: CGFloat) {
         lines.forEach { line in
             line.values.forEach { value in
                 let oldX = value.oldNormalizedX
                 let newX = value.newNormalizedX
+                value.currentNormalizedX = oldX + (newX - oldX) * phase
+            }
+        }
+    }
+
+    func updateCurrentYPoints(phase: CGFloat) {
+        lines.forEach { line in
+            line.values.forEach { value in
                 let oldY = value.oldNormalizedY
                 let newY = value.newNormalizedY
-                value.currentNormalizedX = newX//oldX + (newX - oldX) * phase
-                value.currentNormalizedY = newY//oldY + (newY - oldY) * phase
+                value.currentNormalizedY = oldY + (newY - oldY) * phase
             }
         }
     }

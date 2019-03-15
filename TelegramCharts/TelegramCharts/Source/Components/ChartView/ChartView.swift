@@ -13,23 +13,23 @@ class ChartView: UIView {
     var charts = ChartsData() {
         didSet {
             charts.normalize(range: visibleRange)
-            update()
+            update(animated: true)
         }
     }
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
             charts.normalize(range: visibleRange)
-            update()
+            update(animated: true)
         }
     }
     
     var lineWidth: CGFloat = 4.0 {
         didSet {
-            update()
+            update(animated: true)
         }
     }
 
-    private var animator = Animator()
+    private var animator = PointAnimator()
     private var currentDisplayCharts = ChartsData()
 
     // MARK: - Lifecycle
@@ -55,17 +55,26 @@ class ChartView: UIView {
         startReceivingThemeUpdates()
     }
 
-    func update() {
-        animator.finishAnimation()
-        animator.animate(duration: 0.1, easing: .easeOutCubic, update: { [weak self] phase in
+    private func update(animated: Bool = true) {
+        let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, phaseY) in
             guard let self = self else { return }
-
-            self.charts.updateCurrentPoints(phase: phase)
+            self.charts.updateCurrentXPoints(phase: phaseX)
+            self.charts.updateCurrentYPoints(phase: phaseY)
             self.charts.calculateDisplayValues(viewport: self.bounds)
 
             self.setNeedsDisplay()
+        }
 
-            }, finish: nil)
+        if animated {
+            animator.animate(durationX: 0.05,
+                             durationY: 0.1,
+                             easingX: .easeOutCubic,
+                             easingY: .linear,
+                             update: updateHandler,
+                             finish: nil)
+        } else {
+            updateHandler(1.0, 1.0)
+        }
     }
 
     override func draw(_ rect: CGRect) {

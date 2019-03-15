@@ -41,7 +41,7 @@
 		1154414022397C0D00795743 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154411F22397C0C00795743 /* Colors.swift */; };
 		1154414122397C0D00795743 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154412222397C0C00795743 /* ThemeManager.swift */; };
 		1154414222397C0D00795743 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154412322397C0C00795743 /* Theme.swift */; };
-		1154414422397C9100795743 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154414322397C9100795743 /* Animator.swift */; };
+		1154414422397C9100795743 /* PointAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154414322397C9100795743 /* PointAnimator.swift */; };
 		11649F30223502E00081ABA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11649F24223502E00081ABA1 /* Assets.xcassets */; };
 		11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F25223502E00081ABA1 /* LaunchScreen.storyboard */; };
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
@@ -84,7 +84,7 @@
 		1154411F22397C0C00795743 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		1154412222397C0C00795743 /* ThemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		1154412322397C0C00795743 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		1154414322397C9100795743 /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
+		1154414322397C9100795743 /* PointAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnimator.swift; sourceTree = "<group>"; };
 		11649F0E223502800081ABA1 /* TelegramCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TelegramCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11649F24223502E00081ABA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11649F26223502E00081ABA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -346,7 +346,7 @@
 			children = (
 				1154411C22397C0C00795743 /* TableViewStructure */,
 				1154411F22397C0C00795743 /* Colors.swift */,
-				1154414322397C9100795743 /* Animator.swift */,
+				1154414322397C9100795743 /* PointAnimator.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -510,7 +510,7 @@
 				1154412C22397C0D00795743 /* ChartRangeTableViewCell.swift in Sources */,
 				1154413122397C0D00795743 /* BaseTableViewCell.swift in Sources */,
 				1154413B22397C0D00795743 /* ChartView.swift in Sources */,
-				1154414422397C9100795743 /* Animator.swift in Sources */,
+				1154414422397C9100795743 /* PointAnimator.swift in Sources */,
 				106DC31A223A68E200D6D6C2 /* ChartsData.swift in Sources */,
 				1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */,
 				1154413822397C0D00795743 /* CheckTableViewCellModel.swift in Sources */,
