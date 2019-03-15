@@ -13,6 +13,9 @@ class ChartView: UIView {
     var charts = ChartsData() {
         didSet {
             charts.normalize(range: visibleRange)
+            charts.updateCurrentXPoints(phase: 1)
+            charts.updateCurrentYPoints(phase: 1)
+            charts.calculateDisplayValues(viewport: self.bounds)
             update(animated: true)
         }
     }

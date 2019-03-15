@@ -123,8 +123,8 @@ class MainViewController: UITableViewController {
                      1551744000000,
                      1551830400000,
                      1551916800000,
-                     1552003200000].map { Date(timeIntervalSince1970: $0) }
-        let testDataA = ChartLineData(values: [37,
+                     1552003200000].map { Date(timeIntervalSince1970: $0).stringValue() }
+        let testDataA: [Int64] = [37,
                                           20,
                                           32,
                                           39,
@@ -235,8 +235,8 @@ class MainViewController: UITableViewController {
                                           142,
                                           124,
                                           114,
-                                          64], color: UIColor(hexString: "fe3c30"))
-        let testDataB = ChartLineData(values: [22,
+                                          64]
+        let testDataB: [Int64] = [22,
                                           12,
                                           30,
                                           40,
@@ -347,8 +347,11 @@ class MainViewController: UITableViewController {
                                           89,
                                           50,
                                           73,
-                                          52], color: UIColor(hexString: "4bd964"))
-        return ChartsData(lines: [testDataA, testDataB])
+                                          52]
+        let lineA = ChartLine(values: testDataA, xTitles: dates, color: UIColor(hexString: "4bd964"))
+        let lineB = ChartLine(values: testDataB, xTitles: dates, color: UIColor(hexString: "fe3c30"))
+        
+        return ChartsData(lines: [lineA, lineB].compactMap { $0 })
     }
     
     // MARK: - Lifecycle

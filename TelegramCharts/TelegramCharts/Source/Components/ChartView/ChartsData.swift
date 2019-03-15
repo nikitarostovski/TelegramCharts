@@ -9,88 +9,118 @@
 import UIKit
 
 class ChartsData {
-//    var dates = [Date]()
-    var lines: [ChartLineData]
-
-    init(lines: [ChartLineData]) {
+    var lines: [ChartLine]
+    
+    init(lines: [ChartLine]) {
         self.lines = lines
     }
-
+    
     init() {
-        self.lines = [ChartLineData]()
+        self.lines = [ChartLine]()
     }
-
+    
     func normalize(range: ClosedRange<CGFloat>) {
-        lines.forEach { line in
-            for i in 0 ..< line.values.count {
-                let normX = CGFloat(i) / CGFloat(line.values.count)
-                let xPos: CGFloat = (normX - range.lowerBound) / (range.upperBound - range.lowerBound)
-                line.values[i].oldNormalizedX = line.values[i].currentNormalizedX
-                line.values[i].newNormalizedX = xPos
-            }
+        lines.forEach { $0.normalize(range: range) }
+        guard let maxVisibleValue: Int64 = (lines.compactMap { $0.maxVisibleValue?.value ?? nil }).max() else { return }
+        lines.forEach {
+            $0.correctYPoints(maxVisibleValue: maxVisibleValue)
         }
     }
-
+    
     func updateCurrentXPoints(phase: CGFloat) {
-        var maxVisibleValue: Int64 = 0
-        lines.forEach { line in
-            line.values.forEach { value in
-                let oldX = value.oldNormalizedX
-                let newX = value.newNormalizedX
-                value.currentNormalizedX = oldX + (newX - oldX) * phase
-            }
-            line.values.forEach { value in
-                guard value.currentNormalizedX >= 0 && value.currentNormalizedX <= 1 else { return }
-                maxVisibleValue = max(maxVisibleValue, value.value)
-            }
-        }
-        lines.forEach { line in
-            line.values.forEach { value in
-                let yPos = CGFloat(value.value) / CGFloat(maxVisibleValue)
-                value.oldNormalizedY = value.currentNormalizedY
-                value.newNormalizedY = yPos
-            }
+        lines.forEach {
+            $0.updateCurrentXPoints(phase: phase)
         }
     }
-
+    
     func updateCurrentYPoints(phase: CGFloat) {
-        lines.forEach { line in
-            line.values.forEach { value in
-                let oldY = value.oldNormalizedY
-                let newY = value.newNormalizedY
-                value.currentNormalizedY = oldY + (newY - oldY) * phase
-            }
-        }
+        lines.forEach { $0.updateCurrentYPoints(phase: phase) }
     }
-
+    
     func calculateDisplayValues(viewport: CGRect) {
-        for lineIndex in 0 ..< lines.count {
-            let line = lines[lineIndex]
-            for valueIndex in 0 ..< line.values.count {
-                let value = line.values[valueIndex]
-                value.displayX = viewport.origin.x + value.currentNormalizedX * viewport.width
-                value.displayY = viewport.origin.y + viewport.height * (1.0 - value.currentNormalizedY)
-            }
-        }
+        lines.forEach { $0.calculateDisplayPoints(viewport: viewport) }
     }
 }
 
-class ChartLineData {
-    var values: [ChartValueData]
-    var color: UIColor
-
-    var displayPoints: [CGPoint] {
-        return values.map { $0.displayPoint }
-    }
-
-    init(values: [Int64], color: UIColor) {
-        self.values = values.map { ChartValueData(value: $0) }
+class ChartLine {
+    var values = [ChartValue]()
+    var color: UIColor = .clear
+    
+    var maxVisibleValue: ChartValue?
+    
+    init?(values: [Int64], xTitles: [String], color: UIColor) {
+        guard values.count == xTitles.count else { return }
+        self.values = [ChartValue]()
+        self.color = color
+        
+        for i in 0 ..< values.count {
+            let xTitle = xTitles[i]
+            let value = values[i]
+            let newValue = ChartValue(x: CGFloat(i) / CGFloat(values.count),
+                                      value: value,
+                                      xTitle: xTitle)
+            self.values.append(newValue)
+        }
         self.color = color
     }
+    
+    var displayPoints: [CGPoint] {
+        return values.map { CGPoint(x: $0.displayX, y: $0.displayY) }
+    }
+    
+    func normalize(range: ClosedRange<CGFloat>) {
+        var maxVisible: Int64 = 0
+        var maxVisibleIndex = 0
+        for i in 0 ..< values.count {
+            let value = values[i]
+            let normX = CGFloat(i) / CGFloat(values.count)
+            let xPos: CGFloat = (normX - range.lowerBound) / (range.upperBound - range.lowerBound)
+            value.oldNormalizedX = value.currentNormalizedX
+            value.newNormalizedX = xPos
+            
+            if value.newNormalizedX >= 0 && value.newNormalizedX <= 1 {
+                if value.value > maxVisible {
+                    maxVisible = value.value
+                    maxVisibleIndex = i
+                }
+            }
+        }
+        maxVisibleValue = values[maxVisibleIndex]
+    }
+    
+    func updateCurrentXPoints(phase: CGFloat) {
+        values.indices.forEach { i in
+            let value = values[i]
+            let oldX = value.oldNormalizedX
+            let newX = value.newNormalizedX
+            value.currentNormalizedX = oldX + (newX - oldX) * phase
+        }
+    }
+    
+    func updateCurrentYPoints(phase: CGFloat) {
+        values.forEach { value in
+            let oldY = value.oldNormalizedY
+            let newY = value.newNormalizedY
+            value.currentNormalizedY = oldY + (newY - oldY) * phase
+        }
+    }
+    
+    func correctYPoints(maxVisibleValue: Int64) {
+        values.forEach { value in
+            value.oldNormalizedY = value.currentNormalizedY
+            value.newNormalizedY = CGFloat(value.value) / CGFloat(maxVisibleValue)
+        }
+    }
+    
+    func calculateDisplayPoints(viewport: CGRect) {
+        values.forEach { value in
+            value.displayX = viewport.origin.x + value.currentNormalizedX * viewport.width
+            value.displayY = viewport.origin.y + viewport.height * (1.0 - value.currentNormalizedY)
+        }
+    }
 }
 
-class ChartValueData {
-    var value: Int64
+class ChartValue {
     var newNormalizedX: CGFloat = 0
     var newNormalizedY: CGFloat = 0
     var oldNormalizedX: CGFloat = 0
@@ -99,12 +129,18 @@ class ChartValueData {
     var currentNormalizedY: CGFloat = 0
     var displayX: CGFloat = 0
     var displayY: CGFloat = 0
-
-    var displayPoint: CGPoint {
-        return CGPoint(x: displayX, y: displayY)
-    }
-
-    init(value: Int64) {
+    
+    var xTitle: String
+    var value: Int64
+    
+    init(x: CGFloat, value: Int64, xTitle: String) {
+        self.newNormalizedX = x
+        self.oldNormalizedX = x
+        self.currentNormalizedX = x
+        self.newNormalizedY = CGFloat(value)
+        self.oldNormalizedY = CGFloat(value)
+        self.currentNormalizedY = CGFloat(value)
+        self.xTitle = xTitle
         self.value = value
     }
 }
