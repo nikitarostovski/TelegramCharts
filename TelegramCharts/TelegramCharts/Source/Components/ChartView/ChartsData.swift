@@ -21,7 +21,6 @@ class ChartsData {
     }
 
     func normalize(range: ClosedRange<CGFloat>) {
-        var maxVisibleValue: Int64 = 0
         lines.forEach { line in
             for i in 0 ..< line.values.count {
                 let normX = CGFloat(i) / CGFloat(line.values.count)
@@ -29,8 +28,19 @@ class ChartsData {
                 line.values[i].oldNormalizedX = line.values[i].currentNormalizedX
                 line.values[i].newNormalizedX = xPos
             }
+        }
+    }
+
+    func updateCurrentXPoints(phase: CGFloat) {
+        var maxVisibleValue: Int64 = 0
+        lines.forEach { line in
             line.values.forEach { value in
-                guard value.newNormalizedX >= 0 && value.newNormalizedX <= 1 else { return }
+                let oldX = value.oldNormalizedX
+                let newX = value.newNormalizedX
+                value.currentNormalizedX = oldX + (newX - oldX) * phase
+            }
+            line.values.forEach { value in
+                guard value.currentNormalizedX >= 0 && value.currentNormalizedX <= 1 else { return }
                 maxVisibleValue = max(maxVisibleValue, value.value)
             }
         }
@@ -39,16 +49,6 @@ class ChartsData {
                 let yPos = CGFloat(value.value) / CGFloat(maxVisibleValue)
                 value.oldNormalizedY = value.currentNormalizedY
                 value.newNormalizedY = yPos
-            }
-        }
-    }
-
-    func updateCurrentXPoints(phase: CGFloat) {
-        lines.forEach { line in
-            line.values.forEach { value in
-                let oldX = value.oldNormalizedX
-                let newX = value.newNormalizedX
-                value.currentNormalizedX = oldX + (newX - oldX) * phase
             }
         }
     }
