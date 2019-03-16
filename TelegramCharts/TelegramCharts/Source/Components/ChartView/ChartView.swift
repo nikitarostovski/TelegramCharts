@@ -36,10 +36,17 @@ class ChartView: UIView {
         }
     }
 
-    private var animator = PointAnimator()
+    var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 21, right: 0) {
+        didSet {
+            chartBounds = self.bounds.inset(by: chartInsets)
+            update()
+        }
+    }
     
+    private var animator = PointAnimator()
     private var titleColor: UIColor = .black
-
+    private var chartBounds: CGRect = .zero
+    
     // MARK: - Lifecycle
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,6 +57,12 @@ class ChartView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         initialSetup()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        chartBounds = self.bounds.inset(by: chartInsets)
+        update()
     }
     
     deinit {
@@ -105,14 +118,14 @@ class ChartView: UIView {
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
         ChartDrawer.configureContext(context: context, lineWidth: lineWidth)
-        charts?.getLinesToDraw(viewport: bounds).forEach { (points, color) in
+        charts?.getLinesToDraw(viewport: chartBounds).forEach { (points, color) in
             ChartDrawer.drawChart(points: points, color: color.cgColor, context: context)
         }
         
         AxisDrawer.configureContext(context: context)
         axis?.getTextToDraw(viewport: bounds).forEach { [weak self] axisPoint in
             let attributedString = NSAttributedString(string: axisPoint.title, attributes: self?.textAttributes(alpha: axisPoint.currentAlpha))
-            let height: CGFloat = 21
+            let height: CGFloat = chartInsets.bottom
             let width = attributedString.width(withConstrainedHeight: height)
             let x = axisPoint.dispX - width / 2
             let y = bounds.height - height
@@ -126,7 +139,12 @@ class ChartView: UIView {
 extension ChartView: Stylable {
 
     func textAttributes(alpha: CGFloat) -> [NSAttributedString.Key: Any] {
-        return [.foregroundColor: titleColor.withAlphaComponent(alpha)]
+        let style = NSMutableParagraphStyle()
+        style.alignment = .center
+        return [
+            .foregroundColor: titleColor.withAlphaComponent(alpha),
+            .paragraphStyle: style
+        ]
     }
     
     func themeDidUpdate(theme: Theme) {

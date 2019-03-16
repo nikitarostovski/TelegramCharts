@@ -29,6 +29,8 @@ class ChartRangeTableViewCell: BaseTableViewCell {
         super.updateAppearance()
         guard let model = model as? ChartRangeTableViewCellModel else { return }
         guard let chartsData = model.chartsData else { return }
+        chartView.axis = nil
+        chartView.chartInsets = .zero
         chartView.charts = chartsData
         
         let insetTop = chartView.frame.minY - rangeSlider.frame.minY
