@@ -32,4 +32,10 @@ class ChartDrawer {
 
         context.restoreGState()
     }
+    
+    static func drawXTitles(titles: [(NSAttributedString, CGRect)]) {
+        titles.forEach { (title, frame) in
+            title.draw(in: frame)
+        }
+    }
 }

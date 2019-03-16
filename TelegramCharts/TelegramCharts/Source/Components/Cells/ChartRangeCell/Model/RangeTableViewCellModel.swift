@@ -20,7 +20,7 @@ class ChartRangeTableViewCellModel: BaseTableViewCellModel {
         return ChartRangeTableViewCell.cellHeight
     }
     
-    var chartsData = ChartsData()
+    var chartsData: ChartsData?
     var rangeChangeAction: RangeChangeAction?
     var initialRange: ClosedRange<CGFloat>?
 }

@@ -10,9 +10,9 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
-    private var chartsData: ChartsData {
+    private var chartsData: ChartsData? {
 
-        let dates = [1542412800000,
+        let dates: [Date] = [1542412800000,
                      1542499200000,
                      1542585600000,
                      1542672000000,
@@ -123,7 +123,7 @@ class MainViewController: UITableViewController {
                      1551744000000,
                      1551830400000,
                      1551916800000,
-                     1552003200000].map { Date(timeIntervalSince1970: $0).stringValue() }
+                     1552003200000].map { Date(timeIntervalSince1970: TimeInterval($0)) }
         let testDataA: [Int64] = [37,
                                           20,
                                           32,
@@ -348,10 +348,10 @@ class MainViewController: UITableViewController {
                                           50,
                                           73,
                                           52]
-        let lineA = ChartLine(values: testDataA, xTitles: dates, color: UIColor(hexString: "4bd964"))
-        let lineB = ChartLine(values: testDataB, xTitles: dates, color: UIColor(hexString: "fe3c30"))
+        let lineA = (testDataA, UIColor(hexString: "4bd964"))
+        let lineB = (testDataB, UIColor(hexString: "fe3c30"))
         
-        return ChartsData(lines: [lineA, lineB].compactMap { $0 })
+        return ChartsData(xTitles: dates.map { PrintableDate(date: $0) }, lines: [lineA, lineB])
     }
     
     // MARK: - Lifecycle

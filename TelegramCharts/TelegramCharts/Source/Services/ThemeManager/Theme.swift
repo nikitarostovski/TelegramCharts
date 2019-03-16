@@ -119,4 +119,13 @@ enum Theme: Int {
             return Colors.white
         }
     }
+    
+    var chartTitlesColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.gray
+        case .night:
+            return Colors.grayBlue
+        }
+    }
 }

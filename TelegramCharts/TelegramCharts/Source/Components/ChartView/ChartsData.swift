@@ -8,7 +8,150 @@
 
 import UIKit
 
+protocol Printable {
+    var title: NSAttributedString { get }
+    var size: CGSize { get }
+}
+
+class PrintableDate: Printable {
+    var title: NSAttributedString
+    var size: CGSize
+    
+    private var date: Date
+    
+    init(date: Date) {
+        self.date = date
+        let string = date.stringValue()
+        let attributes = [.font: UIFont.systemFont(ofSize: 12.0, weight: .regular)] as [NSAttributedString.Key : Any]
+        title = NSAttributedString(string: string, attributes: attributes)
+        
+        let height: CGFloat = 21
+        let width = title.width(withConstrainedHeight: height)
+        size = CGSize(width: width, height: height)
+    }
+}
+
+class PrintableNumber: Printable {
+    var title: NSAttributedString
+    var size: CGSize
+    
+    private var number: Int64
+    
+    init(number: Int64) {
+        self.number = number
+        let string = String(number)
+        let attributes = [.font: UIFont.systemFont(ofSize: 12.0, weight: .regular)] as [NSAttributedString.Key : Any]
+        title = NSAttributedString(string: string, attributes: attributes)
+        
+        let height: CGFloat = 21
+        let width = title.width(withConstrainedHeight: height)
+        size = CGSize(width: width, height: height)
+    }
+}
+
 class ChartsData {
+
+    var xVisibleRange: ClosedRange<CGFloat> = 0 ... 1 {
+        didSet {
+            normalize()
+        }
+    }
+    
+    private var xTitles: [Printable]
+    private var lines: [ChartLine]
+    
+    init?(xTitles: [Printable], lines: [([Int64], UIColor)]) {
+        self.xTitles = xTitles
+        self.lines = [ChartLine]()
+        
+        for line in lines {
+            guard line.0.count == xTitles.count  else { return }
+        }
+        var maxValue: Int64 = 0
+        for line in lines {
+            guard let lineMaxValue = line.0.max() else { continue }
+            maxValue = max(maxValue, lineMaxValue)
+        }
+        for lineIndex in lines.indices {
+            let line = lines[lineIndex]
+            
+            var xPositions = [CGFloat]()
+            var yPositions = [CGFloat]()
+            
+            for valueIndex in line.0.indices {
+                let value = line.0[valueIndex]
+                let normalizedX = CGFloat(valueIndex) / CGFloat(xTitles.count)
+                let normalizedY = CGFloat(value) / CGFloat(maxValue)
+                xPositions.append(normalizedX)
+                yPositions.append(normalizedY)
+            }
+            let yTitles: [Printable] = line.0.map { PrintableNumber(number: $0) }
+            let chartLine = ChartLine(yTitles: yTitles, x: xPositions, y: yPositions, color: line.1)
+            self.lines.append(chartLine)
+        }
+    }
+    
+    func getLinesToDraw(viewport: CGRect) -> [([CGPoint], UIColor)] {
+        var result = [([CGPoint], UIColor)]()
+        for line in lines {
+            let convertedPoints: [CGPoint] = line.dispPoints.map {
+                let x = viewport.origin.x + $0.x * viewport.width
+                let y = viewport.origin.y + viewport.height * (1.0 - $0.y)
+                return CGPoint(x: x, y: y)
+            }
+            result.append((convertedPoints, line.color))
+        }
+        return result
+    }
+    
+    private func normalize() {
+        lines.forEach {
+            $0.normalize(range: xVisibleRange)
+        }
+    }
+}
+
+class ChartLine {
+    
+    var color: UIColor
+    var x: [CGFloat]
+    var y: [CGFloat]
+    
+    var dispX: [CGFloat]?
+    var dispY: [CGFloat]?
+    var dispPoints: [CGPoint] {
+        var result = [CGPoint]()
+        guard let dispX = dispX, let dispY = dispY else { return result }
+        for i in 0 ..< dispX.count {
+            guard i < dispX.count && i < dispY.count else { continue }
+            result.append(CGPoint(x: dispX[i], y: dispY[i]))
+        }
+        return result
+    }
+    
+    var yTitles: [Printable]
+    
+    init(yTitles: [Printable], x: [CGFloat], y: [CGFloat], color: UIColor) {
+        self.yTitles = yTitles
+        self.x = x
+        self.y = y
+        self.color = color
+    }
+    
+    func normalize(range: ClosedRange<CGFloat>) {
+        dispX = [CGFloat]()
+        dispY = [CGFloat]()
+        for i in 0 ..< x.count {
+            let xPos = x[i]
+            let dX: CGFloat = (xPos - range.lowerBound) / (range.upperBound - range.lowerBound)
+            if dX >= 0 && dX <= 1 {
+                dispX!.append(dX)
+                dispY!.append(y[i])
+            }
+        }
+    }
+}
+/*class ChartsData {
     var lines: [ChartLine]
     
     init(lines: [ChartLine]) {
@@ -21,15 +164,16 @@ class ChartsData {
     
     func normalize(range: ClosedRange<CGFloat>) {
         lines.forEach { $0.normalize(range: range) }
-        guard let maxVisibleValue: Int64 = (lines.compactMap { $0.maxVisibleValue?.value ?? nil }).max() else { return }
-        lines.forEach {
-            $0.correctYPoints(maxVisibleValue: maxVisibleValue)
-        }
     }
     
     func updateCurrentXPoints(phase: CGFloat) {
+        var maxY: Int64 = 0
         lines.forEach {
             $0.updateCurrentXPoints(phase: phase)
+            if $0.maxVisibleValue?.value ?? 0 > maxY {
+                maxY = $0.maxVisibleValue?.value ?? maxY
+            }
+            $0.correctYPoints(maxVisibleValue: maxY)
         }
     }
     
@@ -40,6 +184,10 @@ class ChartsData {
     func calculateDisplayValues(viewport: CGRect) {
         lines.forEach { $0.calculateDisplayPoints(viewport: viewport) }
     }
+    
+    func calculateDisplayTitles(viewport: CGRect) {
+        let 
+    }
 }
 
 class ChartLine {
@@ -48,7 +196,7 @@ class ChartLine {
     
     var maxVisibleValue: ChartValue?
     
-    init?(values: [Int64], xTitles: [String], color: UIColor) {
+    init?(values: [Int64], xTitles: [NSAttributedString], color: UIColor) {
         guard values.count == xTitles.count else { return }
         self.values = [ChartValue]()
         self.color = color
@@ -64,37 +212,38 @@ class ChartLine {
         self.color = color
     }
     
-    var displayPoints: [CGPoint] {
-        return values.map { CGPoint(x: $0.displayX, y: $0.displayY) }
+    var displayValues: [ChartValue] {
+        return values
     }
     
     func normalize(range: ClosedRange<CGFloat>) {
-        var maxVisible: Int64 = 0
-        var maxVisibleIndex = 0
         for i in 0 ..< values.count {
             let value = values[i]
             let normX = CGFloat(i) / CGFloat(values.count)
             let xPos: CGFloat = (normX - range.lowerBound) / (range.upperBound - range.lowerBound)
             value.oldNormalizedX = value.currentNormalizedX
             value.newNormalizedX = xPos
+        }
+    }
+    
+    func updateCurrentXPoints(phase: CGFloat) {
+        var maxVisible: Int64 = 0
+        var maxVisibleIndex = 0
+        values.indices.forEach { i in
+            let value = values[i]
+            let oldX = value.oldNormalizedX
+            let newX = value.newNormalizedX
+            value.currentNormalizedX = oldX + (newX - oldX) * phase
             
-            if value.newNormalizedX >= 0 && value.newNormalizedX <= 1 {
+            if value.currentNormalizedX >= 0 && value.currentNormalizedX <= 1 {
                 if value.value > maxVisible {
                     maxVisible = value.value
                     maxVisibleIndex = i
                 }
             }
         }
+        
         maxVisibleValue = values[maxVisibleIndex]
-    }
-    
-    func updateCurrentXPoints(phase: CGFloat) {
-        values.indices.forEach { i in
-            let value = values[i]
-            let oldX = value.oldNormalizedX
-            let newX = value.newNormalizedX
-            value.currentNormalizedX = oldX + (newX - oldX) * phase
-        }
     }
     
     func updateCurrentYPoints(phase: CGFloat) {
@@ -130,10 +279,12 @@ class ChartValue {
     var displayX: CGFloat = 0
     var displayY: CGFloat = 0
     
-    var xTitle: String
+    var xTitleSize: CGSize = .zero
+    
+    var xTitle: NSAttributedString
     var value: Int64
     
-    init(x: CGFloat, value: Int64, xTitle: String) {
+    init(x: CGFloat, value: Int64, xTitle: NSAttributedString) {
         self.newNormalizedX = x
         self.oldNormalizedX = x
         self.currentNormalizedX = x
@@ -142,5 +293,14 @@ class ChartValue {
         self.currentNormalizedY = CGFloat(value)
         self.xTitle = xTitle
         self.value = value
+        
+        calculateTitleSize()
+    }
+    
+    private func calculateTitleSize() {
+        let height: CGFloat = 21
+        let width = xTitle.width(withConstrainedHeight: height)
+        xTitleSize = CGSize(width: width, height: height)
     }
 }
+*/

@@ -10,18 +10,15 @@ import UIKit
 
 class ChartView: UIView {
 
-    var charts = ChartsData() {
+    var charts: ChartsData? {
         didSet {
-            charts.normalize(range: visibleRange)
-            charts.updateCurrentXPoints(phase: 1)
-            charts.updateCurrentYPoints(phase: 1)
-            charts.calculateDisplayValues(viewport: self.bounds)
+            charts?.xVisibleRange = visibleRange
             update(animated: true)
         }
     }
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
-            charts.normalize(range: visibleRange)
+            charts?.xVisibleRange = visibleRange
             update(animated: true)
         }
     }
@@ -33,7 +30,8 @@ class ChartView: UIView {
     }
 
     private var animator = PointAnimator()
-    private var currentDisplayCharts = ChartsData()
+    
+    private var titleColor: UIColor = .black
 
     // MARK: - Lifecycle
     
@@ -59,7 +57,7 @@ class ChartView: UIView {
     }
 
     private func update(animated: Bool = true) {
-        let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, phaseY) in
+        /*let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, phaseY) in
             guard let self = self else { return }
             self.charts.updateCurrentXPoints(phase: phaseX)
             self.charts.updateCurrentYPoints(phase: phaseY)
@@ -77,17 +75,45 @@ class ChartView: UIView {
                              finish: nil)
         } else {
             updateHandler(1.0, 1.0)
-        }
+        }*/
+        setNeedsDisplay()
     }
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        self.charts.lines.forEach { [weak self] line in
+        
+        charts?.getLinesToDraw(viewport: bounds).forEach { (points, color) in
+            ChartDrawer.configureContext(context: context, lineWidth: lineWidth, color: color.cgColor)
+            ChartDrawer.drawChart(points: points, context: context)
+        }
+        
+        
+        /*self.charts.lines.forEach { [weak self] line in
             guard let self = self else { return }
             ChartDrawer.configureContext(context: context, lineWidth: self.lineWidth, color: line.color.cgColor)
-            ChartDrawer.drawChart(points: line.displayPoints, context: context)
+            let values = line.displayValues
+            let points = values.map { CGPoint(x: $0.displayX, y: $0.displayY) }
+            ChartDrawer.drawChart(points: points, context: context)
         }
+        guard let values = charts.lines.first?.displayValues else { return }
+        var titles = [(NSAttributedString, CGRect)]()
+        values.forEach { value in
+            var title = value.xTitle
+            
+            var attributes = title.attributes(at: 0, effectiveRange: nil)
+            attributes[.foregroundColor] = titleColor
+            title = NSAttributedString(string: title.string, attributes: attributes)
+            
+            let size = value.xTitleSize
+            let rect = CGRect(x: value.displayX - size.width / 2,
+                              y: bounds.height - size.height,
+                              width: size.width,
+                              height: size.height)
+            
+            titles.append((title, rect))
+        }
+        ChartDrawer.drawXTitles(titles: titles)*/
     }
 }
 
@@ -97,5 +123,7 @@ extension ChartView: Stylable {
 
     func themeDidUpdate(theme: Theme) {
         backgroundColor = theme.cellBackgroundColor
+        titleColor = theme.chartTitlesColor
+        setNeedsDisplay()
     }
 }
