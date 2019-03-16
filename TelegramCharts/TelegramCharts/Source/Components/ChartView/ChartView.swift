@@ -88,7 +88,9 @@ class ChartView: UIView {
             ChartDrawer.drawChart(points: points, context: context)
         }
         
-        
+        if let titlesData = charts?.getTitlesToDraw(viewport: bounds) {
+            ChartDrawer.drawXTitles(titles: titlesData)
+        }
         /*self.charts.lines.forEach { [weak self] line in
             guard let self = self else { return }
             ChartDrawer.configureContext(context: context, lineWidth: self.lineWidth, color: line.color.cgColor)

@@ -104,6 +104,25 @@ class ChartsData {
         return result
     }
     
+    func getTitlesToDraw(viewport: CGRect) -> [(NSAttributedString, CGRect)] {
+        var result = [(NSAttributedString, CGRect)]()
+        guard let line = lines.first,
+            let dispX = line.dispX else {
+            return result
+        }
+        var points = [CGPoint]()
+        for i in xTitles.indices {
+            let title = xTitles[i]
+            let dX = dispX[i]
+            let x = dX * viewport.width - title.size.width / 2
+            let y = viewport.height - title.size.height
+            
+            result.append((title.title, CGRect(x: x, y: y, width: title.size.width, height: title.size.height)))
+            points.append(CGPoint(x: x, y: y))
+        }
+        return result
+    }
+    
     private func normalize() {
         lines.forEach {
             $0.normalize(range: xVisibleRange)
@@ -144,10 +163,8 @@ class ChartLine {
         for i in 0 ..< x.count {
             let xPos = x[i]
             let dX: CGFloat = (xPos - range.lowerBound) / (range.upperBound - range.lowerBound)
-            if dX >= 0 && dX <= 1 {
-                dispX!.append(dX)
-                dispY!.append(y[i])
-            }
+            dispX!.append(dX)
+            dispY!.append(y[i])
         }
     }
 }
