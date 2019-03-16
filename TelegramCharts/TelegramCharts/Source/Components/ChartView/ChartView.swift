@@ -16,12 +16,17 @@ class ChartView: UIView {
             update(animated: true)
         }
     }
+    var axis: AxisData? {
+        didSet {
+            axis?.visibleRange = visibleRange
+            update(animated: true)
+        }
+    }
+    
     private var lastVisibleRange: ClosedRange<CGFloat> = 0 ... 1
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
-//            charts?.xVisibleRange = visibleRange
             update(animated: true)
-//            lastVisibleRange = visibleRange
         }
     }
     
@@ -62,9 +67,15 @@ class ChartView: UIView {
         let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, _) in
             guard let self = self else { return }
             
-            let curLow = self.lastVisibleRange.lowerBound + (self.visibleRange.lowerBound - self.lastVisibleRange.lowerBound) * phaseX
-            let curUp = self.lastVisibleRange.upperBound + (self.visibleRange.upperBound - self.lastVisibleRange.upperBound) * phaseX
+            let lastLow = self.lastVisibleRange.lowerBound
+            let lastUp = self.lastVisibleRange.upperBound
+            let low = self.visibleRange.lowerBound
+            let up = self.visibleRange.upperBound
+            
+            let curLow = lastLow + (low - lastLow) * phaseX
+            let curUp = lastUp + (up - lastUp) * phaseX
             let range = curLow ... curUp
+            
             self.charts?.xVisibleRange = range
             self.lastVisibleRange = range
 
@@ -91,31 +102,16 @@ class ChartView: UIView {
         charts?.getLinesToDraw(viewport: bounds).forEach { (points, color) in
             ChartDrawer.drawChart(points: points, color: color.cgColor, context: context)
         }
-        /*self.charts.lines.forEach { [weak self] line in
-            guard let self = self else { return }
-            ChartDrawer.configureContext(context: context, lineWidth: self.lineWidth, color: line.color.cgColor)
-            let values = line.displayValues
-            let points = values.map { CGPoint(x: $0.displayX, y: $0.displayY) }
-            ChartDrawer.drawChart(points: points, context: context)
+        
+        AxisDrawer.configureContext(context: context)
+        axis?.getTextToDraw(viewport: bounds).forEach { [weak self] (pos, string) in
+            let attributedString = NSAttributedString(string: string, attributes: self?.textAttributes)
+            let height: CGFloat = 21
+            let width = attributedString.width(withConstrainedHeight: height)
+            let x = pos.x - width / 2
+            let y = pos.y - height
+            AxisDrawer.drawText(text: attributedString, frame: CGRect(x: x, y: y, width: width, height: height))
         }
-        guard let values = charts.lines.first?.displayValues else { return }
-        var titles = [(NSAttributedString, CGRect)]()
-        values.forEach { value in
-            var title = value.xTitle
-            
-            var attributes = title.attributes(at: 0, effectiveRange: nil)
-            attributes[.foregroundColor] = titleColor
-            title = NSAttributedString(string: title.string, attributes: attributes)
-            
-            let size = value.xTitleSize
-            let rect = CGRect(x: value.displayX - size.width / 2,
-                              y: bounds.height - size.height,
-                              width: size.width,
-                              height: size.height)
-            
-            titles.append((title, rect))
-        }
-        ChartDrawer.drawXTitles(titles: titles)*/
     }
 }
 
@@ -123,6 +119,10 @@ class ChartView: UIView {
 
 extension ChartView: Stylable {
 
+    var textAttributes: [NSAttributedString.Key: Any] {
+        return [.foregroundColor: titleColor]
+    }
+    
     func themeDidUpdate(theme: Theme) {
         backgroundColor = theme.cellBackgroundColor
         titleColor = theme.chartTitlesColor

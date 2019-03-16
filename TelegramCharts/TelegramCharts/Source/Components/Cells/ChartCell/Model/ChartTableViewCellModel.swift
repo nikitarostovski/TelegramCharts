@@ -19,5 +19,6 @@ class ChartTableViewCellModel: BaseTableViewCellModel {
     }
     
     var chartsData: ChartsData?
+    var axisData: AxisData?
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1
 }

@@ -48,6 +48,8 @@
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
+		11851003223D33860034FA27 /* AxisData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851002223D33860034FA27 /* AxisData.swift */; };
+		11851005223D3C3E0034FA27 /* AxisDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851004223D3C3E0034FA27 /* AxisDrawer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +97,8 @@
 		11649F29223502E00081ABA1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
+		11851002223D33860034FA27 /* AxisData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AxisData.swift; sourceTree = "<group>"; };
+		11851004223D3C3E0034FA27 /* AxisDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AxisDrawer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -334,6 +338,8 @@
 				1154411722397C0C00795743 /* ChartView.swift */,
 				106DC319223A68E200D6D6C2 /* ChartsData.swift */,
 				106DC317223A400B00D6D6C2 /* ChartDrawer.swift */,
+				11851002223D33860034FA27 /* AxisData.swift */,
+				11851004223D3C3E0034FA27 /* AxisDrawer.swift */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
@@ -503,6 +509,7 @@
 				1154413D22397C0D00795743 /* MainViewController.swift in Sources */,
 				11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */,
 				1154414022397C0D00795743 /* Colors.swift in Sources */,
+				11851003223D33860034FA27 /* AxisData.swift in Sources */,
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
 				106DC318223A400B00D6D6C2 /* ChartDrawer.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
@@ -529,6 +536,7 @@
 				1154413922397C0D00795743 /* SliderThumbView.swift in Sources */,
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
+				11851005223D3C3E0034FA27 /* AxisDrawer.swift in Sources */,
 				1154413222397C0D00795743 /* BaseTableViewCellModel.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonTableViewCellModel.swift in Sources */,
 			);
