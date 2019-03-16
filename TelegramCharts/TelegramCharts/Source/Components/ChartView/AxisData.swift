@@ -14,8 +14,9 @@ class AxisData {
             normalize()
         }
     }
-    
+    var textWidth: CGFloat = 100
     var xPoints: [XAxisData]
+    var maxVisiblePositions = 5
     
     init(xTitles: [String]) {
         self.xPoints = [XAxisData]()
@@ -31,25 +32,66 @@ class AxisData {
     
     private func normalize() {
         xPoints.forEach { $0.normalize(range: visibleRange) }
+        var leftIndex = 0
+        for i in xPoints.indices {
+            if xPoints[i].normX > 0 {
+                leftIndex = i
+                break
+            }
+        }
+        var rightIndex = 0
+        for i in xPoints.indices.reversed() {
+            if xPoints[i].normX < 1 {
+                rightIndex = i
+                break
+            }
+        }
+        var step = 1
+        var visibleCount = rightIndex - leftIndex + 1
+        while visibleCount > maxVisiblePositions {
+            step += 1
+            visibleCount = (rightIndex - leftIndex + 1) / step
+        }
+        var visibilityIterator = 0
+        for i in xPoints.indices {
+            if i == leftIndex || i == rightIndex {
+                xPoints[i].isHidden = false
+                xPoints[i].targetAlpha = 1
+//                xPoints[i].currentAlpha = 1
+            } else if i < leftIndex || i > rightIndex {
+                xPoints[i].isHidden = true
+                xPoints[i].targetAlpha = 0
+                xPoints[i].currentAlpha = 0
+            } else {
+                xPoints[i].isHidden = false
+                if visibilityIterator == step {
+                    xPoints[i].targetAlpha = 1
+                } else {
+                    xPoints[i].targetAlpha = 0
+                }
+                visibilityIterator += 1
+                if visibilityIterator > step {
+                    visibilityIterator = 0
+                }
+            }
+        }
     }
     
     func getTextToDraw(viewport: CGRect) -> [XAxisData] {
         for point in xPoints {
-            point.targetAlpha = isVisible(point: point) ? 1 : 0
+            guard !point.isHidden else { continue }
             let x = viewport.origin.x + point.normX * viewport.width
             point.dispX = x
         }
         return xPoints
-    }
-    
-    private func isVisible(point: XAxisData) -> Bool {
-        return point.normX > 0.2 && point.normX < 0.7
     }
 }
 
 class XAxisData {
     var x: CGFloat
     var title: String
+    
+    var isHidden = true
     var targetAlpha: CGFloat = 1
     var currentAlpha: CGFloat = 1
     

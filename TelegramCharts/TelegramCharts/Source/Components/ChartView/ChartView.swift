@@ -76,8 +76,12 @@ class ChartView: UIView {
             let curUp = lastUp + (up - lastUp) * phaseX
             let range = curLow ... curUp
             
-            self.axis?.visibleRange = range
-            self.axis?.updateAlpha(phase: phaseY)
+            if let axis = self.axis {
+                axis.textWidth = 80
+                axis.maxVisiblePositions = Int(self.bounds.width / axis.textWidth)
+                axis.visibleRange = range
+                axis.updateAlpha(phase: phaseY)
+            }
             self.charts?.xVisibleRange = range
             self.lastVisibleRange = range
 
