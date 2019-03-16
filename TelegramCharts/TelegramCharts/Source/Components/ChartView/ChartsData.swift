@@ -27,7 +27,7 @@ class PrintableDate: Printable {
         
         let height: CGFloat = 21
         let width = title.width(withConstrainedHeight: height)
-        size = CGSize(width: width, height: height)
+        size = CGSize(width: width * 2, height: height)
     }
 }
 
@@ -110,7 +110,6 @@ class ChartsData {
             let dispX = line.dispX else {
             return result
         }
-        var points = [CGPoint]()
         for i in xTitles.indices {
             let title = xTitles[i]
             let dX = dispX[i]
@@ -118,9 +117,18 @@ class ChartsData {
             let y = viewport.height - title.size.height
             
             result.append((title.title, CGRect(x: x, y: y, width: title.size.width, height: title.size.height)))
-            points.append(CGPoint(x: x, y: y))
         }
-        return result
+        var filteredResult = [(NSAttributedString, CGRect)]()
+        var lastVisibleIndex = 0
+        for index in 1 ..< result.count {
+            let frame = result[index].1
+            let lastFrame = result[lastVisibleIndex].1
+            if !lastFrame.intersects(frame) {
+                filteredResult.append(result[index])
+                lastVisibleIndex = index
+            }
+        }
+        return filteredResult
     }
     
     private func normalize() {
