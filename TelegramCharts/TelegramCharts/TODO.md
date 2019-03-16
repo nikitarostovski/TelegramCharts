@@ -6,6 +6,7 @@ In ChartView shorten thousands to *k and so on
 Move to VIPER
 Fix RangeSlider jerking on touch (probably add animation)
 Make separate animation for each axis
+Check if we are drawing only visible line segments and labels
 Make SliderThumbView a subclass of CALayer and move arrows to anoter class
 Make TableViewController with chart selection
 Make layout pixel-perfect

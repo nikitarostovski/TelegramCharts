@@ -64,7 +64,7 @@ class ChartView: UIView {
     }
 
     private func update(animated: Bool = true) {
-        let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, _) in
+        let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, phaseY) in
             guard let self = self else { return }
             
             let lastLow = self.lastVisibleRange.lowerBound
@@ -76,6 +76,8 @@ class ChartView: UIView {
             let curUp = lastUp + (up - lastUp) * phaseX
             let range = curLow ... curUp
             
+            self.axis?.visibleRange = range
+            self.axis?.updateAlpha(phase: phaseY)
             self.charts?.xVisibleRange = range
             self.lastVisibleRange = range
 
@@ -104,12 +106,12 @@ class ChartView: UIView {
         }
         
         AxisDrawer.configureContext(context: context)
-        axis?.getTextToDraw(viewport: bounds).forEach { [weak self] (pos, string) in
-            let attributedString = NSAttributedString(string: string, attributes: self?.textAttributes)
+        axis?.getTextToDraw(viewport: bounds).forEach { [weak self] axisPoint in
+            let attributedString = NSAttributedString(string: axisPoint.title, attributes: self?.textAttributes(alpha: axisPoint.currentAlpha))
             let height: CGFloat = 21
             let width = attributedString.width(withConstrainedHeight: height)
-            let x = pos.x - width / 2
-            let y = pos.y - height
+            let x = axisPoint.dispX - width / 2
+            let y = bounds.height - height
             AxisDrawer.drawText(text: attributedString, frame: CGRect(x: x, y: y, width: width, height: height))
         }
     }
@@ -119,8 +121,8 @@ class ChartView: UIView {
 
 extension ChartView: Stylable {
 
-    var textAttributes: [NSAttributedString.Key: Any] {
-        return [.foregroundColor: titleColor]
+    func textAttributes(alpha: CGFloat) -> [NSAttributedString.Key: Any] {
+        return [.foregroundColor: titleColor.withAlphaComponent(alpha)]
     }
     
     func themeDidUpdate(theme: Theme) {

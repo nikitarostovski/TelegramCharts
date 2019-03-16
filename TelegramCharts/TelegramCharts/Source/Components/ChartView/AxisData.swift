@@ -25,25 +25,35 @@ class AxisData {
         }
     }
     
+    func updateAlpha(phase: CGFloat) {
+        xPoints.forEach { $0.updateAlpha(phase: phase) }
+    }
+    
     private func normalize() {
         xPoints.forEach { $0.normalize(range: visibleRange) }
     }
     
-    func getTextToDraw(viewport: CGRect) -> [(CGPoint, String)] {
-        var result = [(CGPoint, String)]()
+    func getTextToDraw(viewport: CGRect) -> [XAxisData] {
         for point in xPoints {
-            let x = viewport.origin.x + point.dispX * viewport.width
-            let y = viewport.height
-            result.append((CGPoint(x: x, y: y), point.title))
+            point.targetAlpha = isVisible(point: point) ? 1 : 0
+            let x = viewport.origin.x + point.normX * viewport.width
+            point.dispX = x
         }
-        return result
+        return xPoints
+    }
+    
+    private func isVisible(point: XAxisData) -> Bool {
+        return point.normX > 0.2 && point.normX < 0.7
     }
 }
 
 class XAxisData {
     var x: CGFloat
     var title: String
+    var targetAlpha: CGFloat = 1
+    var currentAlpha: CGFloat = 1
     
+    var normX: CGFloat = 0
     var dispX: CGFloat = 0
     
     init(x: CGFloat, title: String) {
@@ -51,7 +61,11 @@ class XAxisData {
         self.title = title
     }
     
+    func updateAlpha(phase: CGFloat) {
+        currentAlpha = currentAlpha + (targetAlpha - currentAlpha) * phase
+    }
+    
     func normalize(range: ClosedRange<CGFloat>) {
-        dispX = (x - range.lowerBound) / (range.upperBound - range.lowerBound)
+        normX = (x - range.lowerBound) / (range.upperBound - range.lowerBound)
     }
 }
