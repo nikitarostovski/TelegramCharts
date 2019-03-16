@@ -16,10 +16,12 @@ class ChartView: UIView {
             update(animated: true)
         }
     }
+    private var lastVisibleRange: ClosedRange<CGFloat> = 0 ... 1
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
-            charts?.xVisibleRange = visibleRange
+//            charts?.xVisibleRange = visibleRange
             update(animated: true)
+//            lastVisibleRange = visibleRange
         }
     }
     
@@ -57,11 +59,14 @@ class ChartView: UIView {
     }
 
     private func update(animated: Bool = true) {
-        /*let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, phaseY) in
+        let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, _) in
             guard let self = self else { return }
-            self.charts.updateCurrentXPoints(phase: phaseX)
-            self.charts.updateCurrentYPoints(phase: phaseY)
-            self.charts.calculateDisplayValues(viewport: self.bounds)
+            
+            let curLow = self.lastVisibleRange.lowerBound + (self.visibleRange.lowerBound - self.lastVisibleRange.lowerBound) * phaseX
+            let curUp = self.lastVisibleRange.upperBound + (self.visibleRange.upperBound - self.lastVisibleRange.upperBound) * phaseX
+            let range = curLow ... curUp
+            self.charts?.xVisibleRange = range
+            self.lastVisibleRange = range
 
             self.setNeedsDisplay()
         }
@@ -75,21 +80,16 @@ class ChartView: UIView {
                              finish: nil)
         } else {
             updateHandler(1.0, 1.0)
-        }*/
-        setNeedsDisplay()
+        }
     }
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
+        ChartDrawer.configureContext(context: context, lineWidth: lineWidth)
         charts?.getLinesToDraw(viewport: bounds).forEach { (points, color) in
-            ChartDrawer.configureContext(context: context, lineWidth: lineWidth, color: color.cgColor)
-            ChartDrawer.drawChart(points: points, context: context)
-        }
-        
-        if let titlesData = charts?.getTitlesToDraw(viewport: bounds) {
-            ChartDrawer.drawXTitles(titles: titlesData)
+            ChartDrawer.drawChart(points: points, color: color.cgColor, context: context)
         }
         /*self.charts.lines.forEach { [weak self] line in
             guard let self = self else { return }

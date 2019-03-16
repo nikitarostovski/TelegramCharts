@@ -351,7 +351,7 @@ class MainViewController: UITableViewController {
         let lineA = (testDataA, UIColor(hexString: "4bd964"))
         let lineB = (testDataB, UIColor(hexString: "fe3c30"))
         
-        return ChartsData(xTitles: dates.map { PrintableDate(date: $0) }, lines: [lineA, lineB])
+        return ChartsData(lines: [lineA, lineB])
     }
     
     // MARK: - Lifecycle

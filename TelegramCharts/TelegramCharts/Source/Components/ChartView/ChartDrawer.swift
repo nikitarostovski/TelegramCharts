@@ -10,20 +10,20 @@ import UIKit
 
 class ChartDrawer {
 
-    static func configureContext(context: CGContext, lineWidth: CGFloat = 1.0, color: CGColor) {
+    static func configureContext(context: CGContext, lineWidth: CGFloat = 1.0) {
         context.setLineCap(.round)
         context.setLineJoin(.round)
         context.setLineWidth(lineWidth)
         context.setFillColor(UIColor.clear.cgColor)
-        context.setStrokeColor(color)
         context.setAllowsAntialiasing(true)
         context.setShouldAntialias(true)
     }
 
-    static func drawChart(points: [CGPoint], context: CGContext) {
+    static func drawChart(points: [CGPoint], color: CGColor, context: CGContext) {
         guard points.count > 1 else { return }
         context.saveGState()
 
+        context.setStrokeColor(color)
         context.move(to: points.first!)
         for i in 1 ..< points.count {
             context.addLine(to: points[i])
@@ -31,11 +31,5 @@ class ChartDrawer {
         context.strokePath()
 
         context.restoreGState()
-    }
-    
-    static func drawXTitles(titles: [(NSAttributedString, CGRect)]) {
-        titles.forEach { (title, frame) in
-            title.draw(in: frame)
-        }
     }
 }
