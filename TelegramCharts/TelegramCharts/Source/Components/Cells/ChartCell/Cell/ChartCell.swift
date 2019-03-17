@@ -36,9 +36,11 @@ class ChartCell: BaseCell {
     override func updateAppearance() {
         super.updateAppearance()
         guard let model = model as? ChartCellModel else { return }
-        if currentRange == nil {
-            currentRange = model.initialRange ?? 0 ... 1
+        
+        if model.currentRange == nil {
+            model.currentRange = 0 ... 1
         }
+        currentRange = model.currentRange
         
         mainChartView.charts = model.chartsData
         mainChartView.axis = model.axisData
@@ -66,6 +68,10 @@ extension ChartCell: RangeSliderDelegate {
             let up = sender.upperValue else {
                 return
         }
-        mainChartView.visibleRange = low ... up
+        currentRange = low ... up
+        mainChartView.visibleRange = currentRange!
+        if let model = model as? ChartCellModel {
+            model.currentRange = currentRange
+        }
     }
 }

@@ -399,7 +399,7 @@ class MainViewController: UITableViewController {
         model.chartsData = chartsData
         model.axisData = axisData
         model.gridData = gridData
-        model.initialRange = 0.75 ... 1.0
+        model.currentRange = 0.75 ... 1.0
         model.topSeparatorStyle.isHidden = false
         return model
     }

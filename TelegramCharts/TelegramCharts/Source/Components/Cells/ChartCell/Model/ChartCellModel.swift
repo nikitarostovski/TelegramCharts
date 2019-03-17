@@ -21,5 +21,5 @@ class ChartCellModel: BaseCellModel {
     var chartsData: ChartsData?
     var axisData: AxisData?
     var gridData: GridData?
-    var initialRange: ClosedRange<CGFloat>?
+    var currentRange: ClosedRange<CGFloat>?
 }
