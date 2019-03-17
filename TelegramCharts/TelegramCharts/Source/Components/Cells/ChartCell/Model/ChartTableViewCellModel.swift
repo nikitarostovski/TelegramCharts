@@ -21,5 +21,5 @@ class ChartTableViewCellModel: BaseTableViewCellModel {
     var chartsData: ChartsData?
     var axisData: AxisData?
     var gridData: GridData?
-    var visibleRange: ClosedRange<CGFloat> = 0 ... 1
+    var initialRange: ClosedRange<CGFloat>?
 }

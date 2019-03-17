@@ -18,9 +18,6 @@
 		1154412822397C0D00795743 /* ButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 115440F222397C0C00795743 /* ButtonTableViewCell.xib */; };
 		1154412922397C0D00795743 /* ButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440F322397C0C00795743 /* ButtonTableViewCell.swift */; };
 		1154412A22397C0D00795743 /* ButtonTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440F522397C0C00795743 /* ButtonTableViewCellModel.swift */; };
-		1154412B22397C0D00795743 /* ChartRangeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 115440F822397C0C00795743 /* ChartRangeTableViewCell.xib */; };
-		1154412C22397C0D00795743 /* ChartRangeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440F922397C0C00795743 /* ChartRangeTableViewCell.swift */; };
-		1154412D22397C0D00795743 /* RangeTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440FB22397C0C00795743 /* RangeTableViewCellModel.swift */; };
 		1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440FE22397C0C00795743 /* TableViewHeaderViewModel.swift */; };
 		1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410022397C0C00795743 /* TableViewHeaderView.swift */; };
 		1154413022397C0D00795743 /* TableViewHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1154410122397C0C00795743 /* TableViewHeaderView.xib */; };
@@ -67,9 +64,6 @@
 		115440F222397C0C00795743 /* ButtonTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ButtonTableViewCell.xib; sourceTree = "<group>"; };
 		115440F322397C0C00795743 /* ButtonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCell.swift; sourceTree = "<group>"; };
 		115440F522397C0C00795743 /* ButtonTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCellModel.swift; sourceTree = "<group>"; };
-		115440F822397C0C00795743 /* ChartRangeTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChartRangeTableViewCell.xib; sourceTree = "<group>"; };
-		115440F922397C0C00795743 /* ChartRangeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartRangeTableViewCell.swift; sourceTree = "<group>"; };
-		115440FB22397C0C00795743 /* RangeTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeTableViewCellModel.swift; sourceTree = "<group>"; };
 		115440FE22397C0C00795743 /* TableViewHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderViewModel.swift; sourceTree = "<group>"; };
 		1154410022397C0C00795743 /* TableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderView.swift; sourceTree = "<group>"; };
 		1154410122397C0C00795743 /* TableViewHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewHeaderView.xib; sourceTree = "<group>"; };
@@ -163,7 +157,6 @@
 			isa = PBXGroup;
 			children = (
 				115440F022397C0C00795743 /* ButtonCell */,
-				115440F622397C0C00795743 /* ChartRangeCell */,
 				115440FC22397C0C00795743 /* HeaderView */,
 				1154410222397C0C00795743 /* BaseCell */,
 				1154410722397C0C00795743 /* ChartCell */,
@@ -194,32 +187,6 @@
 			isa = PBXGroup;
 			children = (
 				115440F522397C0C00795743 /* ButtonTableViewCellModel.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		115440F622397C0C00795743 /* ChartRangeCell */ = {
-			isa = PBXGroup;
-			children = (
-				115440F722397C0C00795743 /* Cell */,
-				115440FA22397C0C00795743 /* Model */,
-			);
-			path = ChartRangeCell;
-			sourceTree = "<group>";
-		};
-		115440F722397C0C00795743 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				115440F822397C0C00795743 /* ChartRangeTableViewCell.xib */,
-				115440F922397C0C00795743 /* ChartRangeTableViewCell.swift */,
-			);
-			path = Cell;
-			sourceTree = "<group>";
-		};
-		115440FA22397C0C00795743 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				115440FB22397C0C00795743 /* RangeTableViewCellModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -497,7 +464,6 @@
 				1154413622397C0D00795743 /* CheckTableViewCell.xib in Resources */,
 				11649F32223502E00081ABA1 /* Main.storyboard in Resources */,
 				11649F30223502E00081ABA1 /* Assets.xcassets in Resources */,
-				1154412B22397C0D00795743 /* ChartRangeTableViewCell.xib in Resources */,
 				1154413322397C0D00795743 /* ChartTableViewCell.xib in Resources */,
 				11649FE522353E180081ABA1 /* Localizable.strings in Resources */,
 				11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */,
@@ -520,7 +486,6 @@
 				106DC318223A400B00D6D6C2 /* ChartDrawer.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
 				1154413522397C0D00795743 /* ChartTableViewCellModel.swift in Sources */,
-				1154412D22397C0D00795743 /* RangeTableViewCellModel.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
 				1154414122397C0D00795743 /* ThemeManager.swift in Sources */,
 				1154412722397C0D00795743 /* NSObject+Theme.swift in Sources */,
@@ -529,7 +494,6 @@
 				1154413422397C0D00795743 /* ChartTableViewCell.swift in Sources */,
 				11851009223E4A3F0034FA27 /* GridData.swift in Sources */,
 				1154413722397C0D00795743 /* CheckTableViewCell.swift in Sources */,
-				1154412C22397C0D00795743 /* ChartRangeTableViewCell.swift in Sources */,
 				1154413122397C0D00795743 /* BaseTableViewCell.swift in Sources */,
 				1154413B22397C0D00795743 /* ChartView.swift in Sources */,
 				1154414422397C9100795743 /* PointAnimator.swift in Sources */,

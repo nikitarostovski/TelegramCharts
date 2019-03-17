@@ -399,16 +399,8 @@ class MainViewController: UITableViewController {
         model.chartsData = chartsData
         model.axisData = axisData
         model.gridData = gridData
-        model.topSeparatorStyle.isHidden = false
-        return model
-    }
-    private var chartRangeCellModel: ChartRangeTableViewCellModel {
-        let model = ChartRangeTableViewCellModel()
-        model.chartsData = chartsData
         model.initialRange = 0.75 ... 1.0
-        model.rangeChangeAction = { [weak self] range in
-            self?.chartRangeChange(range: range)
-        }
+        model.topSeparatorStyle.isHidden = false
         return model
     }
     private var joinedCellModel: CheckTableViewCellModel {
@@ -460,7 +452,7 @@ class MainViewController: UITableViewController {
     private func createStructure() {
         structure.clear()
         
-        let chartModels = [chartCellModel, chartRangeCellModel, joinedCellModel, leftCellModel]
+        let chartModels = [chartCellModel, joinedCellModel, leftCellModel]
         let chartSection = TableViewSection(headerModel: followersHeaderModel, cellModels: chartModels)
         structure.addSection(section: chartSection)
         
@@ -471,24 +463,6 @@ class MainViewController: UITableViewController {
     
     // MARK: - Actions
 
-    private func chartRangeChange(range: ClosedRange<CGFloat>) {
-        var chartCellModels = [ChartTableViewCellModel]()
-        structure.sections.forEach { section in
-            section.cellModels.forEach { model in
-                if model is ChartTableViewCellModel {
-                    chartCellModels.append(model as! ChartTableViewCellModel)
-                }
-            }
-        }
-        chartCellModels.forEach {
-            $0.visibleRange = range
-        }
-        tableView.visibleCells.forEach {
-            guard let chartCell = $0 as? ChartTableViewCell else { return }
-            chartCell.updateAppearance()
-        }
-    }
-    
     private func setDayTheme() {
         ThemeManager.shared.currentTheme = .day
     }

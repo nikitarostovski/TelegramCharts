@@ -105,7 +105,6 @@ class ChartView: UIView {
                 grid.updateAlpha(phase: phaseY)
             }
             self.charts?.xVisibleRange = range
-            self.charts?.updateScaleY(phase: phaseY)
             self.lastVisibleRange = range
 
             self.setNeedsDisplay()

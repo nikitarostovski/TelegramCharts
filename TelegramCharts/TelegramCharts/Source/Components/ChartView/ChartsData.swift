@@ -20,9 +20,16 @@ class ChartsData {
     
     private var lines: [ChartLine]
     
+    init(lines: [ChartLine]) {
+        self.lines = lines.map { $0.copy() }
+    }
+    
     init?(lines: [([Int64], UIColor)]) {
         self.lines = [ChartLine]()
-        
+        fillLinesFromData(lines: lines)
+    }
+    
+    private func fillLinesFromData(lines: [([Int64], UIColor)]) {
         var maxValue: Int64 = 0
         for line in lines {
             guard let lineMaxValue = line.0.max() else { continue }
@@ -44,11 +51,6 @@ class ChartsData {
             let chartLine = ChartLine(x: xPositions, y: yPositions, color: line.1)
             self.lines.append(chartLine)
         }
-    }
-    
-    func updateScaleY(phase: CGFloat) {
-        print(maxVisibleY)
-        lines.forEach { $0.updateScaleY(max: maxVisibleY, phase: phase) }
     }
     
     func getLinesToDraw(viewport: CGRect) -> [([CGPoint], UIColor)] {
@@ -78,6 +80,16 @@ class ChartsData {
             maxVisibleY = max(maxVisibleY, lineMaxVisibleY)
         }
     }
+    
+    // MARK: - Copy
+    
+    convenience init( _ otherObject: ChartsData) {
+        self.init(lines: otherObject.lines)
+    }
+    
+    func copy() -> ChartsData {
+        return ChartsData(self)
+    }
 }
 
 class ChartLine {
@@ -88,14 +100,13 @@ class ChartLine {
     
     var normX: [CGFloat]?
     var normY: [CGFloat]?
-    var lastNormY: [CGFloat]?
-    var dispY: [CGFloat]?
+    
     var dispPoints: [CGPoint] {
         var result = [CGPoint]()
-        guard let normX = normX, let dispY = dispY else { return result }
+        guard let normX = normX, let normY = normY else { return result }
         for i in 0 ..< normX.count {
-            guard i < normX.count && i < dispY.count else { continue }
-            result.append(CGPoint(x: normX[i], y: dispY[i]))
+            guard i < normX.count && i < normY.count else { continue }
+            result.append(CGPoint(x: normX[i], y: normY[i]))
         }
         return result
     }
@@ -107,7 +118,6 @@ class ChartLine {
     }
     
     func normalize(range: ClosedRange<CGFloat>) {
-        lastNormY = normY
         normX = [CGFloat]()
         normY = [CGFloat]()
         for i in 0 ..< x.count {
@@ -118,10 +128,13 @@ class ChartLine {
         }
     }
     
-    func updateScaleY(max: CGFloat, phase: CGFloat) {
-        dispY = [CGFloat]()
-        for i in 0 ..< (normY?.count ?? 0) {
-            dispY?.append(lastNormY![i] + (normY![i] - lastNormY![i]) * max * phase)
-        }
+    // MARK: - Copy
+    
+    convenience init( _ otherObject: ChartLine) {
+        self.init(x: otherObject.x, y: otherObject.y, color: otherObject.color)
+    }
+    
+    func copy() -> ChartLine {
+        return ChartLine(self)
     }
 }
