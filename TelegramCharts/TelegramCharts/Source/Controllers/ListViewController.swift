@@ -114,7 +114,7 @@ extension ListViewController {
         if index != charts!.count - 1 {
             model.bottomSeparatorStyle.clampToEdge = false
         }
-        model.titleText = "Statistics " + String(index)
+        model.titleText = "Statistics " + String(index + 1)
         model.cellTapAction = { [weak self] in
             self?.selectedIndex = index
             self?.performSegue(withIdentifier: "showChart", sender: nil)
