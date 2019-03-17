@@ -26,7 +26,6 @@ class GridData {
             let line = GridLineData(y: CGFloat(i) / CGFloat(maxValue), value: i)
             yLines.append(line)
         }
-        print(yLines.count)
     }
     
     func updateAlpha(phase: CGFloat) {
