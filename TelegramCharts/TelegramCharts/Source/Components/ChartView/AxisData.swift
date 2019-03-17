@@ -83,7 +83,7 @@ class AxisData {
             let x = viewport.origin.x + point.normX * viewport.width
             point.dispX = x
         }
-        return xPoints
+        return xPoints.filter { !$0.isHidden }
     }
 }
 

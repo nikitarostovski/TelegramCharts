@@ -37,65 +37,46 @@ class GridData {
         yLines.forEach {
             let range = CGFloat(0) ... CGFloat(maxVisibleValue) / CGFloat(maxValue)
             $0.normalize(range: range)
-            if $0.normY < 0 || $0.normY > 1 {
-                $0.targetAlpha = 0
-                $0.currentAlpha = 0
-                $0.isHidden = true
+        }
+        
+        let bottomIndex = 0
+        var topIndex = 0
+        for i in 1 ..< yLines.count {
+            if yLines[i].normY > 1 {
+                topIndex = i - 1
+                break
+            }
+        }
+        var step = 1
+        var visibleCount = topIndex - bottomIndex + 1
+        while visibleCount > maxVisibleSections {
+            step += 1
+            visibleCount = (topIndex - bottomIndex + 1) / step
+        }
+        var visibilityIterator = 0
+        for i in yLines.indices {
+            if i == bottomIndex || i == topIndex {
+                yLines[i].isHidden = false
+                yLines[i].targetAlpha = 1
+                yLines[i].currentAlpha = 1
+            } else if i < bottomIndex || i > topIndex {
+                yLines[i].isHidden = true
+                yLines[i].targetAlpha = 0
+                yLines[i].currentAlpha = 0
             } else {
-                $0.isHidden = false
-                $0.targetAlpha = 1
-                $0.currentAlpha = 1
+                yLines[i].isHidden = false
+                if visibilityIterator == step {
+                    yLines[i].targetAlpha = 1
+                } else {
+                    yLines[i].targetAlpha = 0
+                }
+                visibilityIterator += 1
+                if visibilityIterator > step {
+                    visibilityIterator = 0
+                }
             }
         }
     }
-//
-//    private func normalize() {
-//        xPoints.forEach { $0.normalize(range: visibleRange) }
-//        var leftIndex = 0
-//        for i in xPoints.indices {
-//            if xPoints[i].normX > 0 {
-//                leftIndex = i
-//                break
-//            }
-//        }
-//        var rightIndex = 0
-//        for i in xPoints.indices.reversed() {
-//            if xPoints[i].normX < 1 {
-//                rightIndex = i
-//                break
-//            }
-//        }
-//        var step = 1
-//        var visibleCount = rightIndex - leftIndex + 1
-//        while visibleCount > maxVisiblePositions {
-//            step += 1
-//            visibleCount = (rightIndex - leftIndex + 1) / step
-//        }
-//        var visibilityIterator = 0
-//        for i in xPoints.indices {
-//            if i == leftIndex || i == rightIndex {
-//                xPoints[i].isHidden = false
-//                xPoints[i].targetAlpha = 1
-//                //                xPoints[i].currentAlpha = 1
-//            } else if i < leftIndex || i > rightIndex {
-//                xPoints[i].isHidden = true
-//                xPoints[i].targetAlpha = 0
-//                xPoints[i].currentAlpha = 0
-//            } else {
-//                xPoints[i].isHidden = false
-//                if visibilityIterator == step {
-//                    xPoints[i].targetAlpha = 1
-//                } else {
-//                    xPoints[i].targetAlpha = 0
-//                }
-//                visibilityIterator += 1
-//                if visibilityIterator > step {
-//                    visibilityIterator = 0
-//                }
-//            }
-//        }
-//    }
-//
     
     func getLinesToDraw(viewport: CGRect) -> [GridLineData] {
         for line in yLines {
@@ -103,7 +84,7 @@ class GridData {
             let y = viewport.origin.y + viewport.height - (line.normY * viewport.height)
             line.dispY = y
         }
-        return yLines
+        return yLines.filter { !$0.isHidden }
     }
 }
 

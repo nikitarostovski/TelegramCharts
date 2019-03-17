@@ -124,11 +124,6 @@ class ChartView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        ChartDrawer.configureContext(context: context, lineWidth: lineWidth)
-        charts?.getLinesToDraw(viewport: chartBounds).forEach { (points, color) in
-            ChartDrawer.drawChart(points: points, color: color.cgColor, context: context)
-        }
         if let axis = self.axis {
             GridDrawer.configureContext(context: context, lineWidth: 0.5)
             let leftPoint = CGPoint(x: 0, y: chartBounds.maxY)
@@ -159,8 +154,13 @@ class ChartView: UIView {
                                        width: textWidth,
                                        height: textHeight)
                 GridDrawer.drawText(text: text, frame: textFrame)
-                GridDrawer.drawLine(pointA: ptA, pointB: ptB, color: gridAuxColor.cgColor, context: context)
+                let color = gridAuxColor.withAlphaComponent($0.currentAlpha)
+                GridDrawer.drawLine(pointA: ptA, pointB: ptB, color: color.cgColor, context: context)
             }
+        }
+        ChartDrawer.configureContext(context: context, lineWidth: lineWidth)
+        charts?.getLinesToDraw(viewport: chartBounds).forEach { (points, color) in
+            ChartDrawer.drawChart(points: points, color: color.cgColor, context: context)
         }
     }
 }
