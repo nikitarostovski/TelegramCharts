@@ -10,7 +10,7 @@ import UIKit
 
 struct TableViewSection {
     var headerModel: TableViewHeaderViewModel?
-    var cellModels: [BaseTableViewCellModel]
+    var cellModels: [BaseCellModel]
 }
 
 class TableViewStructure {
@@ -25,7 +25,7 @@ class TableViewStructure {
         sections.append(section)
     }
     
-    func cellModel(for indexPath: IndexPath) -> BaseTableViewCellModel {
+    func cellModel(for indexPath: IndexPath) -> BaseCellModel {
         let sectionIndex = indexPath.section
         let rowIndex = indexPath.row
         let section = sections[sectionIndex]

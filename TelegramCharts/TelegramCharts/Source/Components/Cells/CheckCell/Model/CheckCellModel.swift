@@ -1,5 +1,5 @@
 //
-//  CheckTableViewCellModel.swift
+//  CheckCellModel.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/03/2019.
@@ -10,14 +10,14 @@ import UIKit
 
 typealias CellTapAction = () -> Void
 
-class CheckTableViewCellModel: BaseTableViewCellModel {
+class CheckCellModel: BaseCellModel {
 
     override var cellIdentifier: String {
-        return CheckTableViewCell.cellIdentifier()
+        return CheckCell.cellIdentifier()
     }
     
     override func cellHeight() -> CGFloat {
-        return CheckTableViewCell.cellHeight
+        return CheckCell.cellHeight
     }
     
     var titleText = ""

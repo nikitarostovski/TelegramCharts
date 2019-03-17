@@ -394,8 +394,8 @@ class MainViewController: UITableViewController {
         model.titleText = "Followers".localized().uppercased()
         return model
     }
-    private var chartCellModel: ChartTableViewCellModel {
-        let model = ChartTableViewCellModel()
+    private var chartCellModel: ChartCellModel {
+        let model = ChartCellModel()
         model.chartsData = chartsData
         model.axisData = axisData
         model.gridData = gridData
@@ -403,8 +403,8 @@ class MainViewController: UITableViewController {
         model.topSeparatorStyle.isHidden = false
         return model
     }
-    private var joinedCellModel: CheckTableViewCellModel {
-        let model = CheckTableViewCellModel()
+    private var joinedCellModel: CheckCellModel {
+        let model = CheckCellModel()
         model.hasCheckmark = true
         model.tagColor = UIColor(hexString: "4bd964")
         model.titleText = "Joined Channel"
@@ -412,8 +412,8 @@ class MainViewController: UITableViewController {
         model.bottomSeparatorStyle.clampToEdge = false
         return model
     }
-    private var leftCellModel: CheckTableViewCellModel {
-        let model = CheckTableViewCellModel()
+    private var leftCellModel: CheckCellModel {
+        let model = CheckCellModel()
         model.hasCheckmark = false
         model.tagColor = UIColor(hexString: "fe3c30")
         model.titleText = "Left Channel"
@@ -424,8 +424,8 @@ class MainViewController: UITableViewController {
         let model = TableViewHeaderViewModel()
         return model
     }
-    private var themeCellModel: ButtonTableViewCellModel {
-        let model = ButtonTableViewCellModel()
+    private var themeCellModel: ButtonCellModel {
+        let model = ButtonCellModel()
         model.topSeparatorStyle.isHidden = false
         model.bottomSeparatorStyle.isHidden = false
         let dayModeTitle = "Switch to Night Mode".localized()

@@ -1,5 +1,5 @@
 //
-//  ChartTableViewCell.swift
+//  ChartCell.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/03/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChartTableViewCell: BaseTableViewCell {
+class ChartCell: BaseCell {
 
     override class var cellHeight: CGFloat {
         return 340
@@ -35,7 +35,7 @@ class ChartTableViewCell: BaseTableViewCell {
     
     override func updateAppearance() {
         super.updateAppearance()
-        guard let model = model as? ChartTableViewCellModel else { return }
+        guard let model = model as? ChartCellModel else { return }
         if currentRange == nil {
             currentRange = model.initialRange ?? 0 ... 1
         }
@@ -59,7 +59,7 @@ class ChartTableViewCell: BaseTableViewCell {
     }
 }
 
-extension ChartTableViewCell: RangeSliderDelegate {
+extension ChartCell: RangeSliderDelegate {
     
     func rangeDidChange(sender: RangeSlider) {
         guard let low = sender.lowerValue,

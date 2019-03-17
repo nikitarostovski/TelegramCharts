@@ -1,5 +1,5 @@
 //
-//  BaseTableViewCell.swift
+//  BaseCell.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/03/2019.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class BaseTableViewCell: UITableViewCell, Stylable {
+class BaseCell: UITableViewCell, Stylable {
 
-    weak var model: BaseTableViewCellModel?
+    weak var model: BaseCellModel?
     
     class var cellHeight: CGFloat {
         return 44
@@ -20,7 +20,7 @@ class BaseTableViewCell: UITableViewCell, Stylable {
     private var bottomSeparatorLayer: CALayer?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        fatalError("Should override BaseTableViewCell class")
+        fatalError("Should override BaseCell class")
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,7 +52,7 @@ class BaseTableViewCell: UITableViewCell, Stylable {
         return String(describing: self)
     }
     
-    func setup(with model: BaseTableViewCellModel) {
+    func setup(with model: BaseCellModel) {
         self.model = model
         updateAppearance()
     }

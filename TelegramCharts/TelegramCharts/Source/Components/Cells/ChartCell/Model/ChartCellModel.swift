@@ -1,5 +1,5 @@
 //
-//  ChartTableViewCellModel.swift
+//  ChartCellModel.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/03/2019.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-class ChartTableViewCellModel: BaseTableViewCellModel {
+class ChartCellModel: BaseCellModel {
 
     override var cellIdentifier: String {
-        return ChartTableViewCell.cellIdentifier()
+        return ChartCell.cellIdentifier()
     }
     
     override func cellHeight() -> CGFloat {
-        return ChartTableViewCell.cellHeight
+        return ChartCell.cellHeight
     }
     
     var chartsData: ChartsData?

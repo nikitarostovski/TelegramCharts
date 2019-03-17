@@ -1,5 +1,5 @@
 //
-//  ButtonTableViewCellModel.swift
+//  ButtonCellModel.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/03/2019.
@@ -10,14 +10,14 @@ import UIKit
 
 typealias ButtonTouchUpInsideAction = () -> Void
 
-class ButtonTableViewCellModel: BaseTableViewCellModel {
+class ButtonCellModel: BaseCellModel {
 
     override var cellIdentifier: String {
-        return ButtonTableViewCell.cellIdentifier()
+        return ButtonCell.cellIdentifier()
     }
     
     override func cellHeight() -> CGFloat {
-        return ButtonTableViewCell.cellHeight
+        return ButtonCell.cellHeight
     }
     
     var buttonTitle: String = ""

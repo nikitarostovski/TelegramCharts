@@ -15,20 +15,20 @@
 		1154412522397C0D00795743 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440EB22397C0C00795743 /* String+Localized.swift */; };
 		1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440EC22397C0C00795743 /* UITableView+VisibleSectionHeaders.swift */; };
 		1154412722397C0D00795743 /* NSObject+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440ED22397C0C00795743 /* NSObject+Theme.swift */; };
-		1154412822397C0D00795743 /* ButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 115440F222397C0C00795743 /* ButtonTableViewCell.xib */; };
-		1154412922397C0D00795743 /* ButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440F322397C0C00795743 /* ButtonTableViewCell.swift */; };
-		1154412A22397C0D00795743 /* ButtonTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440F522397C0C00795743 /* ButtonTableViewCellModel.swift */; };
+		1154412822397C0D00795743 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 115440F222397C0C00795743 /* ButtonCell.xib */; };
+		1154412922397C0D00795743 /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440F322397C0C00795743 /* ButtonCell.swift */; };
+		1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440F522397C0C00795743 /* ButtonCellModel.swift */; };
 		1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440FE22397C0C00795743 /* TableViewHeaderViewModel.swift */; };
 		1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410022397C0C00795743 /* TableViewHeaderView.swift */; };
 		1154413022397C0D00795743 /* TableViewHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1154410122397C0C00795743 /* TableViewHeaderView.xib */; };
-		1154413122397C0D00795743 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410422397C0C00795743 /* BaseTableViewCell.swift */; };
-		1154413222397C0D00795743 /* BaseTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410622397C0C00795743 /* BaseTableViewCellModel.swift */; };
-		1154413322397C0D00795743 /* ChartTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1154410922397C0C00795743 /* ChartTableViewCell.xib */; };
-		1154413422397C0D00795743 /* ChartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410A22397C0C00795743 /* ChartTableViewCell.swift */; };
-		1154413522397C0D00795743 /* ChartTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410C22397C0C00795743 /* ChartTableViewCellModel.swift */; };
-		1154413622397C0D00795743 /* CheckTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1154410F22397C0C00795743 /* CheckTableViewCell.xib */; };
-		1154413722397C0D00795743 /* CheckTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154411022397C0C00795743 /* CheckTableViewCell.swift */; };
-		1154413822397C0D00795743 /* CheckTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154411222397C0C00795743 /* CheckTableViewCellModel.swift */; };
+		1154413122397C0D00795743 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410422397C0C00795743 /* BaseCell.swift */; };
+		1154413222397C0D00795743 /* BaseCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410622397C0C00795743 /* BaseCellModel.swift */; };
+		1154413322397C0D00795743 /* ChartCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1154410922397C0C00795743 /* ChartCell.xib */; };
+		1154413422397C0D00795743 /* ChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410A22397C0C00795743 /* ChartCell.swift */; };
+		1154413522397C0D00795743 /* ChartCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154410C22397C0C00795743 /* ChartCellModel.swift */; };
+		1154413622397C0D00795743 /* CheckCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1154410F22397C0C00795743 /* CheckCell.xib */; };
+		1154413722397C0D00795743 /* CheckCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154411022397C0C00795743 /* CheckCell.swift */; };
+		1154413822397C0D00795743 /* CheckCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154411222397C0C00795743 /* CheckCellModel.swift */; };
 		1154413922397C0D00795743 /* SliderThumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154411422397C0C00795743 /* SliderThumbView.swift */; };
 		1154413A22397C0D00795743 /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154411522397C0C00795743 /* RangeSlider.swift */; };
 		1154413B22397C0D00795743 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1154411722397C0C00795743 /* ChartView.swift */; };
@@ -61,20 +61,20 @@
 		115440EB22397C0C00795743 /* String+Localized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		115440EC22397C0C00795743 /* UITableView+VisibleSectionHeaders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+VisibleSectionHeaders.swift"; sourceTree = "<group>"; };
 		115440ED22397C0C00795743 /* NSObject+Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Theme.swift"; sourceTree = "<group>"; };
-		115440F222397C0C00795743 /* ButtonTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ButtonTableViewCell.xib; sourceTree = "<group>"; };
-		115440F322397C0C00795743 /* ButtonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCell.swift; sourceTree = "<group>"; };
-		115440F522397C0C00795743 /* ButtonTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCellModel.swift; sourceTree = "<group>"; };
+		115440F222397C0C00795743 /* ButtonCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ButtonCell.xib; sourceTree = "<group>"; };
+		115440F322397C0C00795743 /* ButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
+		115440F522397C0C00795743 /* ButtonCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCellModel.swift; sourceTree = "<group>"; };
 		115440FE22397C0C00795743 /* TableViewHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderViewModel.swift; sourceTree = "<group>"; };
 		1154410022397C0C00795743 /* TableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderView.swift; sourceTree = "<group>"; };
 		1154410122397C0C00795743 /* TableViewHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewHeaderView.xib; sourceTree = "<group>"; };
-		1154410422397C0C00795743 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
-		1154410622397C0C00795743 /* BaseTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewCellModel.swift; sourceTree = "<group>"; };
-		1154410922397C0C00795743 /* ChartTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChartTableViewCell.xib; sourceTree = "<group>"; };
-		1154410A22397C0C00795743 /* ChartTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartTableViewCell.swift; sourceTree = "<group>"; };
-		1154410C22397C0C00795743 /* ChartTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartTableViewCellModel.swift; sourceTree = "<group>"; };
-		1154410F22397C0C00795743 /* CheckTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckTableViewCell.xib; sourceTree = "<group>"; };
-		1154411022397C0C00795743 /* CheckTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckTableViewCell.swift; sourceTree = "<group>"; };
-		1154411222397C0C00795743 /* CheckTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckTableViewCellModel.swift; sourceTree = "<group>"; };
+		1154410422397C0C00795743 /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
+		1154410622397C0C00795743 /* BaseCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCellModel.swift; sourceTree = "<group>"; };
+		1154410922397C0C00795743 /* ChartCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChartCell.xib; sourceTree = "<group>"; };
+		1154410A22397C0C00795743 /* ChartCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartCell.swift; sourceTree = "<group>"; };
+		1154410C22397C0C00795743 /* ChartCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartCellModel.swift; sourceTree = "<group>"; };
+		1154410F22397C0C00795743 /* CheckCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckCell.xib; sourceTree = "<group>"; };
+		1154411022397C0C00795743 /* CheckCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckCell.swift; sourceTree = "<group>"; };
+		1154411222397C0C00795743 /* CheckCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckCellModel.swift; sourceTree = "<group>"; };
 		1154411422397C0C00795743 /* SliderThumbView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderThumbView.swift; sourceTree = "<group>"; };
 		1154411522397C0C00795743 /* RangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 		1154411722397C0C00795743 /* ChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
@@ -177,8 +177,8 @@
 		115440F122397C0C00795743 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				115440F222397C0C00795743 /* ButtonTableViewCell.xib */,
-				115440F322397C0C00795743 /* ButtonTableViewCell.swift */,
+				115440F222397C0C00795743 /* ButtonCell.xib */,
+				115440F322397C0C00795743 /* ButtonCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -186,7 +186,7 @@
 		115440F422397C0C00795743 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				115440F522397C0C00795743 /* ButtonTableViewCellModel.swift */,
+				115440F522397C0C00795743 /* ButtonCellModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -229,7 +229,7 @@
 		1154410322397C0C00795743 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				1154410422397C0C00795743 /* BaseTableViewCell.swift */,
+				1154410422397C0C00795743 /* BaseCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -237,7 +237,7 @@
 		1154410522397C0C00795743 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				1154410622397C0C00795743 /* BaseTableViewCellModel.swift */,
+				1154410622397C0C00795743 /* BaseCellModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -254,8 +254,8 @@
 		1154410822397C0C00795743 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				1154410922397C0C00795743 /* ChartTableViewCell.xib */,
-				1154410A22397C0C00795743 /* ChartTableViewCell.swift */,
+				1154410922397C0C00795743 /* ChartCell.xib */,
+				1154410A22397C0C00795743 /* ChartCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -263,7 +263,7 @@
 		1154410B22397C0C00795743 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				1154410C22397C0C00795743 /* ChartTableViewCellModel.swift */,
+				1154410C22397C0C00795743 /* ChartCellModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -280,8 +280,8 @@
 		1154410E22397C0C00795743 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				1154410F22397C0C00795743 /* CheckTableViewCell.xib */,
-				1154411022397C0C00795743 /* CheckTableViewCell.swift */,
+				1154410F22397C0C00795743 /* CheckCell.xib */,
+				1154411022397C0C00795743 /* CheckCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -289,7 +289,7 @@
 		1154411122397C0C00795743 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				1154411222397C0C00795743 /* CheckTableViewCellModel.swift */,
+				1154411222397C0C00795743 /* CheckCellModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -460,11 +460,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1074DA38223913B6006C1D51 /* chart_data.json in Resources */,
-				1154412822397C0D00795743 /* ButtonTableViewCell.xib in Resources */,
-				1154413622397C0D00795743 /* CheckTableViewCell.xib in Resources */,
+				1154412822397C0D00795743 /* ButtonCell.xib in Resources */,
+				1154413622397C0D00795743 /* CheckCell.xib in Resources */,
 				11649F32223502E00081ABA1 /* Main.storyboard in Resources */,
 				11649F30223502E00081ABA1 /* Assets.xcassets in Resources */,
-				1154413322397C0D00795743 /* ChartTableViewCell.xib in Resources */,
+				1154413322397C0D00795743 /* ChartCell.xib in Resources */,
 				11649FE522353E180081ABA1 /* Localizable.strings in Resources */,
 				11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */,
 				1154413022397C0D00795743 /* TableViewHeaderView.xib in Resources */,
@@ -485,32 +485,32 @@
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
 				106DC318223A400B00D6D6C2 /* ChartDrawer.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
-				1154413522397C0D00795743 /* ChartTableViewCellModel.swift in Sources */,
+				1154413522397C0D00795743 /* ChartCellModel.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
 				1154414122397C0D00795743 /* ThemeManager.swift in Sources */,
 				1154412722397C0D00795743 /* NSObject+Theme.swift in Sources */,
 				1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */,
 				1154413E22397C0D00795743 /* UITableView+Structure.swift in Sources */,
-				1154413422397C0D00795743 /* ChartTableViewCell.swift in Sources */,
+				1154413422397C0D00795743 /* ChartCell.swift in Sources */,
 				11851009223E4A3F0034FA27 /* GridData.swift in Sources */,
-				1154413722397C0D00795743 /* CheckTableViewCell.swift in Sources */,
-				1154413122397C0D00795743 /* BaseTableViewCell.swift in Sources */,
+				1154413722397C0D00795743 /* CheckCell.swift in Sources */,
+				1154413122397C0D00795743 /* BaseCell.swift in Sources */,
 				1154413B22397C0D00795743 /* ChartView.swift in Sources */,
 				1154414422397C9100795743 /* PointAnimator.swift in Sources */,
 				106DC31A223A68E200D6D6C2 /* ChartsData.swift in Sources */,
 				1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */,
-				1154413822397C0D00795743 /* CheckTableViewCellModel.swift in Sources */,
+				1154413822397C0D00795743 /* CheckCellModel.swift in Sources */,
 				1154414222397C0D00795743 /* Theme.swift in Sources */,
 				1154413C22397C0D00795743 /* RootNavigationController.swift in Sources */,
-				1154412922397C0D00795743 /* ButtonTableViewCell.swift in Sources */,
+				1154412922397C0D00795743 /* ButtonCell.swift in Sources */,
 				1154413F22397C0D00795743 /* TableViewStructure.swift in Sources */,
 				1154413922397C0D00795743 /* SliderThumbView.swift in Sources */,
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
 				11851005223D3C3E0034FA27 /* AxisDrawer.swift in Sources */,
-				1154413222397C0D00795743 /* BaseTableViewCellModel.swift in Sources */,
+				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
 				11851007223D61280034FA27 /* GridDrawer.swift in Sources */,
-				1154412A22397C0D00795743 /* ButtonTableViewCellModel.swift in Sources */,
+				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

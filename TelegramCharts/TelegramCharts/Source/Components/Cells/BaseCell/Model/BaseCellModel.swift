@@ -1,5 +1,5 @@
 //
-//  BaseTableViewCellModel.swift
+//  BaseCellModel.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/03/2019.
@@ -14,7 +14,7 @@ struct SeparatorStyle {
     var clampToEdge = true
 }
 
-class BaseTableViewCellModel {
+class BaseCellModel {
     
     var cellIdentifier: String {
         return ""

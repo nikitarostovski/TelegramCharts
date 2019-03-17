@@ -21,13 +21,13 @@ extension UITableView {
         return structure.sections[section].cellModels.count
     }
 
-    func dequeueReusableCell(with structure:TableViewStructure, indexPath: IndexPath) -> BaseTableViewCell {
+    func dequeueReusableCell(with structure:TableViewStructure, indexPath: IndexPath) -> BaseCell {
         let model = structure.cellModel(for: indexPath)
-        var cell: BaseTableViewCell? = dequeueReusableCell(withIdentifier: model.cellIdentifier) as? BaseTableViewCell
+        var cell: BaseCell? = dequeueReusableCell(withIdentifier: model.cellIdentifier) as? BaseCell
         if cell == nil {
             let nib = UINib(nibName: model.cellIdentifier, bundle: .main)
             register(nib, forCellReuseIdentifier: model.cellIdentifier)
-            cell = dequeueReusableCell(withIdentifier: model.cellIdentifier) as? BaseTableViewCell
+            cell = dequeueReusableCell(withIdentifier: model.cellIdentifier) as? BaseCell
         }
         cell!.setup(with: model)
         return cell!

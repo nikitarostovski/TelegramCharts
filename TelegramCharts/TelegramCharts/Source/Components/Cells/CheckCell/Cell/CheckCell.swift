@@ -1,5 +1,5 @@
 //
-//  CheckTableViewCell.swift
+//  CheckCell.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/03/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CheckTableViewCell: BaseTableViewCell {
+class CheckCell: BaseCell {
 
     override class var cellHeight: CGFloat {
         return 44
@@ -32,7 +32,7 @@ class CheckTableViewCell: BaseTableViewCell {
     
     override func updateAppearance() {
         super.updateAppearance()
-        guard let model = model as? CheckTableViewCellModel else { return }
+        guard let model = model as? CheckCellModel else { return }
         highlightLayer.frame = bounds
         if model.hasCheckmark {
             accessoryType = .checkmark
@@ -53,7 +53,7 @@ class CheckTableViewCell: BaseTableViewCell {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         highlightOff()
-        guard let model = model as? CheckTableViewCellModel else { return }
+        guard let model = model as? CheckCellModel else { return }
         model.hasCheckmark = !model.hasCheckmark
         updateAppearance()
         model.cellTapAction?()

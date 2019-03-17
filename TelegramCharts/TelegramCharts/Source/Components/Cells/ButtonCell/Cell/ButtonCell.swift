@@ -1,5 +1,5 @@
 //
-//  ButtonTableViewCell.swift
+//  ButtonCell.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/03/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ButtonTableViewCell: BaseTableViewCell {
+class ButtonCell: BaseCell {
 
     @IBOutlet weak var button: UIButton!
     
@@ -18,12 +18,12 @@ class ButtonTableViewCell: BaseTableViewCell {
     
     override func updateAppearance() {
         super.updateAppearance()
-        guard let model = model as? ButtonTableViewCellModel else { return }
+        guard let model = model as? ButtonCellModel else { return }
         button.setTitle(model.buttonTitle, for: .normal)
     }
     
     @IBAction func buttonAction(_ sender: Any) {
-        guard let model = model as? ButtonTableViewCellModel else {
+        guard let model = model as? ButtonCellModel else {
             return
         }
         model.buttonTouchUpInsideAction?()
