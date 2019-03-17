@@ -364,6 +364,8 @@ class MainViewController: UITableViewController {
         return nil
     }
     
+    var chart: Chart?
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -371,23 +373,23 @@ class MainViewController: UITableViewController {
         tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
-        createStructure()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        createStructure()
+        tableView.reloadData()
         startReceivingThemeUpdates()
     }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         stopReceivingThemeUpdates()
     }
     
     // MARK: - Structure
     
     private var structure = TableViewStructure()
-    
     
     private var followersHeaderModel: TableViewHeaderViewModel {
         let model = TableViewHeaderViewModel()

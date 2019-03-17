@@ -34,7 +34,7 @@ extension RootNavigationController: Stylable {
 
     func themeDidUpdate(theme: Theme) {
         setNeedsStatusBarAppearanceUpdate()
-        navigationBar.tintColor = theme.navigationTintColor
+        navigationBar.tintColor = theme.tintColor
         navigationBar.barTintColor = theme.navigationBackgroundColor
         navigationBar.titleTextAttributes = [.foregroundColor: theme.navigationTintColor]
         navigationBar.layoutIfNeeded()

@@ -1,0 +1,90 @@
+//
+//  ItemCell.swift
+//  TelegramCharts
+//
+//  Created by Rost on 10/03/2019.
+//  Copyright © 2019 Rost. All rights reserved.
+//
+
+import UIKit
+
+class ItemCell: BaseCell {
+
+    override class var cellHeight: CGFloat {
+        return 44
+    }
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    
+    private var highlightLayer = CALayer()
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        highlightLayer.removeFromSuperlayer()
+        highlightLayer.backgroundColor = UIColor.black.withAlphaComponent(0.1).cgColor
+        highlightLayer.opacity = 0.0
+        layer.addSublayer(highlightLayer)
+    }
+    
+    override func updateAppearance() {
+        super.updateAppearance()
+        guard let model = model as? ItemCellModel else { return }
+        highlightLayer.frame = bounds
+        model.topSeparatorStyle.inset = titleLabel.frame.origin.x
+        model.bottomSeparatorStyle.inset = titleLabel.frame.origin.x
+        titleLabel.text = model.titleText
+    }
+    
+    // MARK: - Touches
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        highlightOn()
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        highlightOff()
+        guard let model = model as? ItemCellModel else { return }
+        updateAppearance()
+        model.cellTapAction?()
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        highlightOff()
+    }
+    
+    // MARK: - Highlight animation
+    
+    private func highlightOn() {
+        let newOpacity: Float = 1
+        highlightLayer.removeAllAnimations()
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = highlightLayer.opacity
+        animation.toValue = newOpacity
+        animation.duration = 0.1
+        animation.autoreverses = false
+        highlightLayer.opacity = newOpacity
+        highlightLayer.add(animation, forKey: "opacityOn")
+    }
+    
+    private func highlightOff() {
+        let newOpacity: Float = 0
+        highlightLayer.removeAllAnimations()
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = highlightLayer.opacity
+        animation.toValue = newOpacity
+        animation.duration = 0.1
+        animation.autoreverses = false
+        highlightLayer.opacity = newOpacity
+        highlightLayer.add(animation, forKey: "opacityOff")
+    }
+
+    // MARK: - Stylable
+
+    override func themeDidUpdate(theme: Theme) {
+        super.themeDidUpdate(theme: theme)
+        tintColor = theme.tintColor
+        titleLabel.textColor = theme.cellTextColor
+    }
+}
+
+

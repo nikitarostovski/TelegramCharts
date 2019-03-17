@@ -8,20 +8,18 @@
 
 import UIKit
 
-typealias CheckCellTapAction = () -> Void
+typealias ItemCellTapAction = () -> Void
 
-class CheckCellModel: BaseCellModel {
+class ItemCellModel: BaseCellModel {
 
     override var cellIdentifier: String {
-        return CheckCell.cellIdentifier()
+        return ItemCell.cellIdentifier()
     }
     
     override func cellHeight() -> CGFloat {
-        return CheckCell.cellHeight
+        return ItemCell.cellHeight
     }
     
     var titleText = ""
-    var tagColor: UIColor = .clear
-    var hasCheckmark = false
-    var cellTapAction: CheckCellTapAction?
+    var cellTapAction: ItemCellTapAction?
 }
