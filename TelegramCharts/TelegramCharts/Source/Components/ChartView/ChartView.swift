@@ -22,21 +22,18 @@ class ChartView: UIView {
             update(animated: true)
         }
     }
-    
     private var lastVisibleRange: ClosedRange<CGFloat> = 0 ... 1
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
             update(animated: true)
         }
     }
-    
     var lineWidth: CGFloat = 4.0 {
         didSet {
             update(animated: true)
         }
     }
-
-    var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 21, right: 0) {
+    var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 32, right: 0) {
         didSet {
             chartBounds = self.bounds.inset(by: chartInsets)
             update()
@@ -44,8 +41,10 @@ class ChartView: UIView {
     }
     
     private var animator = PointAnimator()
-    private var titleColor: UIColor = .black
     private var chartBounds: CGRect = .zero
+    private var titleColor: UIColor = .black
+    private var gridMainColor: UIColor = .darkGray
+    private var gridAuxColor: UIColor = .lightGray
     
     // MARK: - Lifecycle
     
@@ -100,7 +99,6 @@ class ChartView: UIView {
 
             self.setNeedsDisplay()
         }
-
         if animated {
             animator.animate(durationX: 0.05,
                              durationY: 0.1,
@@ -121,15 +119,23 @@ class ChartView: UIView {
         charts?.getLinesToDraw(viewport: chartBounds).forEach { (points, color) in
             ChartDrawer.drawChart(points: points, color: color.cgColor, context: context)
         }
-        
-        AxisDrawer.configureContext(context: context)
-        axis?.getTextToDraw(viewport: bounds).forEach { [weak self] axisPoint in
-            let attributedString = NSAttributedString(string: axisPoint.title, attributes: self?.textAttributes(alpha: axisPoint.currentAlpha))
-            let height: CGFloat = chartInsets.bottom
-            let width = attributedString.width(withConstrainedHeight: height)
-            let x = axisPoint.dispX - width / 2
-            let y = bounds.height - height
-            AxisDrawer.drawText(text: attributedString, frame: CGRect(x: x, y: y, width: width, height: height))
+        if let axis = self.axis {
+            GridDrawer.configureContext(context: context, lineWidth: 0.5)
+            let leftPoint = CGPoint(x: 0, y: chartBounds.maxY)
+            let rightPoint = CGPoint(x: bounds.width, y: chartBounds.maxY)
+            GridDrawer.drawLine(pointA: leftPoint,
+                                pointB: rightPoint,
+                                color: gridMainColor.cgColor,
+                                context: context)
+            AxisDrawer.configureContext(context: context)
+            axis.getTextToDraw(viewport: bounds).forEach { [weak self] axisPoint in
+                let attributedString = NSAttributedString(string: axisPoint.title, attributes: self?.textAttributes(alpha: axisPoint.currentAlpha))
+                let height: CGFloat = 20
+                let width = attributedString.width(withConstrainedHeight: height)
+                let x = axisPoint.dispX - width / 2
+                let y = bounds.height - chartInsets.bottom + (chartInsets.bottom - height) / 2
+                AxisDrawer.drawText(text: attributedString, frame: CGRect(x: x, y: y, width: width, height: height))
+            }
         }
     }
 }
@@ -150,6 +156,8 @@ extension ChartView: Stylable {
     func themeDidUpdate(theme: Theme) {
         backgroundColor = theme.cellBackgroundColor
         titleColor = theme.chartTitlesColor
+        gridMainColor = theme.chartGridMainColor
+        gridAuxColor = theme.chartGridAuxColor
         setNeedsDisplay()
     }
 }

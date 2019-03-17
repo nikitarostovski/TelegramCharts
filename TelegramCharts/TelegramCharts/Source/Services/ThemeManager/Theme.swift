@@ -128,4 +128,22 @@ enum Theme: Int {
             return Colors.grayBlue
         }
     }
+    
+    var chartGridMainColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.gridLightMain
+        case .night:
+            return Colors.gridDarkMain
+        }
+    }
+    
+    var chartGridAuxColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.gridLightAux
+        case .night:
+            return Colors.gridDarkAux
+        }
+    }
 }

@@ -49,4 +49,9 @@ struct Colors {
     static let white = UIColor(hexString: "fefefe")
     static let black = UIColor(hexString: "000")
     
+    static let gridDarkMain = UIColor(hexString: "131b23")
+    static let gridDarkAux = UIColor(hexString: "1b2734")
+    static let gridLightMain = UIColor(hexString: "cfd1d2")
+    static let gridLightAux = UIColor(hexString: "f3f3f3")
+    
 }
