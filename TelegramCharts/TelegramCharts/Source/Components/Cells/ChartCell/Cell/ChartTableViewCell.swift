@@ -25,6 +25,7 @@ class ChartTableViewCell: BaseTableViewCell {
         guard let model = model as? ChartTableViewCellModel else { return }
         chartView.charts = model.chartsData
         chartView.axis = model.axisData
+        chartView.grid = model.gridData
         chartView.visibleRange = model.visibleRange
     }
 }

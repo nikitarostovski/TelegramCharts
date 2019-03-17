@@ -22,6 +22,12 @@ class ChartView: UIView {
             update(animated: true)
         }
     }
+    var grid: GridData? {
+        didSet {
+            grid?.maxVisibleValue = 100
+            update(animated: true)
+        }
+    }
     private var lastVisibleRange: ClosedRange<CGFloat> = 0 ... 1
     var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
@@ -94,6 +100,10 @@ class ChartView: UIView {
                 axis.visibleRange = range
                 axis.updateAlpha(phase: phaseY)
             }
+            if let grid = self.grid {
+                grid.maxVisibleValue = 100
+                grid.updateAlpha(phase: phaseY)
+            }
             self.charts?.xVisibleRange = range
             self.lastVisibleRange = range
 
@@ -129,12 +139,27 @@ class ChartView: UIView {
                                 context: context)
             AxisDrawer.configureContext(context: context)
             axis.getTextToDraw(viewport: bounds).forEach { [weak self] axisPoint in
-                let attributedString = NSAttributedString(string: axisPoint.title, attributes: self?.textAttributes(alpha: axisPoint.currentAlpha))
+                let attributedString = NSAttributedString(string: axisPoint.title, attributes: self?.xAxisTextAttributes(alpha: axisPoint.currentAlpha))
                 let height: CGFloat = 20
                 let width = attributedString.width(withConstrainedHeight: height)
                 let x = axisPoint.dispX - width / 2
                 let y = bounds.height - chartInsets.bottom + (chartInsets.bottom - height) / 2
                 AxisDrawer.drawText(text: attributedString, frame: CGRect(x: x, y: y, width: width, height: height))
+            }
+        }
+        if let grid = self.grid {
+            grid.getLinesToDraw(viewport: chartBounds).forEach {
+                let ptA = CGPoint(x: chartBounds.minX, y: $0.dispY)
+                let ptB = CGPoint(x: chartBounds.maxX, y: $0.dispY)
+                let textWidth = chartBounds.width
+                let text = NSAttributedString(string: String($0.value), attributes: yAxisTextAttributes(alpha: $0.currentAlpha))
+                let textHeight = text.height(withConstrainedWidth: textWidth)
+                let textFrame = CGRect(x: chartBounds.minX,
+                                       y: $0.dispY - textHeight,
+                                       width: textWidth,
+                                       height: textHeight)
+                GridDrawer.drawText(text: text, frame: textFrame)
+                GridDrawer.drawLine(pointA: ptA, pointB: ptB, color: gridAuxColor.cgColor, context: context)
             }
         }
     }
@@ -144,7 +169,16 @@ class ChartView: UIView {
 
 extension ChartView: Stylable {
 
-    func textAttributes(alpha: CGFloat) -> [NSAttributedString.Key: Any] {
+    func yAxisTextAttributes(alpha: CGFloat) -> [NSAttributedString.Key: Any] {
+        let style = NSMutableParagraphStyle()
+        style.alignment = .left
+        return [
+            .foregroundColor: titleColor.withAlphaComponent(alpha),
+            .paragraphStyle: style
+        ]
+    }
+    
+    func xAxisTextAttributes(alpha: CGFloat) -> [NSAttributedString.Key: Any] {
         let style = NSMutableParagraphStyle()
         style.alignment = .center
         return [

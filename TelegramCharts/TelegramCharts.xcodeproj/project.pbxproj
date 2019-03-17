@@ -51,6 +51,7 @@
 		11851003223D33860034FA27 /* AxisData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851002223D33860034FA27 /* AxisData.swift */; };
 		11851005223D3C3E0034FA27 /* AxisDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851004223D3C3E0034FA27 /* AxisDrawer.swift */; };
 		11851007223D61280034FA27 /* GridDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851006223D61280034FA27 /* GridDrawer.swift */; };
+		11851009223E4A3F0034FA27 /* GridData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851008223E4A3F0034FA27 /* GridData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -101,6 +102,7 @@
 		11851002223D33860034FA27 /* AxisData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AxisData.swift; sourceTree = "<group>"; };
 		11851004223D3C3E0034FA27 /* AxisDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AxisDrawer.swift; sourceTree = "<group>"; };
 		11851006223D61280034FA27 /* GridDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridDrawer.swift; sourceTree = "<group>"; };
+		11851008223E4A3F0034FA27 /* GridData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -342,6 +344,7 @@
 				106DC317223A400B00D6D6C2 /* ChartDrawer.swift */,
 				11851002223D33860034FA27 /* AxisData.swift */,
 				11851004223D3C3E0034FA27 /* AxisDrawer.swift */,
+				11851008223E4A3F0034FA27 /* GridData.swift */,
 				11851006223D61280034FA27 /* GridDrawer.swift */,
 			);
 			path = ChartView;
@@ -524,6 +527,7 @@
 				1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */,
 				1154413E22397C0D00795743 /* UITableView+Structure.swift in Sources */,
 				1154413422397C0D00795743 /* ChartTableViewCell.swift in Sources */,
+				11851009223E4A3F0034FA27 /* GridData.swift in Sources */,
 				1154413722397C0D00795743 /* CheckTableViewCell.swift in Sources */,
 				1154412C22397C0D00795743 /* ChartRangeTableViewCell.swift in Sources */,
 				1154413122397C0D00795743 /* BaseTableViewCell.swift in Sources */,

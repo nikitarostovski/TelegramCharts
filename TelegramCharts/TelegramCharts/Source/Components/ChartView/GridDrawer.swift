@@ -29,4 +29,8 @@ class GridDrawer {
         
         context.restoreGState()
     }
+    
+    static func drawText(text: NSAttributedString, frame: CGRect) {
+        text.draw(in: frame)
+    }
 }
