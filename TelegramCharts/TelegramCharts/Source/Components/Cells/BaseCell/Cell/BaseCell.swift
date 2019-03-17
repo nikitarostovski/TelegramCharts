@@ -16,6 +16,7 @@ class BaseCell: UITableViewCell, Stylable {
         return 44
     }
     
+    private var highlightLayer = CALayer()
     private var topSeparatorLayer: CALayer?
     private var bottomSeparatorLayer: CALayer?
     
@@ -36,6 +37,10 @@ class BaseCell: UITableViewCell, Stylable {
         bottomSeparatorLayer?.removeFromSuperlayer()
         bottomSeparatorLayer = CALayer()
         layer.addSublayer(bottomSeparatorLayer!)
+        highlightLayer.removeFromSuperlayer()
+        highlightLayer.backgroundColor = UIColor.black.withAlphaComponent(0.1).cgColor
+        highlightLayer.opacity = 0.0
+        layer.addSublayer(highlightLayer)
         startReceivingThemeUpdates()
     }
 
@@ -58,6 +63,7 @@ class BaseCell: UITableViewCell, Stylable {
     }
     
     func updateAppearance() {
+        highlightLayer.frame = bounds
         guard let model = model else { return }
 
         topSeparatorLayer?.isHidden = model.topSeparatorStyle.isHidden
@@ -74,6 +80,52 @@ class BaseCell: UITableViewCell, Stylable {
                                              y: frame.size.height - height,
                                              width: frame.size.width - bottomInset,
                                              height: height)
+    }
+    
+    // MARK: - Touches
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard model?.isTouchable ?? false else { return }
+        highlightOn()
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard model?.isTouchable ?? false else { return }
+        highlightOff()
+        guard let model = model as? ItemCellModel else { return }
+        updateAppearance()
+        model.cellTapAction?()
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard model?.isTouchable ?? false else { return }
+        highlightOff()
+    }
+    
+    // MARK: - Highlight animation
+    
+    private func highlightOn() {
+        let newOpacity: Float = 1
+        highlightLayer.removeAllAnimations()
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = highlightLayer.opacity
+        animation.toValue = newOpacity
+        animation.duration = 0.01
+        animation.autoreverses = false
+        highlightLayer.opacity = newOpacity
+        highlightLayer.add(animation, forKey: "opacityOn")
+    }
+    
+    private func highlightOff() {
+        let newOpacity: Float = 0
+        highlightLayer.removeAllAnimations()
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = highlightLayer.opacity
+        animation.toValue = newOpacity
+        animation.duration = 0.01
+        animation.autoreverses = false
+        highlightLayer.opacity = newOpacity
+        highlightLayer.add(animation, forKey: "opacityOff")
     }
 
     // MARK: - Stylable

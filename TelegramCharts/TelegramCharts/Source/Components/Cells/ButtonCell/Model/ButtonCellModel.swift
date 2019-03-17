@@ -20,6 +20,11 @@ class ButtonCellModel: BaseCellModel {
         return ButtonCell.cellHeight
     }
     
+    override init() {
+        super.init()
+        isTouchable = false
+    }
+    
     var buttonTitle: String = ""
     
     var buttonTouchUpInsideAction: ButtonTouchUpInsideAction?

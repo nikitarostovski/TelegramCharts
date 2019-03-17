@@ -18,6 +18,11 @@ class ChartCellModel: BaseCellModel {
         return ChartCell.cellHeight
     }
     
+    override init() {
+        super.init()
+        isTouchable = false
+    }
+    
     var chartsData: ChartsData?
     var axisData: AxisData?
     var gridData: GridData?

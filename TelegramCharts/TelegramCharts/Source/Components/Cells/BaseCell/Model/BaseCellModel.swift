@@ -8,6 +8,8 @@
 
 import UIKit
 
+typealias CellTapAction = () -> Void
+
 struct SeparatorStyle {
     var isHidden: Bool = true
     var inset: CGFloat = 0
@@ -26,4 +28,6 @@ class BaseCellModel {
     
     var topSeparatorStyle = SeparatorStyle()
     var bottomSeparatorStyle = SeparatorStyle()
+    var cellTapAction: CellTapAction?
+    var isTouchable = true
 }

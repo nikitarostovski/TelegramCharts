@@ -8,8 +8,6 @@
 
 import UIKit
 
-typealias CheckCellTapAction = () -> Void
-
 class CheckCellModel: BaseCellModel {
 
     override var cellIdentifier: String {
@@ -23,5 +21,4 @@ class CheckCellModel: BaseCellModel {
     var titleText = ""
     var tagColor: UIColor = .clear
     var hasCheckmark = false
-    var cellTapAction: CheckCellTapAction?
 }

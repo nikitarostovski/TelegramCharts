@@ -20,9 +20,9 @@ extension Chart: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        colors = try container.decode([String: String].self, forKey: .colors)
-        names = try container.decode([String: String].self, forKey: .names)
-        types = try container.decode([String: String].self, forKey: .types)
+        colors = try container.decode(type(of: colors).self, forKey: .colors)
+        names = try container.decode(type(of: names).self, forKey: .names)
+        types = try container.decode(type(of: types).self, forKey: .types)
         
         var columnsContainer = try container.nestedUnkeyedContainer(forKey: .columns)
         var columns = [String: [Int64]]()

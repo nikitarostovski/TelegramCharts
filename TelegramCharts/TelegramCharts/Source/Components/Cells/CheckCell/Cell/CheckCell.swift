@@ -17,23 +17,15 @@ class CheckCell: BaseCell {
     @IBOutlet weak var tagView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     
-    private var highlightLayer = CALayer()
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         tagView.layer.cornerRadius = 3
         tagView.layer.masksToBounds = true
-        
-        highlightLayer.removeFromSuperlayer()
-        highlightLayer.backgroundColor = UIColor.black.withAlphaComponent(0.1).cgColor
-        highlightLayer.opacity = 0.0
-        layer.addSublayer(highlightLayer)
     }
     
     override func updateAppearance() {
         super.updateAppearance()
         guard let model = model as? CheckCellModel else { return }
-        highlightLayer.frame = bounds
         if model.hasCheckmark {
             accessoryType = .checkmark
         } else {
@@ -43,50 +35,6 @@ class CheckCell: BaseCell {
         model.bottomSeparatorStyle.inset = titleLabel.frame.origin.x
         titleLabel.text = model.titleText
         tagView.backgroundColor = model.tagColor
-    }
-    
-    // MARK: - Touches
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        highlightOn()
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        highlightOff()
-        guard let model = model as? CheckCellModel else { return }
-        model.hasCheckmark = !model.hasCheckmark
-        updateAppearance()
-        model.cellTapAction?()
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        highlightOff()
-    }
-    
-    // MARK: - Highlight animation
-    
-    private func highlightOn() {
-        let newOpacity: Float = 1
-        highlightLayer.removeAllAnimations()
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.fromValue = highlightLayer.opacity
-        animation.toValue = newOpacity
-        animation.duration = 0.1
-        animation.autoreverses = false
-        highlightLayer.opacity = newOpacity
-        highlightLayer.add(animation, forKey: "opacityOn")
-    }
-    
-    private func highlightOff() {
-        let newOpacity: Float = 0
-        highlightLayer.removeAllAnimations()
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.fromValue = highlightLayer.opacity
-        animation.toValue = newOpacity
-        animation.duration = 0.1
-        animation.autoreverses = false
-        highlightLayer.opacity = newOpacity
-        highlightLayer.add(animation, forKey: "opacityOff")
     }
 
     // MARK: - Stylable

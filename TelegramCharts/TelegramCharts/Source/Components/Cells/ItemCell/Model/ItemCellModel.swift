@@ -8,8 +8,6 @@
 
 import UIKit
 
-typealias ItemCellTapAction = () -> Void
-
 class ItemCellModel: BaseCellModel {
 
     override var cellIdentifier: String {
@@ -21,5 +19,4 @@ class ItemCellModel: BaseCellModel {
     }
     
     var titleText = ""
-    var cellTapAction: ItemCellTapAction?
 }

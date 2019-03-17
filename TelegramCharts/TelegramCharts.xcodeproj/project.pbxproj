@@ -11,12 +11,12 @@
 		106DC31A223A68E200D6D6C2 /* ChartsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106DC319223A68E200D6D6C2 /* ChartsData.swift */; };
 		1074DA38223913B6006C1D51 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1074DA37223913B6006C1D51 /* chart_data.json */; };
 		1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1102AD5C223C148D000F64A9 /* Date+Formatter.swift */; };
-		113C82D5223E870600723D10 /* ChartProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82D4223E870600723D10 /* ChartProvider.swift */; };
-		113C82D7223E872400723D10 /* Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82D6223E872400723D10 /* Chart.swift */; };
 		113C82D9223E97DE00723D10 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82D8223E97DE00723D10 /* ListViewController.swift */; };
 		113C82E0223E996100723D10 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 113C82DC223E996000723D10 /* ItemCell.xib */; };
 		113C82E1223E996100723D10 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82DD223E996000723D10 /* ItemCell.swift */; };
 		113C82E2223E996100723D10 /* ItemCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82DF223E996000723D10 /* ItemCellModel.swift */; };
+		113C82E6223EB1AC00723D10 /* ChartProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82E4223EB1AC00723D10 /* ChartProvider.swift */; };
+		113C82E7223EB1AC00723D10 /* Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82E5223EB1AC00723D10 /* Chart.swift */; };
 		1154412422397C0D00795743 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440E922397C0C00795743 /* AppDelegate.swift */; };
 		1154412522397C0D00795743 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440EB22397C0C00795743 /* String+Localized.swift */; };
 		1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440EC22397C0C00795743 /* UITableView+VisibleSectionHeaders.swift */; };
@@ -63,12 +63,12 @@
 		106DC319223A68E200D6D6C2 /* ChartsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsData.swift; sourceTree = "<group>"; };
 		1074DA37223913B6006C1D51 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data.json; sourceTree = "<group>"; };
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
-		113C82D4223E870600723D10 /* ChartProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartProvider.swift; sourceTree = "<group>"; };
-		113C82D6223E872400723D10 /* Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chart.swift; sourceTree = "<group>"; };
 		113C82D8223E97DE00723D10 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		113C82DC223E996000723D10 /* ItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
 		113C82DD223E996000723D10 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		113C82DF223E996000723D10 /* ItemCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellModel.swift; sourceTree = "<group>"; };
+		113C82E4223EB1AC00723D10 /* ChartProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartProvider.swift; sourceTree = "<group>"; };
+		113C82E5223EB1AC00723D10 /* Chart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chart.swift; sourceTree = "<group>"; };
 		115440E922397C0C00795743 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		115440EB22397C0C00795743 /* String+Localized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		115440EC22397C0C00795743 /* UITableView+VisibleSectionHeaders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+VisibleSectionHeaders.swift"; sourceTree = "<group>"; };
@@ -146,6 +146,15 @@
 				113C82DF223E996000723D10 /* ItemCellModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		113C82E3223EB1AC00723D10 /* ChartProvider */ = {
+			isa = PBXGroup;
+			children = (
+				113C82E4223EB1AC00723D10 /* ChartProvider.swift */,
+				113C82E5223EB1AC00723D10 /* Chart.swift */,
+			);
+			path = ChartProvider;
 			sourceTree = "<group>";
 		};
 		115440E722397C0C00795743 /* Source */ = {
@@ -388,9 +397,8 @@
 		1154412022397C0C00795743 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				113C82E3223EB1AC00723D10 /* ChartProvider */,
 				1154412122397C0C00795743 /* ThemeManager */,
-				113C82D4223E870600723D10 /* ChartProvider.swift */,
-				113C82D6223E872400723D10 /* Chart.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -521,14 +529,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				113C82E7223EB1AC00723D10 /* Chart.swift in Sources */,
 				1154413D22397C0D00795743 /* MainViewController.swift in Sources */,
 				11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */,
 				1154414022397C0D00795743 /* Colors.swift in Sources */,
+				113C82E6223EB1AC00723D10 /* ChartProvider.swift in Sources */,
 				11851003223D33860034FA27 /* AxisData.swift in Sources */,
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
 				106DC318223A400B00D6D6C2 /* ChartDrawer.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
-				113C82D5223E870600723D10 /* ChartProvider.swift in Sources */,
 				1154413522397C0D00795743 /* ChartCellModel.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
 				1154414122397C0D00795743 /* ThemeManager.swift in Sources */,
@@ -555,7 +564,6 @@
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
 				11851005223D3C3E0034FA27 /* AxisDrawer.swift in Sources */,
-				113C82D7223E872400723D10 /* Chart.swift in Sources */,
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
 				11851007223D61280034FA27 /* GridDrawer.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
