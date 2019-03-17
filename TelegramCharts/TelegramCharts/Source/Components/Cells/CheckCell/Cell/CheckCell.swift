@@ -37,6 +37,13 @@ class CheckCell: BaseCell {
         tagView.backgroundColor = model.tagColor
     }
 
+    override func tapAction() {
+        super.tapAction()
+        guard let model = model as? CheckCellModel else { return }
+        model.hasCheckmark = !model.hasCheckmark
+        updateAppearance()
+    }
+    
     // MARK: - Stylable
 
     override func themeDidUpdate(theme: Theme) {
@@ -45,5 +52,3 @@ class CheckCell: BaseCell {
         titleLabel.textColor = theme.cellTextColor
     }
 }
-
-

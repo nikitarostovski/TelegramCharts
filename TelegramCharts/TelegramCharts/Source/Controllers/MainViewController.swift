@@ -373,12 +373,11 @@ class MainViewController: UITableViewController {
         tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
+        createStructure()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        createStructure()
-        tableView.reloadData()
         startReceivingThemeUpdates()
     }
     
@@ -513,6 +512,10 @@ extension MainViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.viewForHeader(structure: structure, section: section)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

@@ -8,6 +8,19 @@
 
 import UIKit
 
+extension UITableViewCell {
+    var selectionColor: UIColor {
+        set {
+            let view = self.selectedBackgroundView ?? UIView()
+            view.backgroundColor = newValue
+            self.selectedBackgroundView = view
+        }
+        get {
+            return self.selectedBackgroundView?.backgroundColor ?? UIColor.clear
+        }
+    }
+}
+
 class BaseCell: UITableViewCell, Stylable {
 
     weak var model: BaseCellModel?
@@ -16,7 +29,6 @@ class BaseCell: UITableViewCell, Stylable {
         return 44
     }
     
-    private var highlightLayer = CALayer()
     private var topSeparatorLayer: CALayer?
     private var bottomSeparatorLayer: CALayer?
     
@@ -30,17 +42,12 @@ class BaseCell: UITableViewCell, Stylable {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectionStyle = .none
         topSeparatorLayer?.removeFromSuperlayer()
         topSeparatorLayer = CALayer()
         layer.addSublayer(topSeparatorLayer!)
         bottomSeparatorLayer?.removeFromSuperlayer()
         bottomSeparatorLayer = CALayer()
         layer.addSublayer(bottomSeparatorLayer!)
-        highlightLayer.removeFromSuperlayer()
-        highlightLayer.backgroundColor = UIColor.black.withAlphaComponent(0.1).cgColor
-        highlightLayer.opacity = 0.0
-        layer.addSublayer(highlightLayer)
         startReceivingThemeUpdates()
     }
 
@@ -63,9 +70,8 @@ class BaseCell: UITableViewCell, Stylable {
     }
     
     func updateAppearance() {
-        highlightLayer.frame = bounds
         guard let model = model else { return }
-
+        selectionStyle = model.isTouchable ? .default : .none
         topSeparatorLayer?.isHidden = model.topSeparatorStyle.isHidden
         bottomSeparatorLayer?.isHidden = model.bottomSeparatorStyle.isHidden
         
@@ -84,48 +90,14 @@ class BaseCell: UITableViewCell, Stylable {
     
     // MARK: - Touches
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard model?.isTouchable ?? false else { return }
-        highlightOn()
-    }
-    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
         guard model?.isTouchable ?? false else { return }
-        highlightOff()
-        guard let model = model as? ItemCellModel else { return }
-        updateAppearance()
-        model.cellTapAction?()
+        tapAction()
     }
     
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard model?.isTouchable ?? false else { return }
-        highlightOff()
-    }
-    
-    // MARK: - Highlight animation
-    
-    private func highlightOn() {
-        let newOpacity: Float = 1
-        highlightLayer.removeAllAnimations()
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.fromValue = highlightLayer.opacity
-        animation.toValue = newOpacity
-        animation.duration = 0.01
-        animation.autoreverses = false
-        highlightLayer.opacity = newOpacity
-        highlightLayer.add(animation, forKey: "opacityOn")
-    }
-    
-    private func highlightOff() {
-        let newOpacity: Float = 0
-        highlightLayer.removeAllAnimations()
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.fromValue = highlightLayer.opacity
-        animation.toValue = newOpacity
-        animation.duration = 0.01
-        animation.autoreverses = false
-        highlightLayer.opacity = newOpacity
-        highlightLayer.add(animation, forKey: "opacityOff")
+    func tapAction() {
+        model?.cellTapAction?()
     }
 
     // MARK: - Stylable
@@ -134,5 +106,6 @@ class BaseCell: UITableViewCell, Stylable {
         backgroundColor = theme.cellBackgroundColor
         topSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
         bottomSeparatorLayer?.backgroundColor = theme.tableSeparatorColor.cgColor
+        selectionColor = theme.cellSelectionColor
     }
 }

@@ -66,6 +66,15 @@ enum Theme: Int {
         }
     }
 
+    var cellSelectionColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.black.withAlphaComponent(0.1)
+        case .night:
+            return Colors.black.withAlphaComponent(0.1)
+        }
+    }
+    
     var cellTextColor: UIColor {
         switch self {
         case .day:
