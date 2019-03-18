@@ -10,43 +10,22 @@ import UIKit
 
 class ChartView: UIView {
 
-    var charts: ChartsData? {
+    var lines: [ChartLine]?
+    var grid: ChartGrid?
+
+    var xRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
-            charts?.xVisibleRange = visibleRange
-            update(animated: true)
-        }
-    }
-    var axis: AxisData? {
-        didSet {
-            axis?.visibleRange = visibleRange
-            update(animated: true)
-        }
-    }
-    var grid: GridData? {
-        didSet {
-            grid?.maxVisibleValue = 100
-            update(animated: true)
-        }
-    }
-    private var lastVisibleRange: ClosedRange<CGFloat> = 0 ... 1
-    var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
-        didSet {
-            update(animated: true)
+            update()
         }
     }
     var lineWidth: CGFloat = 4.0 {
         didSet {
-            update(animated: true)
-        }
-    }
-    var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 32, right: 0) {
-        didSet {
-            chartBounds = self.bounds.inset(by: chartInsets)
             update()
         }
     }
-    
-    private var animator = PointAnimator()
+    var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 32, right: 0)
+
+    private var animator = Animator()
     private var chartBounds: CGRect = .zero
     private var titleColor: UIColor = .black
     private var gridMainColor: UIColor = .darkGray
@@ -81,85 +60,93 @@ class ChartView: UIView {
         startReceivingThemeUpdates()
     }
 
-    private func update(animated: Bool = true) {
-        let updateHandler: PointAnimationUpdateHandler = { [weak self] (phaseX, phaseY) in
+    private func update() {
+        var maxVisibleY: CGFloat = 0
+        if let lines = lines {
+            for line in lines {
+                line.normalizeX(range: xRange)
+                maxVisibleY = max(maxVisibleY, line.yMaxVisible ?? 0)
+            }
+            for line in lines {
+                line.normalizeY(range: 0 ... maxVisibleY)
+            }
+        }
+        if let grid = grid {
+            grid.normalizeX(range: xRange)
+            grid.normalizeY(range: 0 ... maxVisibleY)
+        }
+        animator.animate(duration: 0.05, easing: .easeOutCubic, update: { [weak self] (phase) in
             guard let self = self else { return }
-            
-            let lastLow = self.lastVisibleRange.lowerBound
-            let lastUp = self.lastVisibleRange.upperBound
-            let low = self.visibleRange.lowerBound
-            let up = self.visibleRange.upperBound
-            
-            let curLow = lastLow + (low - lastLow) * phaseX
-            let curUp = lastUp + (up - lastUp) * phaseX
-            let range = curLow ... curUp
-            
-            if let axis = self.axis {
-                axis.textWidth = 80
-                axis.maxVisiblePositions = Int(self.bounds.width / axis.textWidth)
-                axis.visibleRange = range
-                axis.updateAlpha(phase: phaseY)
+            if let lines = self.lines {
+                for line in lines {
+                    line.updateX(phase: phase)
+                    line.updateY(phase: phase)
+                }
             }
             if let grid = self.grid {
-                grid.maxVisibleValue = 100
-                grid.updateAlpha(phase: phaseY)
+                grid.updateX(phase: phase)
+                grid.updateY(phase: phase)
             }
-            self.charts?.xVisibleRange = range
-            self.lastVisibleRange = range
-
             self.setNeedsDisplay()
-        }
-        if animated {
-            animator.animate(durationX: 0.05,
-                             durationY: 0.1,
-                             easingX: .easeOutCubic,
-                             easingY: .linear,
-                             update: updateHandler,
-                             finish: nil)
-        } else {
-            updateHandler(1.0, 1.0)
-        }
+        })
     }
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        if let axis = self.axis {
+
+        if let grid = grid {
             ChartViewRenderer.configureContext(context: context, lineWidth: 0.5)
             let leftPoint = CGPoint(x: 0, y: chartBounds.maxY)
             let rightPoint = CGPoint(x: bounds.width, y: chartBounds.maxY)
             ChartViewRenderer.drawLine(pointA: leftPoint,
-                                pointB: rightPoint,
-                                color: gridMainColor.cgColor,
-                                context: context)
-            axis.getTextToDraw(viewport: bounds).forEach { [weak self] axisPoint in
-                let attributedString = NSAttributedString(string: axisPoint.title, attributes: self?.xAxisTextAttributes(alpha: axisPoint.currentAlpha))
+                                       pointB: rightPoint,
+                                       color: gridMainColor.cgColor,
+                                       context: context)
+            for yPoint in grid.yPoints {
+                let yView = chartBounds.maxY - (yPoint.normPos * chartBounds.height)
+
+                let ptA = CGPoint(x: chartBounds.minX, y: yView)
+                let ptB = CGPoint(x: chartBounds.maxX, y: yView)
+                let color = self.gridAuxColor.withAlphaComponent(yPoint.currentAlpha)
+                ChartViewRenderer.drawLine(pointA: ptA, pointB: ptB, color: color.cgColor, context: context)
+
+                let text = NSAttributedString(string: yPoint.title, attributes: yAxisTextAttributes(alpha: yPoint.currentAlpha))
+                let textWidth = chartBounds.width
+                let textHeight = text.height(withConstrainedWidth: textWidth)
+                let textFrame = CGRect(x: chartBounds.minX,
+                                       y: yView - textHeight,
+                                       width: textWidth,
+                                       height: textHeight)
+                ChartViewRenderer.drawText(text: text, frame: textFrame)
+            }
+            for xPoint in grid.xPoints {
+                let xView = chartBounds.minX + xPoint.normPos * chartBounds.width
+                let attributedString = NSAttributedString(string: xPoint.title, attributes: xAxisTextAttributes(alpha: xPoint.currentAlpha))
                 let height: CGFloat = 20
                 let width = attributedString.width(withConstrainedHeight: height)
-                let x = axisPoint.dispX - width / 2
+                let x = xView - width / 2
                 let y = bounds.height - chartInsets.bottom + (chartInsets.bottom - height) / 2
                 ChartViewRenderer.drawText(text: attributedString, frame: CGRect(x: x, y: y, width: width, height: height))
             }
         }
-        if let grid = self.grid {
-            grid.getLinesToDraw(viewport: chartBounds).forEach {
-                let ptA = CGPoint(x: chartBounds.minX, y: $0.dispY)
-                let ptB = CGPoint(x: chartBounds.maxX, y: $0.dispY)
-                let textWidth = chartBounds.width
-                let text = NSAttributedString(string: String($0.value), attributes: yAxisTextAttributes(alpha: $0.currentAlpha))
-                let textHeight = text.height(withConstrainedWidth: textWidth)
-                let textFrame = CGRect(x: chartBounds.minX,
-                                       y: $0.dispY - textHeight,
-                                       width: textWidth,
-                                       height: textHeight)
-                ChartViewRenderer.drawText(text: text, frame: textFrame)
-                let color = gridAuxColor.withAlphaComponent($0.currentAlpha)
-                ChartViewRenderer.drawLine(pointA: ptA, pointB: ptB, color: color.cgColor, context: context)
+        if let lines = lines {
+            ChartViewRenderer.configureContext(context: context, lineWidth: lineWidth)
+            for line in lines {
+                guard let normX = line.normX,
+                    let normY = line.normY
+                else {
+                    continue
+                }
+                let color = line.color.cgColor
+                var points = [CGPoint]()
+                for i in line.xVisibleIndices {
+                    let xView = chartBounds.minX + normX[i] * chartBounds.width
+                    let yView = chartBounds.maxY - (normY[i] * chartBounds.height)
+                    points.append(CGPoint(x: xView, y: yView))
+                }
+                ChartViewRenderer.drawChart(points: points, color: color, context: context)
             }
-        }
-        ChartViewRenderer.configureContext(context: context, lineWidth: lineWidth)
-        charts?.getLinesToDraw(viewport: chartBounds).forEach { (points, color) in
-            ChartViewRenderer.drawChart(points: points, color: color.cgColor, context: context)
         }
     }
 }

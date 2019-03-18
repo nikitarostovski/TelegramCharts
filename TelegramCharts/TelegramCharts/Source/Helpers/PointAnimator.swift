@@ -1,5 +1,5 @@
 //
-//  PointAnimator.swift
+//  Animator.swift
 //  TelegramCharts
 //
 //  Created by Rost on 13/03/2019.
@@ -8,42 +8,33 @@
 
 import UIKit
 
-typealias PointAnimationUpdateHandler = ((CGFloat, CGFloat) -> Void)
-typealias PointAnimationFinishHandler = (() -> Void)
+typealias AnimationUpdateHandler = ((CGFloat) -> Void)
+typealias AnimationFinishHandler = (() -> Void)
 
-class PointAnimator {
+class Animator {
 
-    var updateHandler: PointAnimationUpdateHandler?
-    var finishHandler: PointAnimationFinishHandler?
+    var updateHandler: AnimationUpdateHandler?
+    var finishHandler: AnimationFinishHandler?
 
-    var phaseX: CGFloat = 1
-    var phaseY: CGFloat = 1
+    var phase: CGFloat = 1
     
     private var displayLink: CADisplayLink?
-    private var easingFunctionX: EasingFunction?
-    private var easingFunctionY: EasingFunction?
+    private var easingFunction: EasingFunction?
 
-    private var startTimeX: TimeInterval = 0
-    private var finishTimeX: TimeInterval = 0
-    private var startTimeY: TimeInterval = 0
-    private var finishTimeY: TimeInterval = 0
+    private var startTime: TimeInterval = 0
+    private var finishTime: TimeInterval = 0
     
-    func animate(durationX: TimeInterval,
-                 durationY: TimeInterval,
-                 easingX: AnimationEasingType? = nil,
-                 easingY: AnimationEasingType? = nil,
-                 update: PointAnimationUpdateHandler?,
-                 finish: PointAnimationFinishHandler? = nil) {
+    func animate(duration: TimeInterval,
+                 easing: AnimationEasingType? = nil,
+                 update: AnimationUpdateHandler?,
+                 finish: AnimationFinishHandler? = nil) {
 
         finishAnimation()
         updateHandler = update
         finishHandler = finish
-        easingFunctionX = easingFunction(type: easingX ?? .linear)
-        easingFunctionY = easingFunction(type: easingY ?? .linear)
-        startTimeX = CACurrentMediaTime()
-        startTimeY = CACurrentMediaTime()
-        finishTimeX = startTimeX + durationX
-        finishTimeY = startTimeY + durationY
+        easingFunction = easingFunction(type: easing ?? .linear)
+        startTime = CACurrentMediaTime()
+        finishTime = startTime + duration
         displayLink = CADisplayLink(target: self, selector: #selector(displayLinkFire))
         displayLink!.add(to: .main, forMode: .common)
     }
@@ -60,25 +51,18 @@ class PointAnimator {
     @objc private func displayLinkFire() {
         let currentTime: TimeInterval = CACurrentMediaTime()
         updatePhases(currentTime: currentTime)
-        updateHandler?(phaseX, phaseY)
+        updateHandler?(phase)
         
-        if currentTime >= max(finishTimeX, finishTimeY) {
+        if currentTime >= finishTime {
             finishAnimation()
         }
     }
     
     private func updatePhases(currentTime: TimeInterval) {
-        guard let easingX = easingFunctionX,
-            let easingY = easingFunctionY else {
-                return
-        }
-        if currentTime <= finishTimeX {
-            let elapsedX: TimeInterval = min(currentTime - startTimeX, finishTimeX - startTimeX)
-            phaseX = easingX(elapsedX, finishTimeX - startTimeX)
-        }
-        if currentTime <= finishTimeY {
-            let elapsedY: TimeInterval = min(currentTime - startTimeY, finishTimeY - startTimeY)
-            phaseY = easingY(elapsedY, finishTimeY - startTimeY)
+        guard let easing = easingFunction else { return }
+        if currentTime <= finishTime {
+            let elapsed: TimeInterval = min(currentTime - startTime, finishTime - startTime)
+            phase = easing(elapsed, finishTime - startTime)
         }
     }
 }
@@ -92,7 +76,7 @@ enum AnimationEasingType {
     case easeOutCubic
 }
 
-extension PointAnimator {
+extension Animator {
     
     private func easingFunction(type: AnimationEasingType) -> EasingFunction {
         switch type {

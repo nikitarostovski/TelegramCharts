@@ -22,9 +22,8 @@ class ChartCellModel: BaseCellModel {
         super.init()
         isTouchable = false
     }
-    
-    var chartsData: ChartsData?
-    var axisData: AxisData?
-    var gridData: GridData?
+
+    var chartLines: [ChartLine]?
+    var chartGrid: ChartGrid?
     var currentRange: ClosedRange<CGFloat>?
 }

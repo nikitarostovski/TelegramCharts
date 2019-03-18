@@ -41,17 +41,17 @@ class ChartCell: BaseCell {
             model.currentRange = 0 ... 1
         }
         currentRange = model.currentRange
-        
-        mainChartView.charts = model.chartsData
-        mainChartView.axis = model.axisData
-        mainChartView.grid = model.gridData
-        mainChartView.visibleRange = currentRange!
-        
-        mapChartView.axis = nil
+
+        mainChartView.lines = model.chartLines
+        mainChartView.grid = model.chartGrid
+        mainChartView.xRange = currentRange!
+
+        if let lines = model.chartLines {
+            mapChartView.lines = lines.map { $0.copy() } as? [ChartLine]
+        }
         mapChartView.grid = nil
         mapChartView.chartInsets = .zero
-        mapChartView.charts = model.chartsData?.copy()
-        mapChartView.visibleRange = 0 ... 1
+        mapChartView.xRange = 0 ... 1
         
         let insetTop = mapChartView.frame.minY - rangeSlider.frame.minY
         let insetBottom = rangeSlider.frame.maxY - mapChartView.frame.maxY
@@ -69,7 +69,7 @@ extension ChartCell: RangeSliderDelegate {
                 return
         }
         currentRange = low ... up
-        mainChartView.visibleRange = currentRange!
+        mainChartView.xRange = currentRange!
         if let model = model as? ChartCellModel {
             model.currentRange = currentRange
         }
