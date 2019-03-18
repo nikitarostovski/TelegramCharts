@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		106DC318223A400B00D6D6C2 /* ChartDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106DC317223A400B00D6D6C2 /* ChartDrawer.swift */; };
+		106DC318223A400B00D6D6C2 /* ChartViewRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106DC317223A400B00D6D6C2 /* ChartViewRenderer.swift */; };
 		106DC31A223A68E200D6D6C2 /* ChartsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106DC319223A68E200D6D6C2 /* ChartsData.swift */; };
 		1074DA38223913B6006C1D51 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1074DA37223913B6006C1D51 /* chart_data.json */; };
 		1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1102AD5C223C148D000F64A9 /* Date+Formatter.swift */; };
@@ -52,14 +52,12 @@
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
 		11851003223D33860034FA27 /* AxisData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851002223D33860034FA27 /* AxisData.swift */; };
-		11851005223D3C3E0034FA27 /* AxisDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851004223D3C3E0034FA27 /* AxisDrawer.swift */; };
-		11851007223D61280034FA27 /* GridDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851006223D61280034FA27 /* GridDrawer.swift */; };
 		11851009223E4A3F0034FA27 /* GridData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851008223E4A3F0034FA27 /* GridData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		106DC316223A3E1F00D6D6C2 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
-		106DC317223A400B00D6D6C2 /* ChartDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDrawer.swift; sourceTree = "<group>"; };
+		106DC317223A400B00D6D6C2 /* ChartViewRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewRenderer.swift; sourceTree = "<group>"; };
 		106DC319223A68E200D6D6C2 /* ChartsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsData.swift; sourceTree = "<group>"; };
 		1074DA37223913B6006C1D51 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data.json; sourceTree = "<group>"; };
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
@@ -106,8 +104,6 @@
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
 		11851002223D33860034FA27 /* AxisData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AxisData.swift; sourceTree = "<group>"; };
-		11851004223D3C3E0034FA27 /* AxisDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AxisDrawer.swift; sourceTree = "<group>"; };
-		11851006223D61280034FA27 /* GridDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridDrawer.swift; sourceTree = "<group>"; };
 		11851008223E4A3F0034FA27 /* GridData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -355,12 +351,10 @@
 			isa = PBXGroup;
 			children = (
 				1154411722397C0C00795743 /* ChartView.swift */,
+				106DC317223A400B00D6D6C2 /* ChartViewRenderer.swift */,
 				106DC319223A68E200D6D6C2 /* ChartsData.swift */,
-				106DC317223A400B00D6D6C2 /* ChartDrawer.swift */,
 				11851002223D33860034FA27 /* AxisData.swift */,
-				11851004223D3C3E0034FA27 /* AxisDrawer.swift */,
 				11851008223E4A3F0034FA27 /* GridData.swift */,
-				11851006223D61280034FA27 /* GridDrawer.swift */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
@@ -536,7 +530,7 @@
 				113C82E6223EB1AC00723D10 /* ChartProvider.swift in Sources */,
 				11851003223D33860034FA27 /* AxisData.swift in Sources */,
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
-				106DC318223A400B00D6D6C2 /* ChartDrawer.swift in Sources */,
+				106DC318223A400B00D6D6C2 /* ChartViewRenderer.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
 				1154413522397C0D00795743 /* ChartCellModel.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
@@ -563,9 +557,7 @@
 				1154413922397C0D00795743 /* SliderThumbView.swift in Sources */,
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
-				11851005223D3C3E0034FA27 /* AxisDrawer.swift in Sources */,
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
-				11851007223D61280034FA27 /* GridDrawer.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -720,6 +712,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4DZU58EZPK;
 				INFOPLIST_FILE = "$(SRCROOT)/TelegramCharts/Resource/Info.plist";
@@ -729,6 +722,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rost.TelegramCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -738,6 +732,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4DZU58EZPK;
 				INFOPLIST_FILE = "$(SRCROOT)/TelegramCharts/Resource/Info.plist";
@@ -747,6 +742,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rost.TelegramCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

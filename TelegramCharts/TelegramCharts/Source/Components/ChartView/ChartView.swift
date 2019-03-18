@@ -125,21 +125,20 @@ class ChartView: UIView {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
         if let axis = self.axis {
-            GridDrawer.configureContext(context: context, lineWidth: 0.5)
+            ChartViewRenderer.configureContext(context: context, lineWidth: 0.5)
             let leftPoint = CGPoint(x: 0, y: chartBounds.maxY)
             let rightPoint = CGPoint(x: bounds.width, y: chartBounds.maxY)
-            GridDrawer.drawLine(pointA: leftPoint,
+            ChartViewRenderer.drawLine(pointA: leftPoint,
                                 pointB: rightPoint,
                                 color: gridMainColor.cgColor,
                                 context: context)
-            AxisDrawer.configureContext(context: context)
             axis.getTextToDraw(viewport: bounds).forEach { [weak self] axisPoint in
                 let attributedString = NSAttributedString(string: axisPoint.title, attributes: self?.xAxisTextAttributes(alpha: axisPoint.currentAlpha))
                 let height: CGFloat = 20
                 let width = attributedString.width(withConstrainedHeight: height)
                 let x = axisPoint.dispX - width / 2
                 let y = bounds.height - chartInsets.bottom + (chartInsets.bottom - height) / 2
-                AxisDrawer.drawText(text: attributedString, frame: CGRect(x: x, y: y, width: width, height: height))
+                ChartViewRenderer.drawText(text: attributedString, frame: CGRect(x: x, y: y, width: width, height: height))
             }
         }
         if let grid = self.grid {
@@ -153,14 +152,14 @@ class ChartView: UIView {
                                        y: $0.dispY - textHeight,
                                        width: textWidth,
                                        height: textHeight)
-                GridDrawer.drawText(text: text, frame: textFrame)
+                ChartViewRenderer.drawText(text: text, frame: textFrame)
                 let color = gridAuxColor.withAlphaComponent($0.currentAlpha)
-                GridDrawer.drawLine(pointA: ptA, pointB: ptB, color: color.cgColor, context: context)
+                ChartViewRenderer.drawLine(pointA: ptA, pointB: ptB, color: color.cgColor, context: context)
             }
         }
-        ChartDrawer.configureContext(context: context, lineWidth: lineWidth)
+        ChartViewRenderer.configureContext(context: context, lineWidth: lineWidth)
         charts?.getLinesToDraw(viewport: chartBounds).forEach { (points, color) in
-            ChartDrawer.drawChart(points: points, color: color.cgColor, context: context)
+            ChartViewRenderer.drawChart(points: points, color: color.cgColor, context: context)
         }
     }
 }
