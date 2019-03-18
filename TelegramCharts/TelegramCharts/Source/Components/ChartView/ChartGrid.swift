@@ -79,6 +79,33 @@ class ChartGrid {
             yPoints.append(point)
         }
     }
+    
+    func getClosedXAxisData(position: CGFloat) -> Any? {
+        var closestIndex: Int?
+        var closestPoint: ChartAxisPoint?
+        var closestDistance = CGFloat.greatestFiniteMagnitude
+        for i in xPoints.indices {
+            let currentPoint = xPoints[i]
+            if closestIndex == nil {
+                closestIndex = i
+                closestPoint = currentPoint
+                continue
+            }
+            let distance = abs(closestPoint!.normPos - currentPoint.normPos)
+            if distance < closestDistance {
+                closestDistance = distance
+                closestIndex = i
+                closestPoint = currentPoint
+            }
+        }
+        guard closestIndex != nil else {
+            return nil
+        }
+        if closestIndex! < 0 || closestIndex! >= xAxisData.count {
+            return nil
+        }
+        return xAxisData[closestIndex!]
+    }
 }
 
 class ChartAxisPoint {

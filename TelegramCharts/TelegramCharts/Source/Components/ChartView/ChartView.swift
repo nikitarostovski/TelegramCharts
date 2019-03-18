@@ -31,6 +31,13 @@ class ChartView: UIView {
     private var gridMainColor: UIColor = .darkGray
     private var gridAuxColor: UIColor = .lightGray
     
+    private var selectionView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+    private var selectionViewPosition = CGPoint.zero {
+        didSet {
+            selectionView.center = selectionViewPosition
+        }
+    }
+    
     // MARK: - Lifecycle
     
     required init?(coder aDecoder: NSCoder) {
@@ -45,6 +52,7 @@ class ChartView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        selectionView.center = selectionViewPosition
         chartBounds = self.bounds.inset(by: chartInsets)
         update()
     }
@@ -58,6 +66,11 @@ class ChartView: UIView {
     private func initialSetup() {
         layer.masksToBounds = true
         startReceivingThemeUpdates()
+        
+        selectionView.isHidden = true
+        selectionView.isUserInteractionEnabled = false
+        selectionView.backgroundColor = .red
+        addSubview(selectionView)
     }
 
     private func update() {
@@ -94,8 +107,8 @@ class ChartView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-
-        if let grid = grid {
+        
+        if let grid = grid, false {
             ChartViewRenderer.configureContext(context: context, lineWidth: 0.5)
             let leftPoint = CGPoint(x: 0, y: chartBounds.maxY)
             let rightPoint = CGPoint(x: bounds.width, y: chartBounds.maxY)
@@ -174,5 +187,33 @@ extension ChartView: Stylable {
         gridMainColor = theme.chartGridMainColor
         gridAuxColor = theme.chartGridAuxColor
         setNeedsDisplay()
+    }
+}
+
+// MARK: - Touches
+
+extension ChartView {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesBegan(touches, with: event)
+        guard let pos = touches.first?.location(in: self) else { return }
+        selectionView.isHidden = false
+        selectionViewPosition = pos
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesMoved(touches, with: event)
+        guard let pos = touches.first?.location(in: self) else { return }
+        selectionViewPosition = pos
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesEnded(touches, with: event)
+        selectionView.isHidden = true
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesCancelled(touches, with: event)
+        selectionView.isHidden = true
     }
 }

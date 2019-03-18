@@ -38,9 +38,21 @@ class ChartLine {
     }
 
     func normalizeX(range: ClosedRange<CGFloat>) {
-        var maxVisible: CGFloat = 0
+        var left: Int?
+        var right: Int?
         for i in x.indices {
             newNormX[i] = (x[i] - range.lowerBound) / (range.upperBound - range.lowerBound)
+            if newNormX[i] >= 0 && left == nil && i > 0 {
+                left = i - 1
+            }
+            if newNormX[i] > 1 && right == nil && i < (x.count - 1) {
+                right = i + 1
+            }
+        }
+        var maxVisible: CGFloat = 0
+        left = left ?? 0
+        right = right ?? x.count - 1
+        for i in left! ... right! {
             maxVisible = max(maxVisible, y[i])
         }
         yMaxVisible = maxVisible
