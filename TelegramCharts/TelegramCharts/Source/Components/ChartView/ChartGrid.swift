@@ -100,6 +100,10 @@ class ChartAxisPoint {
     func update(phase: CGFloat) {
         currentAlpha = currentAlpha + (targetAlpha - currentAlpha) * phase
         normPos = normPos + (newNormPos - normPos) * phase
+        if currentAlpha < 0.01 {
+            isHidden = true
+            currentAlpha = 0
+        }
     }
 
     func normalize(range: ClosedRange<CGFloat>) {

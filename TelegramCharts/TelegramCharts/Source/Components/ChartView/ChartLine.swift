@@ -20,7 +20,6 @@ class ChartLine {
     private var newNormX: [CGFloat]
     private var newNormY: [CGFloat]
 
-    var xVisibleIndices: ClosedRange<Int>
     var yMaxVisible: CGFloat?
 
     init(y: [CGFloat], color: UIColor) {
@@ -30,7 +29,6 @@ class ChartLine {
         }
         self.newNormX = x
         self.normX = x
-        self.xVisibleIndices = 0 ... (x.count - 1)
 
         self.y = y
         self.newNormY = y
@@ -40,39 +38,22 @@ class ChartLine {
     }
 
     func normalizeX(range: ClosedRange<CGFloat>) {
-        var xNewLow = 0
-        var xNewUp = x.count - 1
-        for i in xVisibleIndices.lowerBound ..< x.count {
-            self.newNormX[i] = (x[i] - range.lowerBound) / (range.upperBound - range.lowerBound)
-            if self.newNormX[i] > 1 {
-                xNewUp = i
-                break
-            }
-        }
-        for i in (0 ... xVisibleIndices.upperBound).reversed() {
-            self.newNormX[i] = (x[i] - range.lowerBound) / (range.upperBound - range.lowerBound)
-            if self.newNormX[i] < 0 {
-                xNewLow = i
-                break
-            }
-        }
-        xVisibleIndices = xNewLow ... xNewUp
-
         var maxVisible: CGFloat = 0
-        for i in xVisibleIndices {
+        for i in x.indices {
+            newNormX[i] = (x[i] - range.lowerBound) / (range.upperBound - range.lowerBound)
             maxVisible = max(maxVisible, y[i])
         }
         yMaxVisible = maxVisible
     }
 
     func normalizeY(range: ClosedRange<CGFloat>) {
-        for i in xVisibleIndices {
+        for i in y.indices {
             newNormY[i] = (y[i] - range.lowerBound) / (range.upperBound - range.lowerBound)
         }
     }
 
     func updateX(phase: CGFloat) {
-        for i in xVisibleIndices {
+        for i in x.indices {
             let oldX = normX[i]
             let newX = newNormX[i]
             let x = oldX + (newX - oldX) * phase
@@ -81,7 +62,7 @@ class ChartLine {
     }
 
     func updateY(phase: CGFloat) {
-        for i in xVisibleIndices {
+        for i in y.indices {
             let oldY = normY[i]
             let newY = newNormY[i]
             let y = oldY + (newY - oldY) * phase

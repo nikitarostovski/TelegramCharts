@@ -135,7 +135,7 @@ class ChartView: UIView {
             for line in lines {
                 let color = line.color.cgColor
                 var points = [CGPoint]()
-                for i in line.xVisibleIndices {
+                for i in line.normX.indices {
                     let xView = chartBounds.minX + line.normX[i] * chartBounds.width
                     let yView = chartBounds.maxY - (line.normY[i] * chartBounds.height)
                     points.append(CGPoint(x: xView, y: yView))
