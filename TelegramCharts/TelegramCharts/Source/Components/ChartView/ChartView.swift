@@ -133,16 +133,11 @@ class ChartView: UIView {
         if let lines = lines {
             ChartViewRenderer.configureContext(context: context, lineWidth: lineWidth)
             for line in lines {
-                guard let normX = line.normX,
-                    let normY = line.normY
-                else {
-                    continue
-                }
                 let color = line.color.cgColor
                 var points = [CGPoint]()
                 for i in line.xVisibleIndices {
-                    let xView = chartBounds.minX + normX[i] * chartBounds.width
-                    let yView = chartBounds.maxY - (normY[i] * chartBounds.height)
+                    let xView = chartBounds.minX + line.normX[i] * chartBounds.width
+                    let yView = chartBounds.maxY - (line.normY[i] * chartBounds.height)
                     points.append(CGPoint(x: xView, y: yView))
                 }
                 ChartViewRenderer.drawChart(points: points, color: color, context: context)
