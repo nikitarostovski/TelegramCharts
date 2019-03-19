@@ -9,7 +9,7 @@
 import Foundation
 
 struct Chart {
-    let columns: [String: [Int64]]
+    let columns: [String: [Int]]
     let names: [String: String]
     let types: [String: String]
     let colors: [String: String]
@@ -25,13 +25,13 @@ extension Chart: Codable {
         types = try container.decode(type(of: types).self, forKey: .types)
         
         var columnsContainer = try container.nestedUnkeyedContainer(forKey: .columns)
-        var columns = [String: [Int64]]()
+        var columns = [String: [Int]]()
         while !columnsContainer.isAtEnd {
             var columnContainer = try columnsContainer.nestedUnkeyedContainer()
             let name = try columnContainer.decode(String.self)
-            columns[name] = [Int64]()
+            columns[name] = [Int]()
             while !columnContainer.isAtEnd {
-                columns[name]?.append(try columnContainer.decode(Int64.self))
+                columns[name]?.append(try columnContainer.decode(Int.self))
             }
         }
         self.columns = columns

@@ -20,7 +20,7 @@ class ChartConverter {
         var lines = [ChartLine]()
         var grid: ChartGrid?
 
-        var maxValue: Int64 = 0
+        var maxValue: Int = 0
         for (name, points) in chart.columns {
             let type = chart.types[name]
             if type == "line" {

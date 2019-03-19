@@ -14,19 +14,19 @@ class ChartGrid {
     var yPoints: [ChartAxisPoint]
 
     var xAxisData: [Any]
-    var yAxisMaxNumber: Int64
+    var yAxisMaxNumber: Int
     var yLinesCount = 5
 
     var xVisibleIndices: ClosedRange<Int> = 0 ... 1
 
-    init(xAxisData: [Any], yAxisMaxNumber: Int64) {
+    init(xAxisData: [Any], yAxisMaxNumber: Int) {
         self.xAxisData = xAxisData
         self.yAxisMaxNumber = yAxisMaxNumber
         xPoints = [ChartAxisPoint]()
         yPoints = [ChartAxisPoint]()
         for i in xAxisData.indices {
             let normalizedPosition = CGFloat(i) / CGFloat(xAxisData.count)
-            let xPoint = ChartAxisPoint(position: normalizedPosition, title: String(i))
+            let xPoint = ChartAxisPoint(position: normalizedPosition, title: String(number: i))
             xPoints.append(xPoint)
         }
     }
@@ -65,12 +65,12 @@ class ChartGrid {
     func normalizeY(range: ClosedRange<CGFloat>) {
         yPoints = yPoints.filter { !$0.isHidden }
         yPoints.forEach { $0.targetAlpha = 0 }
-        let maxVisibleY = Int64(CGFloat(yAxisMaxNumber) * range.upperBound)
+        let maxVisibleY = Int(CGFloat(yAxisMaxNumber) * range.upperBound)
         let step = CGFloat(maxVisibleY) / CGFloat(yLinesCount)
-        let numberStep = Int64(step + 0.5)
+        let numberStep = Int(step + 0.5)
         for i in 0 ..< yLinesCount + 1 {
-            let yValue = Int64(i) * numberStep
-            let point = ChartAxisPoint(position: CGFloat(yValue) / CGFloat(yAxisMaxNumber), title: String(yValue))
+            let yValue = Int(i) * numberStep
+            let point = ChartAxisPoint(position: CGFloat(yValue) / CGFloat(yAxisMaxNumber), title: String(number: yValue))
             point.targetAlpha = 1
             point.currentAlpha = 0
             point.isHidden = false

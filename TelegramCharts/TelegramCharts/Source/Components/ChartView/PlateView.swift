@@ -18,7 +18,7 @@ class PlateView: UIView {
     private var dateTextColor: UIColor = .black
 
     private var date: Date?
-    private var numbers: [(Int64, UIColor)]?
+    private var numbers: [(Int, UIColor)]?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,7 +40,7 @@ class PlateView: UIView {
         stopReceivingThemeUpdates()
     }
 
-    func update(date: Date, numbers: [(Int64, UIColor)]?) {
+    func update(date: Date, numbers: [(Int, UIColor)]?) {
         self.date = date
         self.numbers = numbers
         resetDateAttributedString()
@@ -110,7 +110,7 @@ class PlateView: UIView {
                 .foregroundColor: color,
                 .font: UIFont.boldSystemFont(ofSize: 12)
             ]
-            let text = NSAttributedString(string: String(number) + " ", attributes: attribs)
+            let text = NSAttributedString(string: String(number: number) + " ", attributes: attribs)
             if i % 2 == 0 {
                 topLineText.append(text)
             } else {

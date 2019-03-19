@@ -337,17 +337,17 @@ extension ChartView {
         }
     }
 
-    private func getChartCurrentData() -> (Date, [(Int64, UIColor)])? {
+    private func getChartCurrentData() -> (Date, [(Int, UIColor)])? {
         guard let lines = lines,
             let selectionXIndex = selectionXIndex,
             let date = grid?.xAxisData[selectionXIndex] as? Date else {
             return nil
         }
-        var numbers = [(Int64, UIColor)]()
+        var numbers = [(Int, UIColor)]()
         for line in lines {
             let number = line.y[selectionXIndex]
             let color = line.color
-            numbers.append((Int64(number * 1000), color))
+            numbers.append((Int(number * 1000), color))
         }
         return (date, numbers)
     }

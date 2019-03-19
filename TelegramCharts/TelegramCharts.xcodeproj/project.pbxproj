@@ -14,6 +14,7 @@
 		106DC318223A400B00D6D6C2 /* ChartViewRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106DC317223A400B00D6D6C2 /* ChartViewRenderer.swift */; };
 		1074DA38223913B6006C1D51 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1074DA37223913B6006C1D51 /* chart_data.json */; };
 		1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1102AD5C223C148D000F64A9 /* Date+Formatter.swift */; };
+		1123B45E224163F600107BE5 /* String+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123B45D224163F600107BE5 /* String+Format.swift */; };
 		113C82D9223E97DE00723D10 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82D8223E97DE00723D10 /* ListViewController.swift */; };
 		113C82E0223E996100723D10 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 113C82DC223E996000723D10 /* ItemCell.xib */; };
 		113C82E1223E996100723D10 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82DD223E996000723D10 /* ItemCell.swift */; };
@@ -65,6 +66,7 @@
 		106DC317223A400B00D6D6C2 /* ChartViewRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewRenderer.swift; sourceTree = "<group>"; };
 		1074DA37223913B6006C1D51 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data.json; sourceTree = "<group>"; };
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
+		1123B45D224163F600107BE5 /* String+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Format.swift"; sourceTree = "<group>"; };
 		113C82D8223E97DE00723D10 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		113C82DC223E996000723D10 /* ItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
 		113C82DD223E996000723D10 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				115440ED22397C0C00795743 /* NSObject+Theme.swift */,
 				1102AD5C223C148D000F64A9 /* Date+Formatter.swift */,
 				11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */,
+				1123B45D224163F600107BE5 /* String+Format.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -563,6 +566,7 @@
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
 				104521AB223F792E0052624E /* ChartGrid.swift in Sources */,
+				1123B45E224163F600107BE5 /* String+Format.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
