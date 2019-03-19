@@ -34,12 +34,12 @@ class ChartView: UIView {
     private var titleColor: UIColor = .black
     private var gridMainColor: UIColor = .darkGray
     private var gridAuxColor: UIColor = .lightGray
-    
-    private var selectionView = SelectionView(frame: .zero)
+
+    private var plate: PlateView!
     private var selectionXIndex: Int?
     private var selectionViewPosition: CGFloat = 0 {
         didSet {
-            selectionView.updatePosition(pos: selectionViewPosition)
+            updatePlatePosition()
         }
     }
     
@@ -58,7 +58,7 @@ class ChartView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         chartBounds = self.bounds.inset(by: chartInsets)
-        selectionView.frame = chartBounds
+        updatePlatePosition()
         update()
     }
     
@@ -71,11 +71,10 @@ class ChartView: UIView {
     private func initialSetup() {
         layer.masksToBounds = true
         startReceivingThemeUpdates()
-        
-        selectionView.isHidden = true
-        selectionView.alpha = 0
-        selectionView.isUserInteractionEnabled = false
-        addSubview(selectionView)
+        plate = PlateView(frame: .zero)
+        plate.isHidden = true
+        plate.alpha = 0
+        addSubview(plate)
     }
 
     private func update() {
@@ -116,7 +115,7 @@ class ChartView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
+
         if let grid = grid {
             ChartViewRenderer.configureContext(context: context, lineWidth: 0.5)
             let leftPoint = CGPoint(x: 0, y: chartBounds.maxY)
@@ -153,6 +152,16 @@ class ChartView: UIView {
             }
         }
         if let lines = lines {
+            if let selectionXIndex = selectionXIndex, lines.count > 0 {
+                ChartViewRenderer.configureContext(context: context, lineWidth: 0.5)
+                let position = chartBounds.minX + lines.first!.normX[selectionXIndex] * chartBounds.width
+                let ptA = CGPoint(x: position, y: chartBounds.minY)
+                let ptB = CGPoint(x: position, y: chartBounds.maxY)
+                ChartViewRenderer.drawLine(pointA: ptA,
+                                           pointB: ptB,
+                                           color: gridMainColor.cgColor,
+                                           context: context)
+            }
             ChartViewRenderer.configureContext(context: context, lineWidth: lineWidth)
             for line in lines {
                 let color = line.color.cgColor
@@ -163,6 +172,14 @@ class ChartView: UIView {
                     points.append(CGPoint(x: xView, y: yView))
                 }
                 ChartViewRenderer.drawChart(points: points, color: color, context: context)
+                if let selectionXIndex = selectionXIndex {
+                    let fillColor = (backgroundColor ?? .clear).cgColor
+                    ChartViewRenderer.configureContext(context: context, lineWidth: lineWidth, fillColor: fillColor)
+                    let xView = chartBounds.minX + line.normX[selectionXIndex] * chartBounds.width
+                    let yView = chartBounds.maxY - (line.normY[selectionXIndex] * chartBounds.height)
+                    let radius: CGFloat = 3
+                    ChartViewRenderer.drawSelectionCircle(point: CGPoint(x: xView, y: yView), color: color, radius: radius, context: context)
+                }
             }
         }
     }
@@ -203,11 +220,18 @@ extension ChartView: Stylable {
 
 extension ChartView {
 
+    private func updatePlatePosition() {
+        var x = chartBounds.minX + selectionViewPosition * chartBounds.width
+        x = min(x, chartBounds.maxX - plate.frame.width / 2)
+        x = max(x, chartBounds.minX + plate.frame.width / 2)
+        plate.center = CGPoint(x: x, y: 8 + plate.frame.height / 2)
+    }
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         guard let pos = touches.first?.location(in: self),
             chartBounds.contains(pos),
-            !(selectionView.plate.frame.contains(pos) && !selectionView.isHidden)
+            !(plate.frame.contains(pos) && !plate.isHidden)
         else {
             hideSelection()
             return
@@ -218,7 +242,7 @@ extension ChartView {
             return
         }
         selectionXIndex = closestIndex
-        if selectionView.isHidden {
+        if plate.isHidden {
             showSelection()
         } else {
             moveSelection()
@@ -243,30 +267,28 @@ extension ChartView {
     }
 
     private func showSelection() {
-        guard selectionView.isHidden && selectionView.alpha == 0 else { return }
-        if let data = getChartCurrentData() {
-            selectionView.updateData(date: data.0, numbers: data.1)
-        }
-        selectionView.alpha = 0
-        selectionView.isHidden = false
+        guard plate.isHidden && plate.alpha == 0 else { return }
+        plate.alpha = 0
+        plate.isHidden = false
         moveSelection(animated: false)
         UIView.animate(withDuration: 0.15) {
-            self.selectionView.alpha = 1.0
+            self.plate.alpha = 1.0
         }
+        setNeedsDisplay()
     }
 
     private func moveSelection(animated: Bool = true) {
-        guard !selectionView.isHidden else { return }
+        guard !plate.isHidden else { return }
         guard let selectionXIndex = selectionXIndex,
-            let newPos = grid?.xPoints[selectionXIndex].newNormPos else {
+            let newPos = lines?.first?.normX[selectionXIndex] else {
                 hideSelection()
                 return
         }
         if let data = getChartCurrentData() {
-            selectionView.updateData(date: data.0, numbers: data.1)
+            plate.update(date: data.0, numbers: data.1)
         }
         let transitionClosure = {
-            self.selectionViewPosition = newPos * self.chartBounds.width
+            self.selectionViewPosition = newPos
         }
         if animated {
             UIView.animate(withDuration: 0.15) {
@@ -275,14 +297,17 @@ extension ChartView {
         } else {
             transitionClosure()
         }
+        setNeedsDisplay()
     }
 
     func hideSelection() {
-        guard !selectionView.isHidden && selectionView.alpha == 1 else { return }
+        guard !plate.isHidden && plate.alpha == 1 else { return }
         UIView.animate(withDuration: 0.15, animations: {
-            self.selectionView.alpha = 0
+            self.plate.alpha = 0
         }) { _ in
-            self.selectionView.isHidden = true
+            self.selectionXIndex = nil
+            self.plate.isHidden = true
+            self.setNeedsDisplay()
         }
     }
 

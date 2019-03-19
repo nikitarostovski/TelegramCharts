@@ -10,11 +10,11 @@ import UIKit
 
 class ChartViewRenderer {
 
-    static func configureContext(context: CGContext, lineWidth: CGFloat = 1.0) {
+    static func configureContext(context: CGContext, lineWidth: CGFloat = 1.0, fillColor: CGColor = UIColor.clear.cgColor) {
         context.setLineCap(.round)
         context.setLineJoin(.round)
         context.setLineWidth(lineWidth)
-        context.setFillColor(UIColor.clear.cgColor)
+        context.setFillColor(fillColor)
         context.setAllowsAntialiasing(true)
         context.setShouldAntialias(true)
     }
@@ -27,6 +27,13 @@ class ChartViewRenderer {
             context.addLine(to: points[i])
         }
         context.strokePath()
+    }
+
+    static func drawSelectionCircle(point: CGPoint, color: CGColor, radius: CGFloat, context: CGContext) {
+        context.setStrokeColor(color)
+        let rect = CGRect(x: point.x - radius, y: point.y - radius, width: 2 * radius, height: 2 * radius)
+        context.addEllipse(in: rect)
+        context.drawPath(using: .fillStroke)
     }
 
     static func drawLine(pointA: CGPoint, pointB: CGPoint, color: CGColor, context: CGContext) {

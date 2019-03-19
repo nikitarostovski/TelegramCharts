@@ -1,5 +1,5 @@
 //
-//  SelectionView.swift
+//  PlateView.swift
 //  TelegramCharts
 //
 //  Created by Nikita Rostovskiy on 19/03/2019.
@@ -7,89 +7,6 @@
 //
 
 import UIKit
-
-class SelectionView: UIView {
-
-    private let viewHeight: CGFloat = 60
-    private let dateWidth: CGFloat = 80
-
-    var date: Date?
-    private var numbers: [(Int64, UIColor)]?
-
-    private var dateAttributedString: NSAttributedString?
-    private var dateStringFrame: CGRect = .zero
-    private var numbersAttributedString: NSAttributedString?
-    private var numbersStringFrame: CGRect = .zero
-
-    private var position: CGFloat = 0
-
-    var plate: PlateView!
-    private var lineView: UIView!
-
-    func updatePosition(pos: CGFloat) {
-        self.position = pos
-        recalculatePosition()
-    }
-
-    func updateData(date: Date, numbers: [(Int64, UIColor)]) {
-        self.date = date
-        self.numbers = numbers
-        plate.update(date: date, numbers: numbers)
-        recalculatePosition()
-    }
-
-    // MARK: - Lifecycle
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        initialSetup()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        initialSetup()
-    }
-
-    private func initialSetup() {
-        backgroundColor = .clear
-        plate = PlateView(frame: .zero)
-        plate.layer.cornerRadius = 2.0
-        plate.layer.masksToBounds = true
-        addSubview(plate)
-        lineView = UIView(frame: .zero)
-        addSubview(lineView)
-        startReceivingThemeUpdates()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        recalculatePosition()
-    }
-
-    deinit {
-        stopReceivingThemeUpdates()
-    }
-
-    // MARK: - Private
-
-    private func recalculatePosition() {
-        plate.center = CGPoint(x: position, y: 16)
-        lineView.frame = CGRect(x: position,
-                                y: plate.frame.maxY,
-                                width: 0.5,
-                                height: bounds.height - plate.frame.maxY)
-    }
-}
-
-// MARK: Stylable
-
-extension SelectionView: Stylable {
-
-    func themeDidUpdate(theme: Theme) {
-        lineView.backgroundColor = theme.chartGridMainColor
-        setNeedsDisplay()
-    }
-}
 
 class PlateView: UIView {
 
@@ -135,7 +52,7 @@ class PlateView: UIView {
         numbersAttributedString.draw(in: numbersStringFrame)
     }
 
-    private func recalculateSize() {
+     func recalculateSize() {
         let inset: CGFloat = 4
         guard let height = dateAttributedString?.height(withConstrainedWidth: .greatestFiniteMagnitude),
             let dateWidth = dateAttributedString?.width(withConstrainedHeight: height),
