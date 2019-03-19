@@ -60,7 +60,7 @@ class ListViewController: UITableViewController {
             else {
                 return
             }
-            if selectedIndex > 0 && selectedIndex < charts.count {
+            if selectedIndex >= 0 && selectedIndex < charts.count {
                 (segue.destination as! MainViewController).chart = charts[selectedIndex]
             }
         }
