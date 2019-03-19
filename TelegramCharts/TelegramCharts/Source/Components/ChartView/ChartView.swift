@@ -230,9 +230,10 @@ extension ChartView {
         if let lines = lines, let selectionXIndex = selectionXIndex {
             var yPointsToAvoid = [inset, chartBounds.maxY - inset]
             lines.forEach { line in
-                let yNorm = chartBounds.minY + line.normX[selectionXIndex] * chartBounds.height
-                yPointsToAvoid.append(yNorm)
-                if yNorm >= plate.frame.minY && yNorm <= plate.frame.maxY {
+                let yView = chartBounds.maxY - (line.normY[selectionXIndex] * chartBounds.height)
+                print(yView)
+                yPointsToAvoid.append(yView)
+                if yView >= y - plate.frame.height / 2 && yView <= y + plate.frame.height / 2 {
                     overlaps = true
                 }
             }
@@ -244,6 +245,7 @@ extension ChartView {
                     let center = ptA + (ptB - ptA) / 2
                     if center + plate.frame.height / 2 < ptB && center - plate.frame.height / 2 > ptA {
                         y = center
+                        break
                     }
                 }
             }
