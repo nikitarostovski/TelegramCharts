@@ -221,10 +221,34 @@ extension ChartView: Stylable {
 extension ChartView {
 
     private func updatePlatePosition() {
+        let inset: CGFloat = 8
         var x = chartBounds.minX + selectionViewPosition * chartBounds.width
         x = min(x, chartBounds.maxX - plate.frame.width / 2)
         x = max(x, chartBounds.minX + plate.frame.width / 2)
-        plate.center = CGPoint(x: x, y: 8 + plate.frame.height / 2)
+        var y = inset + plate.frame.height / 2
+        var overlaps = false
+        if let lines = lines, let selectionXIndex = selectionXIndex {
+            var yPointsToAvoid = [inset, chartBounds.maxY - inset]
+            lines.forEach { line in
+                let yNorm = chartBounds.minY + line.normX[selectionXIndex] * chartBounds.height
+                yPointsToAvoid.append(yNorm)
+                if yNorm >= plate.frame.minY && yNorm <= plate.frame.maxY {
+                    overlaps = true
+                }
+            }
+            if overlaps {
+                yPointsToAvoid.sort(by: <)
+                for i in 1 ..< yPointsToAvoid.count {
+                    let ptA = yPointsToAvoid[i - 1]
+                    let ptB = yPointsToAvoid[i]
+                    let center = ptA + (ptB - ptA) / 2
+                    if center + plate.frame.height / 2 < ptB && center - plate.frame.height / 2 > ptA {
+                        y = center
+                    }
+                }
+            }
+        }
+        plate.center = CGPoint(x: x, y: y)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
