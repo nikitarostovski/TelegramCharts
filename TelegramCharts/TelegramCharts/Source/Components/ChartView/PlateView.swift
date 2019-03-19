@@ -11,9 +11,10 @@ import UIKit
 class PlateView: UIView {
 
     var dateAttributedString: NSAttributedString?
-    var numbersAttributedString: NSAttributedString?
     var dateStringFrame: CGRect = .zero
-    var numbersStringFrame: CGRect = .zero
+    
+    var numbersAttributedStrings: [NSAttributedString]?
+    var numbersStringFrames = [CGRect]()
 
     private var dateTextColor: UIColor = .black
 
@@ -51,26 +52,41 @@ class PlateView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let dateAttributedString = dateAttributedString,
-            let numbersAttributedString = numbersAttributedString else {
+            let numbersAttributedStrings = numbersAttributedStrings else {
                 return
         }
         dateAttributedString.draw(in: dateStringFrame)
-        numbersAttributedString.draw(in: numbersStringFrame)
+        if numbersAttributedStrings.count == numbersStringFrames.count {
+            for i in numbersAttributedStrings.indices {
+                numbersAttributedStrings[i].draw(in: numbersStringFrames[i])
+            }
+        }
     }
 
      func recalculateSize() {
         let inset: CGFloat = 4
-        guard let height = dateAttributedString?.height(withConstrainedWidth: .greatestFiniteMagnitude),
-            let dateWidth = dateAttributedString?.width(withConstrainedHeight: height),
-            let numbersWidth = numbersAttributedString?.width(withConstrainedHeight: height)
+        guard let strings = numbersAttributedStrings,
+            let height = dateAttributedString?.height(withConstrainedWidth: .greatestFiniteMagnitude),
+            let dateWidth = dateAttributedString?.width(withConstrainedHeight: height)
             else {
                 return
         }
-        let totalWidth = dateWidth + numbersWidth + 3 * inset
-        let totalHeight = height + 2 * inset
-        frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: totalWidth, height: totalHeight)
         dateStringFrame = CGRect(x: inset, y: inset, width: dateWidth, height: height)
-        numbersStringFrame = CGRect(x: dateStringFrame.maxX + inset, y: inset, width: numbersWidth, height: height)
+        
+        var numbersTotalWidth: CGFloat = 0
+        for i in strings.indices {
+            let columnWidth = strings[i].width(withConstrainedHeight: height)
+            let frame = CGRect(x: dateStringFrame.maxX + inset + numbersTotalWidth, y: inset, width: columnWidth, height: height)
+            numbersStringFrames.append(frame)
+            numbersTotalWidth += columnWidth
+        }
+        
+        let totalWidth = dateWidth + numbersTotalWidth + 3 * inset
+        let totalHeight = height + 2 * inset
+        frame = CGRect(x: center.x - totalWidth / 2,
+                       y: center.y - totalHeight / 2,
+                       width: totalWidth,
+                       height: totalHeight)
         setNeedsDisplay()
     }
 
@@ -98,30 +114,35 @@ class PlateView: UIView {
 
     private func resetNumberAttributedString() {
         guard let numbers = numbers else {
-            numbersAttributedString = nil
+            numbersAttributedStrings = nil
             return
         }
-        let topLineText = NSMutableAttributedString()
-        let bottomLineText = NSMutableAttributedString()
+        var columnTexts = [NSMutableAttributedString]()
+        var currentText: NSMutableAttributedString?
+        var currentDelimeterText: NSMutableAttributedString?
         for i in numbers.indices {
+            if i % 2 == 0 {
+                currentText = NSMutableAttributedString()
+                currentDelimeterText = NSMutableAttributedString(string: "\n")
+            } else {
+                currentDelimeterText = nil
+            }
             let number = numbers[i].0
             let color = numbers[i].1
             let attribs: [NSAttributedString.Key: Any] = [
                 .foregroundColor: color,
                 .font: UIFont.boldSystemFont(ofSize: 12)
             ]
-            let text = NSAttributedString(string: String(number: number) + " ", attributes: attribs)
-            if i % 2 == 0 {
-                topLineText.append(text)
-            } else {
-                bottomLineText.append(text)
+            let text = NSAttributedString(string: String(number: number), attributes: attribs)
+            currentText!.append(text)
+            if currentDelimeterText != nil {
+                currentText!.append(currentDelimeterText!)
+            }
+            if i % 2 == 1 {
+                columnTexts.append(currentText!)
             }
         }
-        let nlText = NSAttributedString(string: "\n")
-        let result = NSMutableAttributedString(attributedString: topLineText)
-        result.append(nlText)
-        result.append(bottomLineText)
-        numbersAttributedString = result.copy() as? NSAttributedString
+        numbersAttributedStrings = columnTexts
     }
 }
 

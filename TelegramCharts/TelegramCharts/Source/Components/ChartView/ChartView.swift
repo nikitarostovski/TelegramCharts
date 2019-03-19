@@ -231,7 +231,6 @@ extension ChartView {
             var yPointsToAvoid = [inset, chartBounds.maxY - inset]
             lines.forEach { line in
                 let yView = chartBounds.maxY - (line.normY[selectionXIndex] * chartBounds.height)
-                print(yView)
                 yPointsToAvoid.append(yView)
                 if yView >= y - plate.frame.height / 2 && yView <= y + plate.frame.height / 2 {
                     overlaps = true
