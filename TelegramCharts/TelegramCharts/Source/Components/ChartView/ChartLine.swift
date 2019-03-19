@@ -25,7 +25,7 @@ class ChartLine {
     init(y: [CGFloat], color: UIColor) {
         self.x = [CGFloat]()
         for i in y.indices {
-            self.x.append(CGFloat(i) / CGFloat(y.count))
+            self.x.append(CGFloat(i) / CGFloat(y.count - 1))
         }
         self.newNormX = x
         self.normX = x
