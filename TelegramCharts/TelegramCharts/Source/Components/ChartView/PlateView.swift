@@ -22,11 +22,17 @@ class PlateView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        startReceivingThemeUpdates()
+        initialSetup()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        initialSetup()
+    }
+    
+    private func initialSetup() {
+        layer.cornerRadius = 2
+        layer.masksToBounds = true
         startReceivingThemeUpdates()
     }
 

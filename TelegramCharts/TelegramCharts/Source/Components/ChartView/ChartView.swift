@@ -155,7 +155,7 @@ class ChartView: UIView {
             if let selectionXIndex = selectionXIndex, lines.count > 0 {
                 ChartViewRenderer.configureContext(context: context, lineWidth: 0.5)
                 let position = chartBounds.minX + lines.first!.normX[selectionXIndex] * chartBounds.width
-                let ptA = CGPoint(x: position, y: chartBounds.minY)
+                let ptA = CGPoint(x: position, y: 0)
                 let ptB = CGPoint(x: position, y: chartBounds.maxY)
                 ChartViewRenderer.drawLine(pointA: ptA,
                                            pointB: ptB,
