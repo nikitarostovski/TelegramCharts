@@ -42,20 +42,19 @@ class ChartGrid {
     }
 
     func normalizeX(range: ClosedRange<CGFloat>) {
+        for p in xPoints {
+            p.normalize(range: range)
+        }
         var xNewLow = 0
         var xNewUp = xPoints.count - 1
         for i in xVisibleIndices.lowerBound ..< xPoints.count {
-            let pt = xPoints[i]
-            pt.normalize(range: range)
-            if pt.normPos > 1 {
+            if xPoints[i].normPos > 1 {
                 xNewUp = i
                 break
             }
         }
         for i in (0 ... xVisibleIndices.upperBound).reversed() {
-            let pt = xPoints[i]
-            pt.normalize(range: range)
-            if pt.normPos < 0 {
+            if xPoints[i].normPos < 0 {
                 xNewLow = i
                 break
             }
@@ -80,31 +79,8 @@ class ChartGrid {
         }
     }
     
-    func getClosedXAxisData(position: CGFloat) -> Any? {
-        var closestIndex: Int?
-        var closestPoint: ChartAxisPoint?
-        var closestDistance = CGFloat.greatestFiniteMagnitude
-        for i in xPoints.indices {
-            let currentPoint = xPoints[i]
-            if closestIndex == nil {
-                closestIndex = i
-                closestPoint = currentPoint
-                continue
-            }
-            let distance = abs(closestPoint!.normPos - currentPoint.normPos)
-            if distance < closestDistance {
-                closestDistance = distance
-                closestIndex = i
-                closestPoint = currentPoint
-            }
-        }
-        guard closestIndex != nil else {
-            return nil
-        }
-        if closestIndex! < 0 || closestIndex! >= xAxisData.count {
-            return nil
-        }
-        return xAxisData[closestIndex!]
+    func getClosedXAxisIndex(position: CGFloat) -> Int? {
+        return Int(CGFloat(xAxisData.count) * position)
     }
 }
 

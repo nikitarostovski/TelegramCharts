@@ -9,8 +9,14 @@
 import UIKit
 
 extension Date {
-    
-    func stringValue() -> String {
+
+    func yearString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY"
+        return dateFormatter.string(from: self)
+    }
+
+    func monthDayShortString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d"
         return dateFormatter.string(from: self)

@@ -39,6 +39,7 @@ class MainViewController: UITableViewController {
         tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
+        tableView.canCancelContentTouches = false
     }
 
     override func viewWillAppear(_ animated: Bool) {

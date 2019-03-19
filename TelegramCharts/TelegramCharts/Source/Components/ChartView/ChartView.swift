@@ -31,10 +31,11 @@ class ChartView: UIView {
     private var gridMainColor: UIColor = .darkGray
     private var gridAuxColor: UIColor = .lightGray
     
-    private var selectionView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-    private var selectionViewPosition = CGPoint.zero {
+    private var selectionView = SelectionView(frame: .zero)
+    private var selectionXIndex: Int?
+    private var selectionViewPosition: CGFloat = 0 {
         didSet {
-            selectionView.center = selectionViewPosition
+            selectionView.updatePosition(pos: selectionViewPosition)
         }
     }
     
@@ -52,8 +53,8 @@ class ChartView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        selectionView.center = selectionViewPosition
         chartBounds = self.bounds.inset(by: chartInsets)
+        selectionView.frame = chartBounds
         update()
     }
     
@@ -68,8 +69,8 @@ class ChartView: UIView {
         startReceivingThemeUpdates()
         
         selectionView.isHidden = true
+        selectionView.alpha = 0
         selectionView.isUserInteractionEnabled = false
-        selectionView.backgroundColor = .red
         addSubview(selectionView)
     }
 
@@ -97,6 +98,7 @@ class ChartView: UIView {
                 }
             }
             if let grid = self.grid {
+                self.moveSelection()
                 grid.updateX(phase: phase)
                 grid.updateY(phase: phase)
             }
@@ -190,30 +192,105 @@ extension ChartView: Stylable {
     }
 }
 
-// MARK: - Touches
+// MARK: - Selection View
 
 extension ChartView {
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        super.touchesBegan(touches, with: event)
-        guard let pos = touches.first?.location(in: self) else { return }
-        selectionView.isHidden = false
-        selectionViewPosition = pos
+        super.touchesBegan(touches, with: event)
+        guard let pos = touches.first?.location(in: self),
+            chartBounds.contains(pos),
+            !(selectionView.plate.frame.contains(pos) && !selectionView.isHidden)
+        else {
+            hideSelection()
+            return
+        }
+        let chartViewPos = (pos.x - chartBounds.minX) / chartBounds.width
+        let normPos = chartViewPos * (xRange.upperBound - xRange.lowerBound) + xRange.lowerBound
+        guard let closestIndex = grid?.getClosedXAxisIndex(position: normPos) else {
+            return
+        }
+        selectionXIndex = closestIndex
+        if selectionView.isHidden {
+            showSelection()
+        } else {
+            moveSelection()
+        }
     }
-    
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        super.touchesMoved(touches, with: event)
-        guard let pos = touches.first?.location(in: self) else { return }
-        selectionViewPosition = pos
+        super.touchesMoved(touches, with: event)
+        guard let pos = touches.first?.location(in: self),
+            chartBounds.contains(pos) else {
+            hideSelection()
+            return
+        }
+        let chartViewPos = (pos.x - chartBounds.minX) / chartBounds.width
+        let normPos = chartViewPos * (xRange.upperBound - xRange.lowerBound) + xRange.lowerBound
+        guard let closestIndex = grid?.getClosedXAxisIndex(position: normPos) else {
+            hideSelection()
+            return
+        }
+        selectionXIndex = closestIndex
+        moveSelection()
     }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        super.touchesEnded(touches, with: event)
-        selectionView.isHidden = true
+
+    private func showSelection() {
+        guard selectionView.isHidden && selectionView.alpha == 0 else { return }
+        if let data = getChartCurrentData() {
+            selectionView.updateData(date: data.0, numbers: data.1)
+        }
+        selectionView.alpha = 0
+        selectionView.isHidden = false
+        moveSelection(animated: false)
+        UIView.animate(withDuration: 0.15) {
+            self.selectionView.alpha = 1.0
+        }
     }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        super.touchesCancelled(touches, with: event)
-        selectionView.isHidden = true
+
+    private func moveSelection(animated: Bool = true) {
+        guard !selectionView.isHidden else { return }
+        guard let selectionXIndex = selectionXIndex,
+            let newPos = grid?.xPoints[selectionXIndex].newNormPos else {
+                hideSelection()
+                return
+        }
+        if let data = getChartCurrentData() {
+            selectionView.updateData(date: data.0, numbers: data.1)
+        }
+        let transitionClosure = {
+            self.selectionViewPosition = newPos * self.chartBounds.width
+        }
+        if animated {
+            UIView.animate(withDuration: 0.15) {
+                transitionClosure()
+            }
+        } else {
+            transitionClosure()
+        }
+    }
+
+    func hideSelection() {
+        guard !selectionView.isHidden && selectionView.alpha == 1 else { return }
+        UIView.animate(withDuration: 0.15, animations: {
+            self.selectionView.alpha = 0
+        }) { _ in
+            self.selectionView.isHidden = true
+        }
+    }
+
+    private func getChartCurrentData() -> (Date, [(Int64, UIColor)])? {
+        guard let lines = lines,
+            let selectionXIndex = selectionXIndex,
+            let date = grid?.xAxisData[selectionXIndex] as? Date else {
+            return nil
+        }
+        var numbers = [(Int64, UIColor)]()
+        for line in lines {
+            let number = line.y[selectionXIndex]
+            let color = line.color
+            numbers.append((Int64(number * 1000), color))
+        }
+        return (date, numbers)
     }
 }

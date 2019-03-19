@@ -70,6 +70,7 @@ extension ChartCell: RangeSliderDelegate {
         }
         currentRange = low ... up
         mainChartView.xRange = currentRange!
+        mainChartView.hideSelection()
         if let model = model as? ChartCellModel {
             model.currentRange = currentRange
         }

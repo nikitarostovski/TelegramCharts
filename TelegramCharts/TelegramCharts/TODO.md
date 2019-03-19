@@ -10,3 +10,4 @@ Make layout pixel-perfect
 Think about value types in chart (maybe replace Int64 by Int or UInt)
 Y-axis scaling
 Fix ChartView theme animations
+Different update methods for values and appearange in chartcell and subviews
