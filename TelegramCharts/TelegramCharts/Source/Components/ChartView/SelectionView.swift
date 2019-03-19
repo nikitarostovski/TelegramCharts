@@ -14,7 +14,7 @@ class SelectionView: UIView {
     private let dateWidth: CGFloat = 80
 
     var date: Date?
-    private var numbers: [(Int64, UIColor, CGFloat)]?
+    private var numbers: [(Int64, UIColor)]?
 
     private var dateAttributedString: NSAttributedString?
     private var dateStringFrame: CGRect = .zero
@@ -31,7 +31,7 @@ class SelectionView: UIView {
         recalculatePosition()
     }
 
-    func updateData(date: Date, numbers: [(Int64, UIColor, CGFloat)]) {
+    func updateData(date: Date, numbers: [(Int64, UIColor)]) {
         self.date = date
         self.numbers = numbers
         plate.update(date: date, numbers: numbers)
@@ -101,7 +101,7 @@ class PlateView: UIView {
     private var dateTextColor: UIColor = .black
 
     private var date: Date?
-    private var numbers: [(Int64, UIColor, CGFloat)]?
+    private var numbers: [(Int64, UIColor)]?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -117,7 +117,7 @@ class PlateView: UIView {
         stopReceivingThemeUpdates()
     }
 
-    func update(date: Date, numbers: [(Int64, UIColor, CGFloat)]?) {
+    func update(date: Date, numbers: [(Int64, UIColor)]?) {
         self.date = date
         self.numbers = numbers
         resetDateAttributedString()

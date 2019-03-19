@@ -25,6 +25,10 @@ class ChartView: UIView {
     }
     var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 32, right: 0)
 
+    private let updateQueue = DispatchQueue(label: "ChartUpdateQueue",
+                                            qos: .utility,
+                                            attributes: [])
+
     private var animator = Animator()
     private var chartBounds: CGRect = .zero
     private var titleColor: UIColor = .black
@@ -75,42 +79,45 @@ class ChartView: UIView {
     }
 
     private func update() {
-        var maxVisibleY: CGFloat = 0
-        if let lines = lines {
-            for line in lines {
-                line.normalizeX(range: xRange)
-                maxVisibleY = max(maxVisibleY, line.yMaxVisible ?? 0)
-            }
-            for line in lines {
-                line.normalizeY(range: 0 ... maxVisibleY)
-            }
-        }
-        if let grid = grid {
-            grid.normalizeX(range: xRange)
-            grid.normalizeY(range: 0 ... maxVisibleY)
-        }
-        animator.animate(duration: 0.05, easing: .easeOutCubic, update: { [weak self] (phase) in
+        updateQueue.async { [ weak self] in
             guard let self = self else { return }
+            var maxVisibleY: CGFloat = 0
             if let lines = self.lines {
                 for line in lines {
-                    line.updateX(phase: phase)
-                    line.updateY(phase: phase)
+                    line.normalizeX(range: self.xRange)
+                    maxVisibleY = max(maxVisibleY, line.yMaxVisible ?? 0)
+                }
+                for line in lines {
+                    line.normalizeY(range: 0 ... maxVisibleY)
                 }
             }
             if let grid = self.grid {
-                self.moveSelection()
-                grid.updateX(phase: phase)
-                grid.updateY(phase: phase)
+                grid.normalizeX(range: self.xRange)
+                grid.normalizeY(range: 0 ... maxVisibleY)
             }
-            self.setNeedsDisplay()
-        })
+            self.animator.animate(duration: 0.05, easing: .easeOutCubic, update: { [weak self] (phase) in
+                guard let self = self else { return }
+                if let lines = self.lines {
+                    for line in lines {
+                        line.updateX(phase: phase)
+                        line.updateY(phase: phase)
+                    }
+                }
+                if let grid = self.grid {
+                    self.moveSelection()
+                    grid.updateX(phase: phase)
+                    grid.updateY(phase: phase)
+                }
+                self.setNeedsDisplay()
+            })
+        }
     }
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
-        if let grid = grid, false {
+        if let grid = grid {
             ChartViewRenderer.configureContext(context: context, lineWidth: 0.5)
             let leftPoint = CGPoint(x: 0, y: chartBounds.maxY)
             let rightPoint = CGPoint(x: bounds.width, y: chartBounds.maxY)
