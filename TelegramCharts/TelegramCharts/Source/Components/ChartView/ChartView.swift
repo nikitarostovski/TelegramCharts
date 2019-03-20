@@ -101,17 +101,17 @@ class ChartView: UIView {
                 grid.normalizeX(range: self.xRange)
                 grid.normalizeY(range: 0 ... maxVisibleY)
             }
-            self.xAnimator.animate(duration: 0.05, easing: .linear, update: { phase in
-                if let lines = self.lines {
-                    for line in lines {
-                        line.updateX(phase: phase)
-                    }
+            if let lines = self.lines {
+                for line in lines {
+                    line.updateX(phase: 1)
                 }
-                if let grid = self.grid {
-                    grid.updateX(phase: phase)
-                }
+            }
+            if let grid = self.grid {
+                grid.updateX(phase: 1)
+            }
+            DispatchQueue.main.async {
                 self.setNeedsDisplay()
-            })
+            }
             self.yAnimator.animate(duration: 0.15, update: { phase in
                 if let lines = self.lines {
                     for line in lines {
@@ -192,6 +192,9 @@ class ChartView: UIView {
                 let color = line.color.withAlphaComponent(line.currentAlpha).cgColor
                 var points = [CGPoint]()
                 for i in line.normX.indices {
+                    guard line.normX[i] > -0.1 && line.normX[i] < 1.1 else {
+                        continue
+                    }
                     let xView = chartBounds.minX + line.normX[i] * chartBounds.width
                     let yView = chartBounds.maxY - (line.normY[i] * chartBounds.height)
                     points.append(CGPoint(x: xView, y: yView))
