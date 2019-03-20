@@ -29,7 +29,9 @@ class ChartView: UIView {
                                             qos: .utility,
                                             attributes: [])
 
-    private var animator = Animator()
+    private var xAnimator = Animator()
+    private var yAnimator = Animator()
+    private var fadeAnimator = Animator()
     private var chartBounds: CGRect = .zero
     private var titleColor: UIColor = .black
     private var gridMainColor: UIColor = .darkGray
@@ -80,11 +82,16 @@ class ChartView: UIView {
     private func update() {
         updateQueue.async { [ weak self] in
             guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.moveSelection()
+            }
             var maxVisibleY: CGFloat = 0
             if let lines = self.lines {
                 for line in lines {
                     line.normalizeX(range: self.xRange)
-                    maxVisibleY = max(maxVisibleY, line.yMaxVisible ?? 0)
+                    if !line.isHidden {
+                        maxVisibleY = max(maxVisibleY, line.yMaxVisible ?? 0)
+                    }
                 }
                 for line in lines {
                     line.normalizeY(range: 0 ... maxVisibleY)
@@ -94,20 +101,35 @@ class ChartView: UIView {
                 grid.normalizeX(range: self.xRange)
                 grid.normalizeY(range: 0 ... maxVisibleY)
             }
-            self.animator.animate(duration: 0.05, easing: .easeOutCubic, update: { [weak self] (phase) in
-                guard let self = self else { return }
+            self.xAnimator.animate(duration: 0.05, easing: .linear, update: { phase in
                 if let lines = self.lines {
                     for line in lines {
                         line.updateX(phase: phase)
+                    }
+                }
+                if let grid = self.grid {
+                    grid.updateX(phase: phase)
+                }
+                self.setNeedsDisplay()
+            })
+            self.yAnimator.animate(duration: 0.15, update: { phase in
+                if let lines = self.lines {
+                    for line in lines {
                         line.updateY(phase: phase)
                     }
                 }
                 if let grid = self.grid {
-                    self.moveSelection()
-                    grid.updateX(phase: phase)
                     grid.updateY(phase: phase)
                 }
                 self.setNeedsDisplay()
+            })
+            self.fadeAnimator.animate(duration: 0.15, update: { phase in
+                if let lines = self.lines {
+                    for line in lines {
+                        line.updateAlpha(phase: phase)
+                    }
+                    self.setNeedsDisplay()
+                }
             })
         }
     }
@@ -164,7 +186,10 @@ class ChartView: UIView {
             }
             ChartViewRenderer.configureContext(context: context, lineWidth: lineWidth)
             for line in lines {
-                let color = line.color.cgColor
+                if line.isHidden && line.currentAlpha == 0 {
+                    continue
+                }
+                let color = line.color.withAlphaComponent(line.currentAlpha).cgColor
                 var points = [CGPoint]()
                 for i in line.normX.indices {
                     let xView = chartBounds.minX + line.normX[i] * chartBounds.width

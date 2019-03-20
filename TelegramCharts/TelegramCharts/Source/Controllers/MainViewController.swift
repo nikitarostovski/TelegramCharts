@@ -69,23 +69,6 @@ class MainViewController: UITableViewController {
         model.topSeparatorStyle.isHidden = false
         return model
     }
-    private var joinedCellModel: CheckCellModel {
-        let model = CheckCellModel()
-        model.hasCheckmark = true
-        model.tagColor = UIColor(hexString: "4bd964")
-        model.titleText = "Joined Channel"
-        model.bottomSeparatorStyle.isHidden = false
-        model.bottomSeparatorStyle.clampToEdge = false
-        return model
-    }
-    private var leftCellModel: CheckCellModel {
-        let model = CheckCellModel()
-        model.hasCheckmark = false
-        model.tagColor = UIColor(hexString: "fe3c30")
-        model.titleText = "Left Channel"
-        model.bottomSeparatorStyle.isHidden = false
-        return model
-    }
     private var settingsHeaderModel: TableViewHeaderViewModel {
         let model = TableViewHeaderViewModel()
         return model
@@ -114,11 +97,39 @@ class MainViewController: UITableViewController {
         }
         return model
     }
+
+    private func makeLineCellModel(line: ChartLine, action: @escaping CellTapAction) -> CheckCellModel {
+        let model = CheckCellModel()
+        model.hasCheckmark = true
+        model.tagColor = line.color
+        model.titleText = line.name
+        model.cellTapAction = action
+        return model
+    }
     
     private func createStructure() {
         structure.clear()
-        
-        let chartModels = [chartCellModel, joinedCellModel, leftCellModel]
+
+        var lineModels = [CheckCellModel]()
+        if let chartLines = chartLines {
+            for i in chartLines.indices {
+                let model = makeLineCellModel(line: chartLines[i], action: { [weak self] in
+                    chartLines[i].isHidden = !chartLines[i].isHidden
+                    // TODO: get cell and redraw it
+                })
+                if i == chartLines.count - 1 {
+                    model.bottomSeparatorStyle.isHidden = false
+                    model.bottomSeparatorStyle.clampToEdge = true
+                } else {
+                    model.bottomSeparatorStyle.isHidden = false
+                    model.bottomSeparatorStyle.clampToEdge = false
+                }
+                lineModels.append(model)
+            }
+        }
+
+        var chartModels: [BaseCellModel] = [chartCellModel]
+        chartModels.append(contentsOf: lineModels)
         let chartSection = TableViewSection(headerModel: followersHeaderModel, cellModels: chartModels)
         structure.addSection(section: chartSection)
         

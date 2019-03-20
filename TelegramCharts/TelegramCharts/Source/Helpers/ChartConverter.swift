@@ -33,7 +33,7 @@ class ChartConverter {
             if type == "line" {
                 guard let colorHex = chart.colors[name] else { continue }
                 let normPoints = values.map { CGFloat($0) / CGFloat(maxValue) }
-                let line = ChartLine(y: normPoints, color: UIColor(hexString: colorHex))
+                let line = ChartLine(y: normPoints, color: UIColor(hexString: colorHex), name: name)
                 lines.append(line)
             } else if type == "x" {
                 let dates: [Date] = values.map { Date(timeIntervalSince1970: TimeInterval($0)) }

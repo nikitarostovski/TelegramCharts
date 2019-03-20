@@ -10,6 +10,15 @@ import UIKit
 
 class ChartLine {
 
+    var isHidden = false {
+        didSet {
+            targetAlpha = isHidden ? 0 : 1
+        }
+    }
+    private var targetAlpha: CGFloat = 1
+    var currentAlpha: CGFloat = 1
+
+    var name: String
     var color: UIColor
     var x: [CGFloat]
     var y: [CGFloat]
@@ -22,7 +31,7 @@ class ChartLine {
 
     var yMaxVisible: CGFloat?
 
-    init(y: [CGFloat], color: UIColor) {
+    init(y: [CGFloat], color: UIColor, name: String) {
         self.x = [CGFloat]()
         for i in y.indices {
             self.x.append(CGFloat(i) / CGFloat(y.count - 1))
@@ -35,6 +44,7 @@ class ChartLine {
         self.normY = y
 
         self.color = color
+        self.name = name
     }
 
     func normalizeX(range: ClosedRange<CGFloat>) {
@@ -81,12 +91,16 @@ class ChartLine {
             normY[i] = y
         }
     }
+
+    func updateAlpha(phase: CGFloat) {
+        currentAlpha = currentAlpha + (targetAlpha - currentAlpha) * phase
+    }
 }
 
 extension ChartLine: NSCopying {
 
     func copy(with zone: NSZone? = nil) -> Any {
-        let copy = ChartLine(y: self.y, color: self.color)
+        let copy = ChartLine(y: self.y, color: self.color, name: self.name)
         copy.x = self.x
         copy.normX = self.normX
         copy.normY = self.normY
