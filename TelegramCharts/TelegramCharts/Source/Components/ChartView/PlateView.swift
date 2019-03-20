@@ -10,11 +10,8 @@ import UIKit
 
 class PlateView: UIView {
 
-    var dateAttributedString: NSAttributedString?
-    var dateStringFrame: CGRect = .zero
-    
-    var numbersAttributedStrings: [NSAttributedString]?
-    var numbersStringFrames = [CGRect]()
+
+    var labels = [UILabel]()
 
     private var dateTextColor: UIColor = .black
 
@@ -34,6 +31,7 @@ class PlateView: UIView {
     private func initialSetup() {
         layer.cornerRadius = 2
         layer.masksToBounds = true
+        translatesAutoresizingMaskIntoConstraints = false
         startReceivingThemeUpdates()
     }
 
@@ -44,56 +42,74 @@ class PlateView: UIView {
     func update(date: Date, numbers: [(Int, UIColor)]?) {
         self.date = date
         self.numbers = numbers
-        resetDateAttributedString()
-        resetNumberAttributedString()
+        resetTexts()
         recalculateSize()
     }
 
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        guard let dateAttributedString = dateAttributedString,
-            let numbersAttributedStrings = numbersAttributedStrings else {
-                return
+    func resetTexts() {
+        guard let numbers = self.numbers else {
+            return
         }
-        dateAttributedString.draw(in: dateStringFrame)
-        if numbersAttributedStrings.count == numbersStringFrames.count {
-            for i in numbersAttributedStrings.indices {
-                numbersAttributedStrings[i].draw(in: numbersStringFrames[i])
+        labels.forEach { $0.removeFromSuperview() }
+        labels.removeAll()
+
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 2
+        label.attributedText = dateAttributedString()
+        labels.append(label)
+        addSubview(label)
+
+        for i in 0 ..< numbers.count {
+            if i % 2 == 0 {
+                var columnNumbers = [numbers[i]]
+                if i + 1 < numbers.count {
+                    columnNumbers.append(numbers[i + 1])
+                }
+                let label = UILabel(frame: .zero)
+                label.translatesAutoresizingMaskIntoConstraints = false
+                label.numberOfLines = 2
+                label.attributedText = numberAttributedString(numberTitles: columnNumbers)
+                labels.append(label)
+                addSubview(label)
             }
         }
     }
 
-     func recalculateSize() {
+    func recalculateSize() {
         let inset: CGFloat = 4
-        guard let strings = numbersAttributedStrings,
-            let height = dateAttributedString?.height(withConstrainedWidth: .greatestFiniteMagnitude),
-            let dateWidth = dateAttributedString?.width(withConstrainedHeight: height)
-            else {
-                return
+        let dateTextWidth: CGFloat = 48
+        let numberTextWidth: CGFloat = 28
+        let textHeight: CGFloat = 30
+        for i in labels.indices {
+            let label = labels[i]
+            var left = NSLayoutConstraint(item: label, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: inset)
+            var textWidth = dateTextWidth
+            if i > 0 {
+                if let text = label.attributedText {
+                    textWidth = text.width(withConstrainedHeight: textHeight)
+                } else {
+                    textWidth = numberTextWidth
+                }
+                left = NSLayoutConstraint(item: label, attribute: .leading, relatedBy: .equal, toItem: labels[i - 1], attribute: .trailing, multiplier: 1, constant: inset)
+            }
+            let top = NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: inset)
+            let height = NSLayoutConstraint(item: label, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: textHeight)
+            let width = NSLayoutConstraint(item: label, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: textWidth)
+
+            self.addConstraints([top, height, width, left])
+
+            if i == labels.count - 1 {
+                let right = NSLayoutConstraint(item: label, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -inset)
+                let bottom = NSLayoutConstraint(item: label, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -inset)
+                self.addConstraints([right, bottom])
+            }
         }
-        dateStringFrame = CGRect(x: inset, y: inset, width: dateWidth, height: height)
-        
-        var numbersTotalWidth: CGFloat = 0
-        for i in strings.indices {
-            let columnWidth = strings[i].width(withConstrainedHeight: height)
-            let frame = CGRect(x: dateStringFrame.maxX + inset + numbersTotalWidth, y: inset, width: columnWidth, height: height)
-            numbersStringFrames.append(frame)
-            numbersTotalWidth += columnWidth
-        }
-        
-        let totalWidth = dateWidth + numbersTotalWidth + 3 * inset
-        let totalHeight = height + 2 * inset
-        frame = CGRect(x: center.x - totalWidth / 2,
-                       y: center.y - totalHeight / 2,
-                       width: totalWidth,
-                       height: totalHeight)
-        setNeedsDisplay()
     }
 
-    private func resetDateAttributedString() {
+    private func dateAttributedString() -> NSAttributedString? {
         guard let date = date else {
-            dateAttributedString = nil
-            return
+            return nil
         }
         let topLineAttribs: [NSAttributedString.Key: Any] = [
             .foregroundColor: dateTextColor,
@@ -109,40 +125,26 @@ class PlateView: UIView {
         let result = NSMutableAttributedString(attributedString: topLineText)
         result.append(nlText)
         result.append(bottomLineText)
-        dateAttributedString = result.copy() as? NSAttributedString
+        return result.copy() as? NSAttributedString
     }
 
-    private func resetNumberAttributedString() {
-        guard let numbers = numbers else {
-            numbersAttributedStrings = nil
-            return
-        }
-        var columnTexts = [NSMutableAttributedString]()
-        var currentText: NSMutableAttributedString?
-        var currentDelimeterText: NSMutableAttributedString?
-        for i in numbers.indices {
-            if i % 2 == 0 {
-                currentText = NSMutableAttributedString()
-                currentDelimeterText = NSMutableAttributedString(string: "\n")
-            } else {
-                currentDelimeterText = nil
-            }
-            let number = numbers[i].0
-            let color = numbers[i].1
+    private func numberAttributedString(numberTitles: [(Int, UIColor)]) -> NSAttributedString? {
+        let currentText = NSMutableAttributedString()
+        let currentDelimeterText = NSMutableAttributedString(string: "\n")
+        for i in numberTitles.indices {
+            let number = numberTitles[i].0
+            let color = numberTitles[i].1
             let attribs: [NSAttributedString.Key: Any] = [
                 .foregroundColor: color,
                 .font: UIFont.boldSystemFont(ofSize: 12)
             ]
             let text = NSAttributedString(string: String(number: number), attributes: attribs)
-            currentText!.append(text)
-            if currentDelimeterText != nil {
-                currentText!.append(currentDelimeterText!)
-            }
-            if i % 2 == 1 {
-                columnTexts.append(currentText!)
+            currentText.append(text)
+            if i != numberTitles.count - 1 {
+                currentText.append(currentDelimeterText)
             }
         }
-        numbersAttributedStrings = columnTexts
+        return currentText.copy() as? NSAttributedString
     }
 }
 
@@ -151,8 +153,6 @@ extension PlateView: Stylable {
     func themeDidUpdate(theme: Theme) {
         dateTextColor = theme.chartTitlesColor
         backgroundColor = theme.viewBackgroundColor
-        resetDateAttributedString()
-        resetNumberAttributedString()
-        setNeedsDisplay()
+        resetTexts()
     }
 }
