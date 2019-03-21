@@ -10,7 +10,13 @@ import UIKit
 
 class ChartXDrawAxis {
     
+    var visibleDatesCount = 5
     var points: [ChartXDrawPoint]
+    var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
+        didSet {
+            updatePoints()
+        }
+    }
     
     private var lastChangeValue = 0
     
@@ -24,16 +30,22 @@ class ChartXDrawAxis {
     }
     
     private func updatePoints() {
-        /*hidingPoints = points.map { $0 }
-        points.removeAll()
-        for pos in linePositions {
-            let point = ChartXDrawPoint(value: Int(pos * CGFloat(maxValue)))
-            points.append(point)
-            if hidingPoints.contains(where: { $0.value == point.value }) {
-                hidingPoints = hidingPoints.filter { $0.value != point.value }
-                point.alpha = 1.0
+        let startIndex = Int(visibleRange.lowerBound)
+        let finishIndex = Int(visibleRange.upperBound)
+        let step = (finishIndex - startIndex)
+        
+        for i in points.indices {
+            let pt = points[i]
+            if i < startIndex || i > finishIndex {
+                pt.isHidden = true
+                continue
             }
-        }*/
+            if i % step == 0 {
+                pt.isHidden = false
+            } else {
+                pt.isHidden = true
+            }
+        }
     }
 }
 
@@ -42,6 +54,7 @@ class ChartXDrawPoint {
     var value: Date
     var title: String
     var alpha: CGFloat
+    var isHidden = false
     
     init(value: Date, x: CGFloat, initialAlpha: CGFloat = 1) {
         self.x = x

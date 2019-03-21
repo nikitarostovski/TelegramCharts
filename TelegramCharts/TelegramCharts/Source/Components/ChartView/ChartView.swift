@@ -61,7 +61,7 @@ class ChartView: UIView {
                                             attributes: [])
     
     private var plate: PlateView!
-    private var selectionXIndex: Int?
+    private var selectedIndex: Int?
     private var selectionViewPosition: CGFloat = 0 {
         didSet {
 //            updatePlatePosition()
@@ -122,6 +122,9 @@ class ChartView: UIView {
             guard let drawLines = self.drawLines else { return }
             DispatchQueue.main.async {
 //                self.moveSelection()
+            }
+            if let xDrawAxis = self.xDrawAxis {
+                xDrawAxis.visibleRange = self.xRange
             }
             var maxValue: Int = 0
             for i in drawLines.indices {
@@ -184,6 +187,20 @@ class ChartView: UIView {
                 context.strokePath()
             }
         }
+        
+        if let xDrawAxis = xDrawAxis, gridVisible {
+            for p in xDrawAxis.points {
+                guard !p.isHidden else { continue }
+                let height: CGFloat = 18
+                let width: CGFloat = 40
+                let frame = CGRect(x: chartBounds.minX + p.x * chartBounds.width,
+                                   y: chartBounds.maxY,
+                                   width: width, height: height)
+                let attrStr = NSAttributedString(string: p.title,
+                                                 attributes: xAxisTextAttributes(alpha: p.alpha))
+                attrStr.draw(in: frame)
+            }
+        }
 
         context.setLineWidth(lineWidth)
         for line in drawLines ?? [] {
@@ -200,13 +217,17 @@ class ChartView: UIView {
             }
             context.strokePath()
 
-            /*let radius: CGFloat = 4
-            for i in 0 ..< line.points.count {
+            let radius: CGFloat = 4
+            for i in line.firstIndex ... line.lastIndex {
                 guard line.points[i].isSelected else { continue }
-                let rect = CGRect(x: line.points[i].point.x - radius, y: line.points[i].point.y - radius, width: 2 * radius, height: 2 * radius)
+                let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[i].value) / maxVisibleY
+                let rect = CGRect(x: line.points[i].x - radius,
+                                  y: self.chartBounds.maxY - normY * self.chartBounds.height,
+                                  width: 2 * radius,
+                                  height: 2 * radius)
                 context.addEllipse(in: rect)
                 context.drawPath(using: .fillStroke)
-            }*/
+            }
             
             /*if let selectionXIndex = selectionXIndex {
              let fillColor = (backgroundColor ?? .clear).cgColor
@@ -261,10 +282,11 @@ extension ChartView {
         x = max(x, chartBounds.minX + plate.frame.width / 2)
         var y = inset + plate.frame.height / 2
         var overlaps = false
-        if let lines = lines, let selectionXIndex = selectionXIndex {
+        if let selectedIndex = selectedIndex, let drawLines = drawLines {
             var yPointsToAvoid = [inset, chartBounds.maxY - inset]
-            lines.forEach { line in
-                let yView = chartBounds.maxY - (line.normY[selectionXIndex] * chartBounds.height)
+            drawLines.forEach { line in
+                let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[selectedIndex].value) / maxVisibleY
+                let yView = chartBounds.maxY - (normY * chartBounds.height)
                 yPointsToAvoid.append(yView)
                 if yView >= y - plate.frame.height / 2 && yView <= y + plate.frame.height / 2 {
                     overlaps = true

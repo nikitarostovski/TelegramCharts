@@ -40,7 +40,8 @@ class ChartCell: BaseCell {
     override func updateAppearance() {
         super.updateAppearance()
         guard let model = model as? ChartCellModel,
-            let chartLines = model.chartLines
+            let chartLines = model.chartLines,
+            let chartDates = model.chartDates
         else {
             return
         }
@@ -50,9 +51,9 @@ class ChartCell: BaseCell {
         currentRange = model.currentRange
 
         mainChartView.xRange = currentRange!
-        mainChartView.setupData(lines: chartLines)
+        mainChartView.setupData(lines: chartLines, dates: chartDates)
 
-        mapChartView.setupData(lines: chartLines)
+        mapChartView.setupData(lines: chartLines, dates: chartDates)
         mapChartView.gridVisible = false
         mapChartView.chartInsets = .zero
         mapChartView.xRange = 0 ... 1
