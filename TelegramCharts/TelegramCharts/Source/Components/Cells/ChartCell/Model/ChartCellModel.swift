@@ -24,6 +24,6 @@ class ChartCellModel: BaseCellModel {
     }
 
     var chartLines: [ChartLine]?
-    var chartGrid: ChartGrid?
+    var chartDates: [Date]?
     var currentRange: ClosedRange<CGFloat>?
 }

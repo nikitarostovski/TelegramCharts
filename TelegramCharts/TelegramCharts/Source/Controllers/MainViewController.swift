@@ -19,7 +19,7 @@ class MainViewController: UITableViewController {
                     if let converted = converted {
                         DispatchQueue.main.async {
                             self.chartLines = converted.lines
-                            self.chartGrid = converted.grid
+                            self.chartDates = converted.dates
                             self.createStructure()
                             self.tableView.reloadData()
                         }
@@ -30,7 +30,7 @@ class MainViewController: UITableViewController {
     }
 
     private var chartLines: [ChartLine]?
-    private var chartGrid: ChartGrid?
+    private var chartDates: [Date]?
     
     // MARK: - Lifecycle
     
@@ -64,7 +64,7 @@ class MainViewController: UITableViewController {
     private var chartCellModel: ChartCellModel {
         let model = ChartCellModel()
         model.chartLines = chartLines
-        model.chartGrid = chartGrid
+        model.chartDates = chartDates
         model.currentRange = 0.75 ... 1.0
         model.topSeparatorStyle.isHidden = false
         return model
@@ -114,8 +114,10 @@ class MainViewController: UITableViewController {
         if let chartLines = chartLines {
             for i in chartLines.indices {
                 let model = makeLineCellModel(line: chartLines[i], action: { [weak self] in
-                    chartLines[i].isHidden = !chartLines[i].isHidden
-                    // TODO: get cell and redraw it
+                    guard let self = self else { return }
+                    if let chartCell = self.getChartCell() {
+                        chartCell.setChartVisibility(index: i, isHidden: false)
+                    }
                 })
                 if i == chartLines.count - 1 {
                     model.bottomSeparatorStyle.isHidden = false
@@ -136,6 +138,10 @@ class MainViewController: UITableViewController {
         let settingsModels = [themeCellModel]
         let settingsSection = TableViewSection(headerModel: settingsHeaderModel, cellModels: settingsModels)
         structure.addSection(section: settingsSection)
+    }
+    
+    private func getChartCell() -> ChartCell? {
+        return nil
     }
     
     // MARK: - Actions

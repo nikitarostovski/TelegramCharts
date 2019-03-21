@@ -8,7 +8,7 @@
 
 import UIKit
 
-typealias ConversionCompletionHandler = ((lines: [ChartLine], grid: ChartGrid)?) -> Void
+typealias ConversionCompletionHandler = ((lines: [ChartLine], dates: [Date])?) -> Void
 
 class ChartConverter {
 
@@ -18,25 +18,18 @@ class ChartConverter {
             return
         }
         var lines = [ChartLine]()
-        var grid: ChartGrid?
+        var dates = [Date]()
 
         for (name, values) in chart.columns {
             let type = chart.types[name]
             if type == "line" {
                 guard let colorHex = chart.colors[name] else { continue }
-                let line = ChartLine(values: values, color: UIColor(hexString: colorHex), name: name)
+                let line = (values: values, color: UIColor(hexString: colorHex), name: name)
                 lines.append(line)
             } else if type == "x" {
-                let dates: [Date] = values.map { Date(timeIntervalSince1970: TimeInterval($0)) }
-                grid = ChartGrid(xAxisData: dates, yAxisMaxNumber: 1000)
+                dates = values.map { Date(timeIntervalSince1970: TimeInterval($0 / 1000)) }
             }
         }
-        if let grid = grid {
-            completion((lines: lines, grid: grid))
-            return
-        } else {
-            completion(nil)
-            return
-        }
+        completion((lines: lines, dates: dates))
     }
 }

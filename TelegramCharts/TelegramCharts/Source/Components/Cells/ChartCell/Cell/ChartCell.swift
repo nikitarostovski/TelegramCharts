@@ -33,19 +33,27 @@ class ChartCell: BaseCell {
     
     private var currentRange: ClosedRange<CGFloat>?
     
+    func setChartVisibility(index: Int, isHidden: Bool) {
+        
+    }
+    
     override func updateAppearance() {
         super.updateAppearance()
-        guard let model = model as? ChartCellModel else { return }
-        
+        guard let model = model as? ChartCellModel,
+            let chartLines = model.chartLines
+        else {
+            return
+        }
         if model.currentRange == nil {
             model.currentRange = 0 ... 1
         }
         currentRange = model.currentRange
 
-        mainChartView.lines = model.chartLines
         mainChartView.xRange = currentRange!
+        mainChartView.setupData(lines: chartLines)
 
-        mapChartView.lines = model.chartLines
+        mapChartView.setupData(lines: chartLines)
+        mapChartView.gridVisible = false
         mapChartView.chartInsets = .zero
         mapChartView.xRange = 0 ... 1
         
