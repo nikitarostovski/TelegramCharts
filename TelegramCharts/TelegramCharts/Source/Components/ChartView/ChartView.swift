@@ -24,7 +24,8 @@ class ChartYDrawAxis {
     }
 
     func updatePoints() {
-        hidingPoints = points
+        hidingPoints = points.map { $0 }
+        points.removeAll()
         let step = maxValue / (linesCount - 1)
         for i in 0 ... linesCount {
             let point = ChartYDrawPoint(value: i * step)
@@ -42,7 +43,7 @@ class ChartYDrawPoint {
     init(value: Int) {
         self.value = value
         self.title = String(number: value)
-        self.alpha = 1
+        self.alpha = 0
     }
 }
 
@@ -105,12 +106,15 @@ class ChartView: UIView {
     private var maxVisibleValue: Int? {
         didSet {
             targetMaxVisibleY = CGFloat(maxVisibleValue ?? 0)
-            yAnimator.animate(duration: 0.1, easing: .linear, update: { [weak self] phase in
+            yAnimator.animate(duration: 1.0, easing: .linear, update: { [weak self] phase in
                 guard let self = self else { return }
                 self.maxVisibleY = self.maxVisibleY + (self.targetMaxVisibleY - self.maxVisibleY) * phase
                 if let yDrawAxis = self.yDrawAxis {
                     for pt in yDrawAxis.hidingPoints {
-                        pt.alpha = 1.0 - phase
+                        pt.alpha = pt.alpha - pt.alpha * phase
+                    }
+                    for pt in yDrawAxis.points {
+                        pt.alpha = pt.alpha + (1 - pt.alpha) * phase
                     }
                 }
                 self.redraw()
