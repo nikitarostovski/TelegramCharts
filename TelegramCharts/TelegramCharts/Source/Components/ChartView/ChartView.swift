@@ -10,9 +10,16 @@ import UIKit
 
 class ChartYDrawAxis {
     let linesCount = 5
+
+    private var lastChangeValue = 0
     var maxValue = 0 {
         didSet {
-            updatePoints()
+            // TODO: do not replace points if difference is not big
+            let diff = CGFloat(max(maxValue, lastChangeValue)) / CGFloat(max(lastChangeValue, maxValue))
+            if diff > 1.2 {
+                lastChangeValue = maxValue
+                updatePoints()
+            }
         }
     }
 
@@ -23,7 +30,7 @@ class ChartYDrawAxis {
         self.maxValue = maxValue
     }
 
-    func updatePoints() {
+    private func updatePoints() {
         hidingPoints = points.map { $0 }
         points.removeAll()
         let step = maxValue / (linesCount - 1)
