@@ -36,12 +36,3 @@ class ChartLine {
         self.name = name
     }
 }
-
-extension ChartLine: NSCopying {
-
-    func copy(with zone: NSZone? = nil) -> Any {
-        let copy = ChartLine(values: self.values, color: self.color, name: self.name)
-        copy.x = self.x
-        return copy
-    }
-}

@@ -43,13 +43,9 @@ class ChartCell: BaseCell {
         currentRange = model.currentRange
 
         mainChartView.lines = model.chartLines
-        mainChartView.grid = model.chartGrid
         mainChartView.xRange = currentRange!
 
-        if let lines = model.chartLines {
-            mapChartView.lines = lines.map { $0.copy() } as? [ChartLine]
-        }
-        mapChartView.grid = nil
+        mapChartView.lines = model.chartLines
         mapChartView.chartInsets = .zero
         mapChartView.xRange = 0 ... 1
         
@@ -70,7 +66,7 @@ extension ChartCell: RangeSliderDelegate {
         }
         currentRange = low ... up
         mainChartView.xRange = currentRange!
-        mainChartView.hideSelection()
+//        mainChartView.hideSelection()
         if let model = model as? ChartCellModel {
             model.currentRange = currentRange
         }
