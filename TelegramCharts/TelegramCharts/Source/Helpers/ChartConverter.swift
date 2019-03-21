@@ -20,24 +20,15 @@ class ChartConverter {
         var lines = [ChartLine]()
         var grid: ChartGrid?
 
-        var maxValue: Int = 0
-        for (name, points) in chart.columns {
-            let type = chart.types[name]
-            if type == "line" {
-                maxValue = max(maxValue, points.max() ?? 0)
-            }
-        }
-
         for (name, values) in chart.columns {
             let type = chart.types[name]
             if type == "line" {
                 guard let colorHex = chart.colors[name] else { continue }
-                let normPoints = values.map { CGFloat($0) / CGFloat(maxValue) }
-                let line = ChartLine(y: normPoints, color: UIColor(hexString: colorHex), name: name)
+                let line = ChartLine(values: values, color: UIColor(hexString: colorHex), name: name)
                 lines.append(line)
             } else if type == "x" {
                 let dates: [Date] = values.map { Date(timeIntervalSince1970: TimeInterval($0)) }
-                grid = ChartGrid(xAxisData: dates, yAxisMaxNumber: maxValue)
+                grid = ChartGrid(xAxisData: dates, yAxisMaxNumber: 1000)
             }
         }
         if let grid = grid {
