@@ -12,6 +12,16 @@ class ChartXDrawAxis {
     
     var visibleDatesCount = 5
     var points: [ChartXDrawPoint]
+    var selectionIndex: Int? {
+        didSet {
+            if let oldValue = oldValue {
+                points[oldValue].isSelected = false
+            }
+            if let selectionIndex = selectionIndex {
+                points[selectionIndex].isSelected = true
+            }
+        }
+    }
 
     var firstIndex = 0 {
         didSet {
@@ -33,6 +43,10 @@ class ChartXDrawAxis {
             let point = ChartXDrawPoint(value: dates[i], x: x)
             points.append(point)
         }
+    }
+
+    func getClosestIndex(position: CGFloat) -> Int {
+        return Int(CGFloat(points.count) * position)
     }
     
     private func updatePoints() {
@@ -62,6 +76,7 @@ class ChartXDrawPoint {
     var title: String
     var alpha: CGFloat
     var isHidden = false
+    var isSelected: Bool = false
     
     init(value: Date, x: CGFloat, initialAlpha: CGFloat = 1) {
         self.originalX = x
@@ -142,7 +157,6 @@ class ChartDrawPoint {
     var value: Int
     var originalX: CGFloat = 0
     var x: CGFloat = 0
-    var isSelected: Bool = false
     var isVisible: Bool = false
     
     init(x: CGFloat, value: Int) {

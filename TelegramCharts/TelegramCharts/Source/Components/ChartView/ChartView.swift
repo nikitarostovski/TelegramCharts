@@ -14,6 +14,9 @@ class ChartView: UIView {
 
     var xRange: ClosedRange<CGFloat> = 0 ... 1 {
         didSet {
+            if xRange != oldValue {
+                hideSelection()
+            }
             recalc()
         }
     }
@@ -55,16 +58,16 @@ class ChartView: UIView {
     private var titleColor: UIColor = .black
     private var gridMainColor: UIColor = .darkGray
     private var gridAuxColor: UIColor = .lightGray
+    private var backColor: UIColor = .white
 
     private let updateQueue = DispatchQueue(label: "ChartUpdateQueue",
                                             qos: .userInitiated,
                                             attributes: [])
     
     private var plate: PlateView!
-    private var selectedIndex: Int?
     private var selectionViewPosition: CGFloat = 0 {
         didSet {
-//            updatePlatePosition()
+            updatePlatePosition()
         }
     }
     
@@ -83,7 +86,7 @@ class ChartView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         chartBounds = self.bounds.inset(by: chartInsets)
-//        updatePlatePosition()
+        updatePlatePosition()
         recalc()
     }
     
@@ -163,6 +166,7 @@ class ChartView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
+        guard let xDrawAxis = xDrawAxis else { return }
         context.setLineCap(.round)
         context.setLineJoin(.round)
         context.setAllowsAntialiasing(true)
@@ -193,7 +197,7 @@ class ChartView: UIView {
             }
         }
         
-        if let xDrawAxis = xDrawAxis, gridVisible {
+        if gridVisible {
             for i in xDrawAxis.firstIndex ... xDrawAxis.lastIndex {
                 let p = xDrawAxis.points[i]
                 guard !p.isHidden else { continue }
@@ -208,8 +212,18 @@ class ChartView: UIView {
             }
         }
 
+        if let selectionPos = xDrawAxis.selectionIndex {
+            let viewPos = xDrawAxis.points[selectionPos].x
+            context.setLineWidth(0.5)
+            context.setStrokeColor(gridMainColor.cgColor)
+            context.move(to: CGPoint(x: viewPos, y: 0))
+            context.addLine(to: CGPoint(x: viewPos, y: chartBounds.maxY))
+            context.strokePath()
+        }
+
         context.setLineWidth(lineWidth)
         for line in drawLines ?? [] {
+            context.setFillColor(UIColor.clear.cgColor)
             context.setStrokeColor(line.color.cgColor)
             for i in line.firstIndex ... line.lastIndex {
                 let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[i].value) / maxVisibleY
@@ -224,25 +238,17 @@ class ChartView: UIView {
             context.strokePath()
 
             let radius: CGFloat = 4
+            context.setFillColor(backColor.cgColor)
             for i in line.firstIndex ... line.lastIndex {
-                guard line.points[i].isSelected else { continue }
+                guard xDrawAxis.points[i].isSelected else { continue }
                 let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[i].value) / maxVisibleY
                 let rect = CGRect(x: line.points[i].x - radius,
-                                  y: self.chartBounds.maxY - normY * self.chartBounds.height,
+                                  y: self.chartBounds.maxY - normY * self.chartBounds.height - radius,
                                   width: 2 * radius,
                                   height: 2 * radius)
                 context.addEllipse(in: rect)
                 context.drawPath(using: .fillStroke)
             }
-            
-            /*if let selectionXIndex = selectionXIndex {
-             let fillColor = (backgroundColor ?? .clear).cgColor
-             ChartViewRenderer.configureContext(context: context, lineWidth: lineWidth, fillColor: fillColor)
-             let xView = chartBounds.minX + line.normX[selectionXIndex] * chartBounds.width
-             let yView = chartBounds.maxY - (line.normY[selectionXIndex] * chartBounds.height)
-             let radius: CGFloat = 3
-             ChartViewRenderer.drawSelectionCircle(point: CGPoint(x: xView, y: yView), color: color, radius: radius, context: context)
-             }*/
         }
     }
 }
@@ -270,6 +276,7 @@ extension ChartView: Stylable {
     }
     
     func themeDidUpdate(theme: Theme) {
+        backColor = theme.cellBackgroundColor
         titleColor = theme.chartTitlesColor
         gridMainColor = theme.chartGridMainColor
         gridAuxColor = theme.chartGridAuxColor
@@ -281,18 +288,19 @@ extension ChartView: Stylable {
 
 extension ChartView {
 
-    /*private func updatePlatePosition() {
+    private func updatePlatePosition() {
+        guard !plate.isHidden else { return }
         let inset: CGFloat = 8
-        var x = chartBounds.minX + selectionViewPosition * chartBounds.width
+        var x = selectionViewPosition
         x = min(x, chartBounds.maxX - plate.frame.width / 2)
         x = max(x, chartBounds.minX + plate.frame.width / 2)
         var y = inset + plate.frame.height / 2
         var overlaps = false
-        if let selectedIndex = selectedIndex, let drawLines = drawLines {
+        if let selectedIndex = xDrawAxis?.selectionIndex, let drawLines = drawLines {
             var yPointsToAvoid = [inset, chartBounds.maxY - inset]
             drawLines.forEach { line in
                 let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[selectedIndex].value) / maxVisibleY
-                let yView = chartBounds.maxY - (normY * chartBounds.height)
+                let yView = chartBounds.maxY - normY * chartBounds.height
                 yPointsToAvoid.append(yView)
                 if yView >= y - plate.frame.height / 2 && yView <= y + plate.frame.height / 2 {
                     overlaps = true
@@ -316,6 +324,7 @@ extension ChartView {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+        guard let xDrawAxis = xDrawAxis else { return }
         guard let pos = touches.first?.location(in: self),
             chartBounds.contains(pos),
             !(plate.frame.contains(pos) && !plate.isHidden)
@@ -325,10 +334,7 @@ extension ChartView {
         }
         let chartViewPos = (pos.x - chartBounds.minX) / chartBounds.width
         let normPos = chartViewPos * (xRange.upperBound - xRange.lowerBound) + xRange.lowerBound
-        guard let closestIndex = grid?.getClosedXAxisIndex(position: normPos) else {
-            return
-        }
-        selectionXIndex = closestIndex
+        xDrawAxis.selectionIndex = xDrawAxis.getClosestIndex(position: normPos)
         if plate.isHidden {
             showSelection()
         } else {
@@ -338,6 +344,7 @@ extension ChartView {
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
+        guard let xDrawAxis = xDrawAxis else { return }
         guard let pos = touches.first?.location(in: self),
             chartBounds.contains(pos) else {
             hideSelection()
@@ -345,11 +352,7 @@ extension ChartView {
         }
         let chartViewPos = (pos.x - chartBounds.minX) / chartBounds.width
         let normPos = chartViewPos * (xRange.upperBound - xRange.lowerBound) + xRange.lowerBound
-        guard let closestIndex = grid?.getClosedXAxisIndex(position: normPos) else {
-            hideSelection()
-            return
-        }
-        selectionXIndex = closestIndex
+        xDrawAxis.selectionIndex = xDrawAxis.getClosestIndex(position: normPos)
         moveSelection()
     }
 
@@ -366,11 +369,12 @@ extension ChartView {
 
     private func moveSelection(animated: Bool = true) {
         guard !plate.isHidden else { return }
-        guard let selectionXIndex = selectionXIndex,
-            let newPos = lines?.first?.normX[selectionXIndex] else {
-                hideSelection()
-                return
+        guard let xDrawAxis = xDrawAxis,
+            let selectionIndex = xDrawAxis.selectionIndex else {
+            hideSelection()
+            return
         }
+        let newPos = xDrawAxis.points[selectionIndex].x
         if let data = getChartCurrentData() {
             plate.update(date: data.0, numbers: data.1)
         }
@@ -392,24 +396,25 @@ extension ChartView {
         UIView.animate(withDuration: 0.15, animations: {
             self.plate.alpha = 0
         }) { _ in
-            self.selectionXIndex = nil
+            self.xDrawAxis?.selectionIndex = nil
             self.plate.isHidden = true
             self.redraw()
         }
     }
 
     private func getChartCurrentData() -> (Date, [(Int, UIColor)])? {
-        guard let lines = lines,
-            let selectionXIndex = selectionXIndex,
-            let date = grid?.xAxisData[selectionXIndex] as? Date else {
+        guard let drawLines = drawLines,
+            let xDrawAxis = xDrawAxis,
+            let selectionIndex = xDrawAxis.selectionIndex else {
             return nil
         }
+        let date = xDrawAxis.points[selectionIndex].value
         var numbers = [(Int, UIColor)]()
-        for line in lines {
-            let number = line.y[selectionXIndex]
-            let color = line.color
-            numbers.append((Int(number * 1000), color))
+        for drawLine in drawLines {
+            let number = drawLine.points[selectionIndex].value
+            let color = drawLine.color
+            numbers.append((number, color))
         }
         return (date, numbers)
-    }*/
+    }
 }
