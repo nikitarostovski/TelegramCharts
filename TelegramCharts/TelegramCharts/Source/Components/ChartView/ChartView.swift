@@ -110,6 +110,9 @@ class ChartView: UIView {
             }
         }
         recalc()
+        if !plate.isHidden, let data = getChartCurrentData() {
+            plate.update(date: data.0, numbers: data.1)
+        }
         fadeAnimator.animate(duration: 1, update: { [weak self] phase in
             guard let self = self else { return }
             guard let drawLines = self.drawLines else { return }
@@ -325,6 +328,7 @@ extension ChartView {
         if let selectedIndex = xDrawAxis?.selectionIndex, let drawLines = drawLines {
             var yPointsToAvoid = [inset, chartBounds.maxY - inset]
             drawLines.forEach { line in
+                guard !line.isHiding else { return }
                 let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[selectedIndex].value) / maxVisibleY
                 let yView = chartBounds.maxY - normY * chartBounds.height
                 yPointsToAvoid.append(yView)
@@ -437,6 +441,7 @@ extension ChartView {
         let date = xDrawAxis.points[selectionIndex].value
         var numbers = [(Int, UIColor)]()
         for drawLine in drawLines {
+            guard !drawLine.isHiding else { continue }
             let number = drawLine.points[selectionIndex].value
             let color = drawLine.color
             numbers.append((number, color))

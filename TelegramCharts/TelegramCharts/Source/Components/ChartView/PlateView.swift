@@ -80,31 +80,44 @@ class PlateView: UIView {
         let inset: CGFloat = 4
         let dateTextWidth: CGFloat = 48
         let numberTextWidth: CGFloat = 28
-        let textHeight: CGFloat = 30
+        let textHeight: CGFloat = 15
+
+        var maxLabelHeight: CGFloat = 0
+        var biggestLabelIndex = 0
         for i in labels.indices {
             let label = labels[i]
             var left = NSLayoutConstraint(item: label, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: inset)
             var textWidth = dateTextWidth
+            var correctedTextHeight = textHeight
+            if label.attributedText?.string.range(of: "\n") != nil {
+                correctedTextHeight *= 2
+            }
+            if correctedTextHeight > maxLabelHeight {
+                maxLabelHeight = correctedTextHeight
+                biggestLabelIndex = i
+            }
             if i > 0 {
                 if let text = label.attributedText {
-                    textWidth = text.width(withConstrainedHeight: textHeight)
+                    textWidth = text.width(withConstrainedHeight: correctedTextHeight)
                 } else {
                     textWidth = numberTextWidth
                 }
                 left = NSLayoutConstraint(item: label, attribute: .leading, relatedBy: .equal, toItem: labels[i - 1], attribute: .trailing, multiplier: 1, constant: inset)
             }
             let top = NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: inset)
-            let height = NSLayoutConstraint(item: label, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: textHeight)
+            let height = NSLayoutConstraint(item: label, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: correctedTextHeight)
             let width = NSLayoutConstraint(item: label, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: textWidth)
 
             self.addConstraints([top, height, width, left])
 
             if i == labels.count - 1 {
                 let right = NSLayoutConstraint(item: label, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -inset)
-                let bottom = NSLayoutConstraint(item: label, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -inset)
-                self.addConstraints([right, bottom])
+                self.addConstraint(right)
             }
         }
+        let biggestLabel = labels[biggestLabelIndex]
+        let bottom = NSLayoutConstraint(item: biggestLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -inset)
+        self.addConstraint(bottom)
     }
 
     private func dateAttributedString() -> NSAttributedString? {
