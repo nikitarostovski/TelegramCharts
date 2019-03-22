@@ -120,25 +120,30 @@ class ChartView: UIView {
         updateQueue.async { [ weak self] in
             guard let self = self else { return }
             guard let drawLines = self.drawLines else { return }
+            guard let xDrawAxis = self.xDrawAxis else { return }
             DispatchQueue.main.async {
 //                self.moveSelection()
             }
-            if let xDrawAxis = self.xDrawAxis {
-                xDrawAxis.visibleRange = self.xRange
-            }
             var maxValue: Int = 0
+            let firstVisibleIndex = max(Int(self.xRange.lowerBound * CGFloat(xDrawAxis.points.count) - 0.5), 0)
+            let lastVisibleIndex = min(Int(self.xRange.upperBound * CGFloat(xDrawAxis.points.count) + 0.5), xDrawAxis.points.count - 1)
+            xDrawAxis.firstIndex = firstVisibleIndex
+            xDrawAxis.lastIndex = lastVisibleIndex
+
+            for i in firstVisibleIndex ... lastVisibleIndex {
+                let xNorm = (xDrawAxis.points[i].originalX - self.xRange.lowerBound) / (self.xRange.upperBound - self.xRange.lowerBound)
+                xDrawAxis.points[i].x = self.chartBounds.minX + xNorm * self.chartBounds.width
+            }
+
             for i in drawLines.indices {
                 let drawLine = drawLines[i]
 
-                drawLine.firstIndex = max(Int(self.xRange.lowerBound * CGFloat(drawLine.points.count) - 0.5), 0)
-                drawLine.lastIndex = min(Int(self.xRange.upperBound * CGFloat(drawLine.points.count) + 0.5), drawLine.points.count - 1)
+                drawLine.firstIndex = firstVisibleIndex
+                drawLine.lastIndex = lastVisibleIndex
 
                 for j in drawLine.firstIndex ... drawLine.lastIndex {
-                    let xNorm = (drawLine.points[j].originalX - self.xRange.lowerBound) / (self.xRange.upperBound - self.xRange.lowerBound)
-                    drawLine.points[j].x = self.chartBounds.minX + xNorm * self.chartBounds.width
-                    if xNorm >= 0 && xNorm <= 1 {
-                        maxValue = max(maxValue, drawLine.points[j].value)
-                    }
+                    drawLine.points[j].x = xDrawAxis.points[j].x
+                    maxValue = max(maxValue, drawLine.points[j].value)
                 }
             }
             if self.maxVisibleValue != maxValue {
@@ -189,11 +194,12 @@ class ChartView: UIView {
         }
         
         if let xDrawAxis = xDrawAxis, gridVisible {
-            for p in xDrawAxis.points {
+            for i in xDrawAxis.firstIndex ... xDrawAxis.lastIndex {
+                let p = xDrawAxis.points[i]
                 guard !p.isHidden else { continue }
                 let height: CGFloat = 18
                 let width: CGFloat = 40
-                let frame = CGRect(x: chartBounds.minX + p.x * chartBounds.width,
+                let frame = CGRect(x: p.x,
                                    y: chartBounds.maxY,
                                    width: width, height: height)
                 let attrStr = NSAttributedString(string: p.title,

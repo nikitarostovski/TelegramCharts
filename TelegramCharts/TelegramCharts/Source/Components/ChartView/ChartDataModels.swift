@@ -12,7 +12,13 @@ class ChartXDrawAxis {
     
     var visibleDatesCount = 5
     var points: [ChartXDrawPoint]
-    var visibleRange: ClosedRange<CGFloat> = 0 ... 1 {
+
+    var firstIndex = 0 {
+        didSet {
+            updatePoints()
+        }
+    }
+    var lastIndex = 0 {
         didSet {
             updatePoints()
         }
@@ -30,13 +36,12 @@ class ChartXDrawAxis {
     }
     
     private func updatePoints() {
-        let startIndex = Int(visibleRange.lowerBound)
-        let finishIndex = Int(visibleRange.upperBound)
-        let step = (finishIndex - startIndex)
-        
+
+//        let step = (finishIndex - startIndex)
+
         for i in points.indices {
             let pt = points[i]
-            if i < startIndex || i > finishIndex {
+            /*if i < startIndex || i > finishIndex {
                 pt.isHidden = true
                 continue
             }
@@ -44,20 +49,22 @@ class ChartXDrawAxis {
                 pt.isHidden = false
             } else {
                 pt.isHidden = true
-            }
+            }*/
+            pt.isHidden = false
         }
     }
 }
 
 class ChartXDrawPoint {
-    var x: CGFloat
+    var originalX: CGFloat
+    var x: CGFloat = 0
     var value: Date
     var title: String
     var alpha: CGFloat
     var isHidden = false
     
     init(value: Date, x: CGFloat, initialAlpha: CGFloat = 1) {
-        self.x = x
+        self.originalX = x
         self.value = value
         self.title = value.monthDayShortString()
         self.alpha = initialAlpha
