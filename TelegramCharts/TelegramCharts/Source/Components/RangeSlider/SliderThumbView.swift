@@ -58,8 +58,10 @@ class SliderThumbView: UIView {
             return .right
         } else if leftRect.contains(point) {
             return .left
-        } else {
+        } else if point.x > leftRect.maxX && point.x < rightRect.minX {
             return .center
+        } else {
+            return .none
         }
     }
 

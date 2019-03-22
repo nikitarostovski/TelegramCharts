@@ -9,7 +9,9 @@
 import UIKit
 
 protocol RangeSliderDelegate {
-    func rangeDidChange(sender: RangeSlider)
+    func sliderLeftDidChange(sender: RangeSlider)
+    func sliderRightDidChange(sender: RangeSlider)
+    func sliderDidScroll(sender: RangeSlider)
 }
 
 class RangeSlider: UIControl {
@@ -18,25 +20,21 @@ class RangeSlider: UIControl {
 
     var minimumValue: CGFloat = 0 {
         didSet {
-            delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }
     var maximumValue: CGFloat = 1 {
         didSet {
-            delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }
     var lowerValue: CGFloat? {
         didSet {
-            delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }
     var upperValue: CGFloat? {
         didSet {
-            delegate?.rangeDidChange(sender: self)
             updateLayout()
         }
     }
@@ -152,8 +150,10 @@ extension RangeSlider {
             break
         case .left:
             self.lowerValue = min(max(minimumValue, lowerValue + deltaValue), upperValue - minValueDelta)
+            delegate?.sliderLeftDidChange(sender: self)
         case .right:
             self.upperValue = max(min(maximumValue, upperValue + deltaValue), lowerValue + minValueDelta)
+            delegate?.sliderRightDidChange(sender: self)
         case .center:
             var newDelta: CGFloat = deltaValue
             if lowerValue + deltaValue < minimumValue {
@@ -163,6 +163,7 @@ extension RangeSlider {
             }
             self.lowerValue! += newDelta
             self.upperValue! += newDelta
+            delegate?.sliderDidScroll(sender: self)
         }
         
         return true

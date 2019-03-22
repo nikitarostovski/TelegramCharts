@@ -12,14 +12,7 @@ typealias ChartLine = (values: [Int], color: UIColor, name: String)
 
 class ChartView: UIView {
 
-    var xRange: ClosedRange<CGFloat> = 0 ... 1 {
-        didSet {
-            if xRange != oldValue {
-                hideSelection()
-                recalc()
-            }
-        }
-    }
+    var xRange: ClosedRange<CGFloat> = 0 ... 1
     var lineWidth: CGFloat = 4.0 {
         didSet {
             redraw()
@@ -28,8 +21,8 @@ class ChartView: UIView {
     var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
     var gridVisible = true
     
-    private var yDrawAxis: ChartYDrawAxis?
-    private var xDrawAxis: ChartXDrawAxis?
+    private var yDrawAxis: ChartDrawAxisY?
+    private var xDrawAxis: ChartDrawAxisX?
     private var drawLines: [ChartDrawLine]?
     private var maxValue: Int = 0
     private var maxVisibleValue: Int? {
@@ -95,6 +88,25 @@ class ChartView: UIView {
     }
     
     // MARK: - Public
+    
+    func changeLowerBound(newLow: CGFloat) {
+        xRange = newLow ... xRange.upperBound
+        hideSelection()
+        recalc()
+    }
+    
+    func changeUpperBound(newUp: CGFloat) {
+        xRange = xRange.lowerBound ... newUp
+        hideSelection()
+        recalc()
+    }
+    
+    func changePoisition(newLow: CGFloat) {
+        let diff = xRange.upperBound - xRange.lowerBound
+        xRange = newLow ... newLow + diff
+        hideSelection()
+        recalc()
+    }
 
     func setLinesVisibility(visibility: [Bool]) {
         guard let drawLines = drawLines,
@@ -131,8 +143,8 @@ class ChartView: UIView {
             self.maxValue = max(self.maxValue, line.values.max() ?? 0)
         }
         self.drawLines = newDrawLines
-        self.yDrawAxis = ChartYDrawAxis(maxValue: self.maxValue)
-        self.xDrawAxis = ChartXDrawAxis(dates: dates)
+        self.yDrawAxis = ChartDrawAxisY(maxValue: self.maxValue)
+        self.xDrawAxis = ChartDrawAxisX(dates: dates)
     }
     
     // MARK: - Private

@@ -39,6 +39,7 @@ class ChartCell: BaseCell {
         mapChartView.setLinesVisibility(visibility: visibility)
     }
     
+    private var chartDataIsSet = false
     override func updateAppearance() {
         super.updateAppearance()
         guard let model = model as? ChartCellModel,
@@ -52,17 +53,19 @@ class ChartCell: BaseCell {
         }
         currentRange = model.currentRange
 
-        mainChartView.xRange = currentRange!
-        mainChartView.setupData(lines: chartLines, dates: chartDates)
-
-        mapChartView.setupData(lines: chartLines, dates: chartDates)
-        mapChartView.gridVisible = false
-        mapChartView.chartInsets = .zero
-        mapChartView.xRange = 0 ... 1
-
-        if let visibility = model.linesVisibility {
-            mainChartView.setLinesVisibility(visibility: visibility)
-            mapChartView.setLinesVisibility(visibility: visibility)
+        if !chartDataIsSet {
+            mainChartView.xRange = currentRange!
+            mainChartView.setupData(lines: chartLines, dates: chartDates)
+            
+            mapChartView.setupData(lines: chartLines, dates: chartDates)
+            mapChartView.gridVisible = false
+            mapChartView.chartInsets = .zero
+            mapChartView.xRange = 0 ... 1
+            
+            if let visibility = model.linesVisibility {
+                mainChartView.setLinesVisibility(visibility: visibility)
+                mapChartView.setLinesVisibility(visibility: visibility)
+            }
         }
         let insetTop = mapChartView.frame.minY - rangeSlider.frame.minY
         let insetBottom = rangeSlider.frame.maxY - mapChartView.frame.maxY
@@ -74,16 +77,30 @@ class ChartCell: BaseCell {
 
 extension ChartCell: RangeSliderDelegate {
     
-    func rangeDidChange(sender: RangeSlider) {
-        guard let low = sender.lowerValue,
-            let up = sender.upperValue else {
-                return
-        }
-        currentRange = low ... up
-        mainChartView.xRange = currentRange!
-//        mainChartView.hideSelection()
-        if let model = model as? ChartCellModel {
+    func sliderLeftDidChange(sender: RangeSlider) {
+        guard let model = model as? ChartCellModel, let currentRange = currentRange else { return }
+        if let newLow = sender.lowerValue {
+            self.currentRange = newLow ... currentRange.upperBound
             model.currentRange = currentRange
+            mainChartView.changeLowerBound(newLow: newLow)
+        }
+    }
+    
+    func sliderRightDidChange(sender: RangeSlider) {
+        guard let model = model as? ChartCellModel, let currentRange = currentRange else { return }
+        if let newUp = sender.upperValue {
+            self.currentRange = currentRange.lowerBound ... newUp
+            model.currentRange = currentRange
+            mainChartView.changeUpperBound(newUp: newUp)
+        }
+    }
+    
+    func sliderDidScroll(sender: RangeSlider) {
+        guard let model = model as? ChartCellModel else { return }
+        if let newLow = sender.lowerValue, let newUp = sender.upperValue {
+            currentRange = newLow ... newUp
+            model.currentRange = currentRange
+            mainChartView.changePoisition(newLow: newLow)
         }
     }
 }
