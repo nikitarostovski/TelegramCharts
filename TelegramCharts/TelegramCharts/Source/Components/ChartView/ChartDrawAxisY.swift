@@ -51,7 +51,7 @@ class ChartDrawPointY {
     var title: String
     var alpha: CGFloat
     
-    init(value: Int, initialAlpha: CGFloat = 0.5) {
+    init(value: Int, initialAlpha: CGFloat = 0.2) {
         self.value = value
         self.title = String(number: value)
         self.alpha = initialAlpha

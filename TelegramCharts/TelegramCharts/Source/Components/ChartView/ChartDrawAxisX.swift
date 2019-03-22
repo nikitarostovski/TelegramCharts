@@ -26,9 +26,6 @@ class ChartDrawAxisX {
     private (set) var lastIndex = 0
     private (set) var range: ClosedRange<CGFloat> = 0 ... 1
     
-    private (set) var firstTitleIndex = 0
-    private (set) var lastTitleIndex = 0
-    
     private var textWidth: CGFloat = 0
     
     private var visibilityStep = 1
@@ -36,21 +33,21 @@ class ChartDrawAxisX {
     
     func changeTextWidth(newWidth: CGFloat) {
         textWidth = newWidth
-        recalcPoints(fromIndex: firstTitleIndex)
+        recalcPoints(fromIndex: firstIndex)
         updatePoints()
     }
     
     func changeLowerBound(newLow: CGFloat) {
         range = newLow ... range.upperBound
         recalcIndices()
-        recalcPoints(fromIndex: lastTitleIndex)
+        recalcPoints(fromIndex: lastIndex)
         updatePoints()
     }
     
     func changeUpperBound(newUp: CGFloat) {
         range = range.lowerBound ... newUp
         recalcIndices()
-        recalcPoints(fromIndex: firstTitleIndex)
+        recalcPoints(fromIndex: firstIndex)
         updatePoints()
     }
     
@@ -71,32 +68,33 @@ class ChartDrawAxisX {
     }
     
     func getClosestIndex(position: CGFloat) -> Int {
-        return Int(CGFloat(points.count) * position)
+        return min(max(Int(CGFloat(points.count) * position), 0), points.count - 1)
     }
     
     private func recalcIndices() {
-        firstIndex = max(Int(range.lowerBound * CGFloat(points.count - 1) - 0.5), 0)
-        lastIndex = min(Int(range.upperBound * CGFloat(points.count - 1) + 0.5), points.count - 1)
-        firstTitleIndex = max(Int(range.lowerBound * CGFloat(points.count - 1) - 0.5), 0)
-        lastTitleIndex = min(Int(range.upperBound * CGFloat(points.count - 1) + 0.5), points.count - 1)
+        firstIndex = max(Int(range.lowerBound * CGFloat(points.count) - 0.5), 0)
+        lastIndex = min(Int(range.upperBound * CGFloat(points.count) + 0.5), points.count - 1)
     }
     
     private func updatePoints() {
-        for i in points.indices {
+        for i in firstIndex ... lastIndex {
             let pt = points[i]
             pt.x = (pt.originalX - range.lowerBound) / (range.upperBound - range.lowerBound)
-            if abs(i - visibilityAnchorIndex) % visibilityStep == 0 {
+            if i == visibilityAnchorIndex || abs(i - visibilityAnchorIndex) % visibilityStep == 0 {
                 pt.isHidden = false
             } else {
                 pt.isHidden = true
             }
         }
+        for i in 0 ..< firstIndex {
+            points[i].alpha = 0
+        }
+        for i in lastIndex ..< points.count - 1 {
+            points[i].alpha = 0
+        }
     }
     
     private func recalcPoints(fromIndex: Int) {
-        guard firstTitleIndex > 0, lastTitleIndex < points.count, firstTitleIndex < lastTitleIndex else {
-            return
-        }
         let getPointLeft: (ChartDrawPointX) -> CGFloat = { pt in
             return pt.x - self.textWidth / 2
         }

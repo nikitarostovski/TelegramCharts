@@ -18,6 +18,7 @@ class ChartView: UIView {
             redraw()
         }
     }
+    var xAxisTextSpacing: CGFloat = 20
     var yAxisGridStep: CGFloat = 0.18
     var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
     var gridVisible = true
@@ -44,6 +45,7 @@ class ChartView: UIView {
             }, finish: nil)
         }
     }
+    private var dateTextWidth: CGFloat = 60
     private var maxVisibleY: CGFloat = 0
     private var targetMaxVisibleY: CGFloat = 0
     private var fadeAnimator = Animator()
@@ -113,6 +115,7 @@ class ChartView: UIView {
         let diff = xRange.upperBound - xRange.lowerBound
         xRange = newLow ... newLow + diff
         xDrawAxis?.changePoisition(newLow: newLow)
+        animateXTitles()
         hideSelection()
         recalc()
     }
@@ -151,6 +154,15 @@ class ChartView: UIView {
             newDrawLines.append(ChartDrawLine(color: line.color, points: line.values))
             self.maxValue = max(self.maxValue, line.values.max() ?? 0)
         }
+        dateTextWidth = 0
+        for date in dates {
+            let attributes = xAxisTextAttributes(alpha: 1)
+            let stringDate = date.monthDayShortString()
+            let attrDate = NSAttributedString(string: stringDate, attributes: attributes)
+            let width = attrDate.width(withConstrainedHeight: .greatestFiniteMagnitude)
+            dateTextWidth = max(dateTextWidth, width)
+        }
+        dateTextWidth += xAxisTextSpacing
         self.drawLines = newDrawLines
         self.yDrawAxis = ChartDrawAxisY(maxValue: self.maxValue)
         self.xDrawAxis = ChartDrawAxisX(dates: dates)
@@ -159,13 +171,13 @@ class ChartView: UIView {
     // MARK: - Private
     
     private func animateXTitles() {
-        xAnimator.animate(duration: 0.2, update: { [weak self] phase in
-            guard let points = self?.xDrawAxis?.points else { return }
-            for i in points.indices {
-                let pt = points[i]
+        xAnimator.animate(duration: 0.1, update: { [weak self] phase in
+            guard let self = self, let xDrawAxis = self.xDrawAxis else { return }
+            for i in xDrawAxis.firstIndex ... xDrawAxis.lastIndex {
+                let pt = xDrawAxis.points[i]
                 pt.alpha = pt.alpha + (pt.targetAlpha - pt.alpha) * phase
             }
-            self?.redraw()
+            self.redraw()
         })
     }
     
@@ -181,8 +193,7 @@ class ChartView: UIView {
     }
     
     private func updateXAxisTextWidth() {
-        let width: CGFloat = 60
-        xDrawAxis?.changeTextWidth(newWidth: width / chartBounds.width)
+        xDrawAxis?.changeTextWidth(newWidth: dateTextWidth / chartBounds.width)
     }
 
     private func initialSetup() {
@@ -268,7 +279,7 @@ class ChartView: UIView {
                 let p = xDrawAxis.points[i]
                 let height: CGFloat = 18
                 let width: CGFloat = 40
-                let frame = CGRect(x: chartBounds.minX + p.x * chartBounds.width,
+                let frame = CGRect(x: chartBounds.minX + p.x * chartBounds.width - dateTextWidth / 2,
                                    y: chartBounds.maxY,
                                    width: width, height: height)
                 let attrStr = NSAttributedString(string: p.title,

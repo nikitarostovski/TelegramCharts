@@ -101,7 +101,7 @@ class RangeSlider: UIControl {
         thumbView.leftBorder = thumbLeft
         thumbView.rightBorder = thumbRight
 
-        minValueDelta = 3 * thumbView.thumbWidth / thumbView.bounds.width
+        minValueDelta = 44.0 / thumbView.bounds.width
         
         tintLayer.frame = bounds.inset(by: tintAreaInsets)
         drawTint()
