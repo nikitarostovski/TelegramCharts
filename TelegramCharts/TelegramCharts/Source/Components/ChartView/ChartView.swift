@@ -159,7 +159,7 @@ class ChartView: UIView {
     // MARK: - Private
     
     private func animateXTitles() {
-        xAnimator.animate(duration: 1, update: { [weak self] phase in
+        xAnimator.animate(duration: 0.2, update: { [weak self] phase in
             guard let points = self?.xDrawAxis?.points else { return }
             for i in points.indices {
                 let pt = points[i]

@@ -31,6 +31,9 @@ class ChartDrawAxisX {
     
     private var textWidth: CGFloat = 0
     
+    private var visibilityStep = 1
+    private var visibilityAnchorIndex = 0
+    
     func changeTextWidth(newWidth: CGFloat) {
         textWidth = newWidth
         recalcPoints(fromIndex: firstTitleIndex)
@@ -82,53 +85,56 @@ class ChartDrawAxisX {
         for i in points.indices {
             let pt = points[i]
             pt.x = (pt.originalX - range.lowerBound) / (range.upperBound - range.lowerBound)
+            if abs(i - visibilityAnchorIndex) % visibilityStep == 0 {
+                pt.isHidden = false
+            } else {
+                pt.isHidden = true
+            }
         }
     }
     
     private func recalcPoints(fromIndex: Int) {
-        for i in firstTitleIndex ... lastTitleIndex {
-            points[i].isHidden = true
-        }
         guard firstTitleIndex > 0, lastTitleIndex < points.count, firstTitleIndex < lastTitleIndex else {
             return
         }
-        let width: CGFloat = self.textWidth
-        points[fromIndex].isHidden = false
-        
         let getPointLeft: (ChartDrawPointX) -> CGFloat = { pt in
-            return pt.x - width / 2
+            return pt.x - self.textWidth / 2
         }
         let getPointRight: (ChartDrawPointX) -> CGFloat = { pt in
-            return pt.x + width / 2
+            return pt.x + self.textWidth / 2
         }
+        points[fromIndex].isHidden = false
+        let lastVisibleRight = getPointRight(points[fromIndex])
+        let lastVisibleLeft = getPointLeft(points[fromIndex])
         
-        var lastVisibleRight = getPointRight(points[fromIndex])
+        var step: Int?
         var i = fromIndex + 1
         while i < points.count {
             let pt = points[i]
             let left = getPointLeft(pt)
             if left > lastVisibleRight {
-                pt.isHidden = false
-                lastVisibleRight = getPointRight(pt)
-            } else {
-                pt.isHidden = true
+                step = i - fromIndex
+                break
             }
             i += 1
         }
-        
-        var lastVisibleLeft = getPointLeft(points[fromIndex])
-        i = fromIndex - 1
-        while i > 0 {
-            let pt = points[i]
-            let right = getPointRight(pt)
-            if right < lastVisibleLeft {
-                pt.isHidden = false
-                lastVisibleLeft = getPointLeft(pt)
-            } else {
-                pt.isHidden = true
+        if step == nil {
+            i = fromIndex - 1
+            while i > 0 {
+                let pt = points[i]
+                let right = getPointRight(pt)
+                if right < lastVisibleLeft {
+                    step = fromIndex - i
+                    break
+                }
+                i -= 1
             }
-            i -= 1
         }
+        if step == nil {
+            step = 1
+        }
+        visibilityAnchorIndex = fromIndex
+        visibilityStep = step!
     }
 }
 
