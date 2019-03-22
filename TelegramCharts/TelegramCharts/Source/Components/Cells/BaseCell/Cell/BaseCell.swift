@@ -97,7 +97,8 @@ class BaseCell: UITableViewCell, Stylable {
     }
     
     func tapAction() {
-        model?.cellTapAction?()
+        guard let model = model else { return }
+        model.cellTapAction?(model, self)
     }
 
     // MARK: - Stylable

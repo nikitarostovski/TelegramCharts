@@ -115,7 +115,7 @@ extension ListViewController {
             model.bottomSeparatorStyle.clampToEdge = false
         }
         model.titleText = "Statistics " + String(index + 1)
-        model.cellTapAction = { [weak self] in
+        model.cellTapAction = { [weak self] (_, _) in
             self?.selectedIndex = index
             self?.performSegue(withIdentifier: "showChart", sender: nil)
         }

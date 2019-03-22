@@ -139,10 +139,17 @@ class ChartYDrawPoint {
 class ChartDrawLine {
     var color: UIColor
     var alpha: CGFloat = 1
+    var isHiding: Bool = false {
+        didSet {
+            targetAlpha = isHiding ? 0 : 1
+        }
+    }
     var points: [ChartDrawPoint]
     
     var firstIndex = 0
     var lastIndex = 0
+
+    var targetAlpha: CGFloat = 1
     
     init(color: UIColor, points: [Int]) {
         self.color = color

@@ -33,8 +33,10 @@ class ChartCell: BaseCell {
     
     private var currentRange: ClosedRange<CGFloat>?
     
-    func setChartVisibility(index: Int, isHidden: Bool) {
-        
+    func updateLinesVisibility() {
+        guard let model = model as? ChartCellModel, let visibility = model.linesVisibility else { return }
+        mainChartView.setLinesVisibility(visibility: visibility)
+        mapChartView.setLinesVisibility(visibility: visibility)
     }
     
     override func updateAppearance() {
@@ -57,7 +59,11 @@ class ChartCell: BaseCell {
         mapChartView.gridVisible = false
         mapChartView.chartInsets = .zero
         mapChartView.xRange = 0 ... 1
-        
+
+        if let visibility = model.linesVisibility {
+            mainChartView.setLinesVisibility(visibility: visibility)
+            mapChartView.setLinesVisibility(visibility: visibility)
+        }
         let insetTop = mapChartView.frame.minY - rangeSlider.frame.minY
         let insetBottom = rangeSlider.frame.maxY - mapChartView.frame.maxY
         rangeSlider.tintAreaInsets = UIEdgeInsets(top: insetTop, left: 0, bottom: insetBottom, right: 0)

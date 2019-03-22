@@ -98,12 +98,12 @@ class MainViewController: UITableViewController {
         return model
     }
 
-    private func makeLineCellModel(line: ChartLine, action: @escaping CellTapAction) -> CheckCellModel {
+    private func makeLineCellModel(line: ChartLine, lineIndex: Int) -> CheckCellModel {
         let model = CheckCellModel()
         model.hasCheckmark = true
         model.tagColor = line.color
         model.titleText = line.name
-        model.cellTapAction = action
+        model.lineIndex = lineIndex
         return model
     }
     
@@ -113,18 +113,27 @@ class MainViewController: UITableViewController {
         var lineModels = [CheckCellModel]()
         if let chartLines = chartLines {
             for i in chartLines.indices {
-                let model = makeLineCellModel(line: chartLines[i], action: { [weak self] in
-                    guard let self = self else { return }
-                    if let chartCell = self.getChartCell() {
-                        chartCell.setChartVisibility(index: i, isHidden: false)
-                    }
-                })
+                let model = makeLineCellModel(line: chartLines[i], lineIndex: i)
                 if i == chartLines.count - 1 {
                     model.bottomSeparatorStyle.isHidden = false
                     model.bottomSeparatorStyle.clampToEdge = true
                 } else {
                     model.bottomSeparatorStyle.isHidden = false
                     model.bottomSeparatorStyle.clampToEdge = false
+                }
+                model.cellTapAction = { [weak self] (model, cell) in
+                    guard let self = self, let model = model as? CheckCellModel else { return }
+                    for section in self.structure.sections {
+                        for chartModel in section.cellModels {
+                            if let chartModel = chartModel as? ChartCellModel {
+                                chartModel.linesVisibility![model.lineIndex] = !model.hasCheckmark
+                            }
+                        }
+                    }
+                    for cell in self.tableView.visibleCells {
+                        guard let cell = cell as? ChartCell else { continue }
+                        cell.updateLinesVisibility()
+                    }
                 }
                 lineModels.append(model)
             }
@@ -138,10 +147,6 @@ class MainViewController: UITableViewController {
         let settingsModels = [themeCellModel]
         let settingsSection = TableViewSection(headerModel: settingsHeaderModel, cellModels: settingsModels)
         structure.addSection(section: settingsSection)
-    }
-    
-    private func getChartCell() -> ChartCell? {
-        return nil
     }
     
     // MARK: - Actions

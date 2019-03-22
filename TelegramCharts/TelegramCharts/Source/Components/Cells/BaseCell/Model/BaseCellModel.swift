@@ -8,7 +8,7 @@
 
 import UIKit
 
-typealias CellTapAction = () -> Void
+typealias CellTapAction = (BaseCellModel, BaseCell) -> Void
 
 struct SeparatorStyle {
     var isHidden: Bool = true
@@ -17,7 +17,7 @@ struct SeparatorStyle {
 }
 
 class BaseCellModel {
-    
+
     var cellIdentifier: String {
         return ""
     }

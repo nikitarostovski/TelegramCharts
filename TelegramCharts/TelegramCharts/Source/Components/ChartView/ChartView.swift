@@ -16,8 +16,8 @@ class ChartView: UIView {
         didSet {
             if xRange != oldValue {
                 hideSelection()
+                recalc()
             }
-            recalc()
         }
     }
     var lineWidth: CGFloat = 4.0 {
@@ -52,7 +52,7 @@ class ChartView: UIView {
     }
     private var maxVisibleY: CGFloat = 0
     private var targetMaxVisibleY: CGFloat = 0
-    private var xAnimator = Animator()
+    private var fadeAnimator = Animator()
     private var yAnimator = Animator()
     private var chartBounds: CGRect = .zero
     private var titleColor: UIColor = .black
@@ -95,8 +95,33 @@ class ChartView: UIView {
     }
     
     // MARK: - Public
+
+    func setLinesVisibility(visibility: [Bool]) {
+        guard let drawLines = drawLines,
+            visibility.count == drawLines.count
+        else {
+            return
+        }
+        for i in 0 ..< visibility.count {
+            let drawLine = drawLines[i]
+            let visible = visibility[i]
+            if drawLine.isHiding == visible {
+                drawLine.isHiding = !visible
+            }
+        }
+        recalc()
+        fadeAnimator.animate(duration: 1, update: { [weak self] phase in
+            guard let self = self else { return }
+            guard let drawLines = self.drawLines else { return }
+            for drawLine in drawLines {
+                drawLine.alpha = drawLine.alpha + (drawLine.targetAlpha - drawLine.alpha) * phase
+            }
+            self.redraw()
+        })
+    }
     
     func setupData(lines: [ChartLine], dates: [Date]) {
+        guard self.drawLines == nil else { return }
         var newDrawLines = [ChartDrawLine]()
         for line in lines {
             newDrawLines.append(ChartDrawLine(color: line.color, points: line.values))
@@ -124,12 +149,11 @@ class ChartView: UIView {
             guard let self = self else { return }
             guard let drawLines = self.drawLines else { return }
             guard let xDrawAxis = self.xDrawAxis else { return }
-            DispatchQueue.main.async {
-//                self.moveSelection()
-            }
+
             var maxValue: Int = 0
             let firstVisibleIndex = max(Int(self.xRange.lowerBound * CGFloat(xDrawAxis.points.count) - 0.5), 0)
             let lastVisibleIndex = min(Int(self.xRange.upperBound * CGFloat(xDrawAxis.points.count) + 0.5), xDrawAxis.points.count - 1)
+            guard firstVisibleIndex < lastVisibleIndex else { return }
             xDrawAxis.firstIndex = firstVisibleIndex
             xDrawAxis.lastIndex = lastVisibleIndex
 
@@ -146,7 +170,9 @@ class ChartView: UIView {
 
                 for j in drawLine.firstIndex ... drawLine.lastIndex {
                     drawLine.points[j].x = xDrawAxis.points[j].x
-                    maxValue = max(maxValue, drawLine.points[j].value)
+                    if !drawLine.isHiding {
+                        maxValue = max(maxValue, drawLine.points[j].value)
+                    }
                 }
             }
             if self.maxVisibleValue != maxValue {
@@ -224,7 +250,7 @@ class ChartView: UIView {
         context.setLineWidth(lineWidth)
         for line in drawLines ?? [] {
             context.setFillColor(UIColor.clear.cgColor)
-            context.setStrokeColor(line.color.cgColor)
+            context.setStrokeColor(line.color.withAlphaComponent(line.alpha).cgColor)
             for i in line.firstIndex ... line.lastIndex {
                 let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[i].value) / maxVisibleY
                 let pt = CGPoint(x: line.points[i].x, y: self.chartBounds.maxY - normY * self.chartBounds.height)

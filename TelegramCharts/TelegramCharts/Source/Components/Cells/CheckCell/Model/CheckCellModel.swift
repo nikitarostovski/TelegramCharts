@@ -17,7 +17,8 @@ class CheckCellModel: BaseCellModel {
     override func cellHeight() -> CGFloat {
         return CheckCell.cellHeight
     }
-    
+
+    var lineIndex: Int = -1
     var titleText = ""
     var tagColor: UIColor = .clear
     var hasCheckmark = false

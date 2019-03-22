@@ -23,7 +23,17 @@ class ChartCellModel: BaseCellModel {
         isTouchable = false
     }
 
-    var chartLines: [ChartLine]?
+    var linesVisibility: [Bool]?
+    var chartLines: [ChartLine]? {
+        didSet {
+            if let chartLines = chartLines {
+                linesVisibility = [Bool]()
+                chartLines.forEach { _ in
+                    linesVisibility!.append(true)
+                }
+            }
+        }
+    }
     var chartDates: [Date]?
     var currentRange: ClosedRange<CGFloat>?
 }
