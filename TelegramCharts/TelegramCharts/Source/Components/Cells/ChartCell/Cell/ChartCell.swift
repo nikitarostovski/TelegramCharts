@@ -56,11 +56,13 @@ class ChartCell: BaseCell {
         if !chartDataIsSet {
             mainChartView.xRange = currentRange!
             mainChartView.setupData(lines: chartLines, dates: chartDates)
+            mainChartView.changeLowerBound(newLow: currentRange!.lowerBound)
             
             mapChartView.setupData(lines: chartLines, dates: chartDates)
             mapChartView.gridVisible = false
             mapChartView.chartInsets = .zero
             mapChartView.xRange = 0 ... 1
+            mapChartView.changeLowerBound(newLow: 0)
             
             if let visibility = model.linesVisibility {
                 mainChartView.setLinesVisibility(visibility: visibility)
