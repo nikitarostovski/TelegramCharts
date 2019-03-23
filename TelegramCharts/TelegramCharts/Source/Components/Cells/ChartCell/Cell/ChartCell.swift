@@ -54,8 +54,8 @@ class ChartCell: BaseCell {
         currentRange = model.currentRange
 
         if !chartDataIsSet {
-            mainChartView.xRange = currentRange!
             mainChartView.setupData(lines: chartLines, dates: chartDates)
+            mainChartView.xRange = currentRange!
             mainChartView.changeLowerBound(newLow: currentRange!.lowerBound)
             
             mapChartView.setupData(lines: chartLines, dates: chartDates)

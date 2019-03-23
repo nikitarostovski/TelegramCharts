@@ -28,8 +28,8 @@ class ChartDrawAxisX {
     
     private var textWidth: CGFloat = 0
     
-    private var visibilityStep = 1
-    private var visibilityAnchorIndex = 0
+    private (set) var visibilityStep = 1
+    private (set) var visibilityAnchorIndex = 0
     
     func changeTextWidth(newWidth: CGFloat) {
         textWidth = newWidth
@@ -77,7 +77,9 @@ class ChartDrawAxisX {
     }
     
     private func updatePoints() {
-        for i in firstIndex ... lastIndex {
+        let start = max(0, firstIndex - visibilityStep)
+        let end = min(lastIndex + visibilityStep, points.count - 1)
+        for i in start ... end {
             let pt = points[i]
             pt.x = (pt.originalX - range.lowerBound) / (range.upperBound - range.lowerBound)
             if i == visibilityAnchorIndex || abs(i - visibilityAnchorIndex) % visibilityStep == 0 {
@@ -86,10 +88,10 @@ class ChartDrawAxisX {
                 pt.isHidden = true
             }
         }
-        for i in 0 ..< firstIndex {
+        for i in 0 ..< start {
             points[i].alpha = 0
         }
-        for i in lastIndex ..< points.count - 1 {
+        for i in end ..< points.count - 1 {
             points[i].alpha = 0
         }
     }
