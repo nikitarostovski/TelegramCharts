@@ -285,6 +285,7 @@ class ChartView: UIView {
             let end = min(xDrawAxis.lastIndex + xDrawAxis.visibilityStep, xDrawAxis.points.count - 1)
             for i in start ... end {
                 let p = xDrawAxis.points[i]
+                guard p.alpha > 0.01 else { continue }
                 let height: CGFloat = 18
                 let width: CGFloat = 40
                 let frame = CGRect(x: chartBounds.minX + p.x * chartBounds.width - dateTextWidth / 2,

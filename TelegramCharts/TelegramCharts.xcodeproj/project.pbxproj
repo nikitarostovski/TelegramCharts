@@ -60,7 +60,6 @@
 /* Begin PBXFileReference section */
 		104521AC223F8C400052624E /* ChartConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartConverter.swift; sourceTree = "<group>"; };
 		104521AE2240F2FD0052624E /* PlateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateView.swift; sourceTree = "<group>"; };
-		106DC316223A3E1F00D6D6C2 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		1074DA37223913B6006C1D51 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data.json; sourceTree = "<group>"; };
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
 		1123B45D224163F600107BE5 /* String+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Format.swift"; sourceTree = "<group>"; };
@@ -431,7 +430,6 @@
 		11649F10223502800081ABA1 /* TelegramCharts */ = {
 			isa = PBXGroup;
 			children = (
-				106DC316223A3E1F00D6D6C2 /* TODO.md */,
 				11649F23223502E00081ABA1 /* Resource */,
 				115440E722397C0C00795743 /* Source */,
 			);
