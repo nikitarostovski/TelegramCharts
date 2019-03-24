@@ -180,7 +180,7 @@ class ChartView: UIView {
     }
     
     private func animateXTitles() {
-        xAnimator.animate(duration: 0.15, update: { [weak self] phase in
+        xAnimator.animate(duration: 2, update: { [weak self] phase in
             guard let self = self, let xDrawAxis = self.xDrawAxis else { return }
             for i in xDrawAxis.firstIndex ... xDrawAxis.lastIndex {
                 let pt = xDrawAxis.points[i]
@@ -206,7 +206,6 @@ class ChartView: UIView {
     }
 
     private func initialSetup() {
-        updateTitleAttributes()
         backgroundColor = .clear
         layer.masksToBounds = true
         startReceivingThemeUpdates()
@@ -289,17 +288,15 @@ class ChartView: UIView {
             context.move(to: CGPoint(x: chartBounds.minX, y: chartBounds.maxY))
             context.addLine(to: CGPoint(x: chartBounds.maxX, y: chartBounds.maxY))
             context.strokePath()
-            
-            let start = max(0, xDrawAxis.firstIndex - xDrawAxis.visibilityStep)
-            let end = min(xDrawAxis.lastIndex + xDrawAxis.visibilityStep, xDrawAxis.points.count - 1)
-            for i in start ... end {
+            for i in xDrawAxis.points.indices {
                 let p = xDrawAxis.points[i]
                 guard p.alpha > 0.01 else { continue }
+                let x = chartBounds.minX + p.x * chartBounds.width - p.titleWidth / 2
+                
                 let height: CGFloat = 18
-                let width: CGFloat = 40
-                let frame = CGRect(x: chartBounds.minX + p.x * chartBounds.width - dateTextWidth / 2,
+                let frame = CGRect(x: x,
                                    y: chartBounds.maxY + 2,
-                                   width: width, height: height)
+                                   width: p.titleWidth, height: height)
                 context.setAlpha(p.alpha)
                 p.title.draw(in: frame)
             }
