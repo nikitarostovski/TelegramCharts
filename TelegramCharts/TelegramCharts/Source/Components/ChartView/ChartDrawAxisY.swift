@@ -26,9 +26,15 @@ class ChartDrawAxisY {
         }
     }
     
+    var attributes: [NSAttributedString.Key: Any]? {
+        didSet {
+            points.forEach { $0.attributes = attributes }
+        }
+    }
     private var lastChangeValue = 0
     
-    init(maxValue: Int) {
+    init(maxValue: Int, attributes: [NSAttributedString.Key: Any]?) {
+        self.attributes = attributes
         self.maxValue = maxValue
     }
     
@@ -36,7 +42,7 @@ class ChartDrawAxisY {
         hidingPoints = points.map { $0 }
         points.removeAll()
         for pos in linePositions {
-            let point = ChartDrawPointY(value: Int(pos * CGFloat(maxValue)))
+            let point = ChartDrawPointY(value: Int(pos * CGFloat(maxValue)), attributes: attributes)
             points.append(point)
             if hidingPoints.contains(where: { $0.value == point.value }) {
                 hidingPoints = hidingPoints.filter { $0.value != point.value }
@@ -48,12 +54,18 @@ class ChartDrawAxisY {
 
 class ChartDrawPointY {
     var value: Int
-    var title: String
+    var title: NSAttributedString
     var alpha: CGFloat
     
-    init(value: Int, initialAlpha: CGFloat = 0.2) {
+    var attributes: [NSAttributedString.Key: Any]? {
+        didSet {
+            title = NSAttributedString(string: String(number: value), attributes: attributes)
+        }
+    }
+    
+    init(value: Int, attributes: [NSAttributedString.Key: Any]?, initialAlpha: CGFloat = 0.2) {
         self.value = value
-        self.title = String(number: value)
+        self.title = NSAttributedString(string: String(number: value), attributes: attributes)
         self.alpha = initialAlpha
     }
 }

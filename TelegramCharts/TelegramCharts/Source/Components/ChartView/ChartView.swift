@@ -23,6 +23,8 @@ class ChartView: UIView {
     var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
     var gridVisible = true
     
+    private var xAxisTextAttributes: [NSAttributedString.Key: Any]!
+    private var yAxisTextAttributes: [NSAttributedString.Key: Any]!
     private var yDrawAxis: ChartDrawAxisY?
     private var xDrawAxis: ChartDrawAxisX?
     private var drawLines: [ChartDrawLine]?
@@ -155,21 +157,27 @@ class ChartView: UIView {
             newDrawLines.append(ChartDrawLine(color: line.color, points: line.values))
             self.maxValue = max(self.maxValue, line.values.max() ?? 0)
         }
+        self.drawLines = newDrawLines
+        self.yDrawAxis = ChartDrawAxisY(maxValue: self.maxValue, attributes: yAxisTextAttributes)
+        self.xDrawAxis = ChartDrawAxisX(dates: dates, attributes: xAxisTextAttributes)
+        
         dateTextWidth = 0
-        for date in dates {
-            let attributes = xAxisTextAttributes(alpha: 1)
-            let stringDate = date.monthDayShortString()
-            let attrDate = NSAttributedString(string: stringDate, attributes: attributes)
-            let width = attrDate.width(withConstrainedHeight: .greatestFiniteMagnitude)
+        for p in self.xDrawAxis!.points {
+            let width = p.title.width(withConstrainedHeight: .greatestFiniteMagnitude)
             dateTextWidth = max(dateTextWidth, width)
         }
         dateTextWidth += xAxisTextSpacing
-        self.drawLines = newDrawLines
-        self.yDrawAxis = ChartDrawAxisY(maxValue: self.maxValue)
-        self.xDrawAxis = ChartDrawAxisX(dates: dates)
     }
     
     // MARK: - Private
+    
+    private func updateTitleAttributes() {
+        xAxisTextAttributes = makeXAxisTextAttributes()
+        yAxisTextAttributes = makeYAxisTextAttributes()
+        
+        xDrawAxis?.attributes = xAxisTextAttributes
+        yDrawAxis?.attributes = yAxisTextAttributes
+    }
     
     private func animateXTitles() {
         xAnimator.animate(duration: 0.15, update: { [weak self] phase in
@@ -198,6 +206,7 @@ class ChartView: UIView {
     }
 
     private func initialSetup() {
+        updateTitleAttributes()
         backgroundColor = .clear
         layer.masksToBounds = true
         startReceivingThemeUpdates()
@@ -260,19 +269,19 @@ class ChartView: UIView {
                 let frame = CGRect(x: chartBounds.minX,
                                    y: y - height,
                                    width: chartBounds.width, height: height)
-                let attrStr = NSAttributedString(string: p.title,
-                                                 attributes: yAxisTextAttributes(alpha: p.alpha))
-                attrStr.draw(in: frame)
+                context.setAlpha(p.alpha)
+                p.title.draw(in: frame)
                 
                 if p.value == 0 {
                     continue
                 } else {
-                    context.setStrokeColor(gridAuxColor.withAlphaComponent(p.alpha).cgColor)
+                    context.setStrokeColor(gridAuxColor.cgColor)
                 }
                 context.move(to: CGPoint(x: 0, y: y))
                 context.addLine(to: CGPoint(x: chartBounds.maxX, y: y))
                 context.strokePath()
             }
+            context.setAlpha(1)
         }
         
         if gridVisible {
@@ -291,11 +300,11 @@ class ChartView: UIView {
                 let frame = CGRect(x: chartBounds.minX + p.x * chartBounds.width - dateTextWidth / 2,
                                    y: chartBounds.maxY + 2,
                                    width: width, height: height)
-                let attrStr = NSAttributedString(string: p.title,
-                                                 attributes: xAxisTextAttributes(alpha: p.alpha))
-                attrStr.draw(in: frame)
+                context.setAlpha(p.alpha)
+                p.title.draw(in: frame)
             }
         }
+        context.setAlpha(1)
 
         if let selectionPos = xDrawAxis.selectionIndex {
             let viewPos = self.chartBounds.minX + xDrawAxis.points[selectionPos].x * self.chartBounds.width
@@ -345,22 +354,21 @@ class ChartView: UIView {
 
 extension ChartView: Stylable {
 
-    private func yAxisTextAttributes(alpha: CGFloat) -> [NSAttributedString.Key: Any] {
+    private func makeYAxisTextAttributes() -> [NSAttributedString.Key: Any] {
         let style = NSMutableParagraphStyle()
         style.alignment = .left
         return [
-            .foregroundColor: titleColor.withAlphaComponent(alpha),
+            .foregroundColor: titleColor,
             .paragraphStyle: style
         ]
     }
-    
-    private func xAxisTextAttributes(alpha: CGFloat) -> [NSAttributedString.Key: Any] {
+    private func makeXAxisTextAttributes() -> [NSAttributedString.Key: Any] {
         let style = NSMutableParagraphStyle()
         style.alignment = .center
         return [
-            .foregroundColor: titleColor.withAlphaComponent(alpha),
-            .paragraphStyle: style
-        ]
+            .paragraphStyle: style,
+            .foregroundColor: titleColor
+            ]
     }
     
     func themeDidUpdate(theme: Theme) {
@@ -368,6 +376,7 @@ extension ChartView: Stylable {
         titleColor = theme.chartTitlesColor
         gridMainColor = theme.chartGridMainColor
         gridAuxColor = theme.chartGridAuxColor
+        updateTitleAttributes()
         redraw()
     }
 }

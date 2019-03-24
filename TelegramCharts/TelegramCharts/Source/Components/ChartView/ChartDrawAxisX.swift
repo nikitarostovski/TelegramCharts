@@ -21,7 +21,11 @@ class ChartDrawAxisX {
             }
         }
     }
-    
+    var attributes: [NSAttributedString.Key: Any]? {
+        didSet {
+            points.forEach { $0.attributes = attributes }
+        }
+    }
     private (set) var firstIndex = 0
     private (set) var lastIndex = 0
     private (set) var range: ClosedRange<CGFloat> = 0 ... 1
@@ -58,13 +62,14 @@ class ChartDrawAxisX {
         updatePoints()
     }
     
-    init(dates: [Date]) {
+    init(dates: [Date], attributes: [NSAttributedString.Key: Any]?) {
         self.points = [ChartDrawPointX]()
         for i in dates.indices {
             let x = CGFloat(i) / CGFloat(dates.count - 1)
-            let point = ChartDrawPointX(value: dates[i], x: x)
+            let point = ChartDrawPointX(value: dates[i], x: x, attributes: attributes)
             points.append(point)
         }
+        self.attributes = attributes
     }
     
     func getClosestIndex(position: CGFloat) -> Int {
@@ -142,7 +147,7 @@ class ChartDrawPointX {
     var originalX: CGFloat
     var x: CGFloat = 0
     var value: Date
-    var title: String
+    var title: NSAttributedString
     var alpha: CGFloat
     var isSelected: Bool = false
     var isHidden = false {
@@ -150,14 +155,20 @@ class ChartDrawPointX {
             targetAlpha = isHidden ? 0 : 1
         }
     }
+    var attributes: [NSAttributedString.Key: Any]? {
+        didSet {
+            title = NSAttributedString(string: value.monthDayShortString(), attributes: attributes)
+        }
+    }
     
     private (set) var targetAlpha: CGFloat
     
-    init(value: Date, x: CGFloat, initialAlpha: CGFloat = 1) {
+    init(value: Date, x: CGFloat, initialAlpha: CGFloat = 1, attributes: [NSAttributedString.Key: Any]?) {
         self.originalX = x
         self.value = value
         self.alpha = initialAlpha
         self.targetAlpha = initialAlpha
-        self.title = value.monthDayShortString()
+        self.attributes = attributes
+        self.title = NSAttributedString(string: value.monthDayShortString(), attributes: attributes)
     }
 }
