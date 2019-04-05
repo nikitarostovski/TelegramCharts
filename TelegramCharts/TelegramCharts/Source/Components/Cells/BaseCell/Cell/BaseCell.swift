@@ -66,6 +66,7 @@ class BaseCell: UITableViewCell, Stylable {
     
     func setup(with model: BaseCellModel) {
         self.model = model
+        model.cell = self
         updateAppearance()
     }
     

@@ -10,32 +10,32 @@ import UIKit
 
 typealias ChartLine = (values: [Int], color: UIColor, name: String)
 
+protocol ChartViewDataSource {
+    var yDrawAxis: ChartDrawAxisY { get }
+    var xDrawAxis: ChartDrawAxisX { get }
+    var drawLines: [ChartDrawLine] { get }
+    var maxValue: Int { get }
+}
+
 class ChartView: UIView {
 
-    var xRange: ClosedRange<CGFloat> = 0 ... 1
-    var lineWidth: CGFloat = 4.0 {
-        didSet {
-            redraw()
-        }
-    }
-    var xAxisTextSpacing: CGFloat = 20
+    var dataSource: ChartViewDataSource
+    private var xRange: ClosedRange<CGFloat>
+    private var lineWidth: CGFloat
+    private var gridVisible: Bool
+
     var yAxisGridStep: CGFloat = 0.18
     var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
-    var gridVisible = true
-    
-    private var xAxisTextAttributes: [NSAttributedString.Key: Any]!
-    private var yAxisTextAttributes: [NSAttributedString.Key: Any]!
-    private var yDrawAxis: ChartDrawAxisY?
-    private var xDrawAxis: ChartDrawAxisX?
-    private var drawLines: [ChartDrawLine]?
-    private var maxValue: Int = 0
-    private var maxVisibleValue: Int? {
+
+    private var maxVisibleValue: Int! {
         didSet {
             targetMaxVisibleY = CGFloat(maxVisibleValue ?? 0)
             yAnimator.animate(duration: 2.0, easing: .linear, update: { [weak self] phase in
                 guard let self = self else { return }
+                self.maxVisibleY = self.maxVisibleY ?? self.targetMaxVisibleY
                 self.maxVisibleY = self.maxVisibleY + (self.targetMaxVisibleY - self.maxVisibleY) * phase
-                if let yDrawAxis = self.yDrawAxis, self.gridVisible {
+                if self.gridVisible {
+                    let yDrawAxis = self.dataSource.yDrawAxis
                     for pt in yDrawAxis.hidingPoints {
                         pt.alpha = pt.alpha - pt.alpha * phase * 2
                     }
@@ -48,13 +48,12 @@ class ChartView: UIView {
         }
     }
     private var dateTextWidth: CGFloat = 60
-    private var maxVisibleY: CGFloat = 0
-    private var targetMaxVisibleY: CGFloat = 0
+    private var maxVisibleY: CGFloat!
+    private var targetMaxVisibleY: CGFloat!
     private var fadeAnimator = Animator()
     private var xAnimator = Animator()
     private var yAnimator = Animator()
     private var chartBounds: CGRect = .zero
-    private var titleColor: UIColor = .black
     private var gridMainColor: UIColor = .darkGray
     private var gridAuxColor: UIColor = .lightGray
     private var backColor: UIColor = .white
@@ -64,24 +63,36 @@ class ChartView: UIView {
                                             attributes: [])
     
     private var plate: PlateView!
-    private var selectionViewPosition: CGFloat = 0 {
+    private var selectionViewPosition: CGFloat! {
         didSet {
             updatePlatePosition()
         }
     }
     
     // MARK: - Lifecycle
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        initialSetup()
-    }
-    
-    override init(frame: CGRect) {
+
+    init(frame: CGRect, dataSource: ChartViewDataSource, range: ClosedRange<CGFloat>, lineWidth: CGFloat, gridVisible: Bool = true) {
+        self.gridVisible = gridVisible
+        self.lineWidth = lineWidth
+        self.xRange = range
+
+        self.dataSource = dataSource
+
+        plate = PlateView(frame: .zero)
+        plate.isHidden = true
+        plate.alpha = 0
         super.init(frame: frame)
-        initialSetup()
+
+        addSubview(plate)
+        backgroundColor = .clear
+        layer.masksToBounds = true
+        startReceivingThemeUpdates()
     }
-    
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         chartBounds = self.bounds.inset(by: chartInsets)
@@ -96,41 +107,20 @@ class ChartView: UIView {
     }
     
     // MARK: - Public
-    
-    func changeLowerBound(newLow: CGFloat) {
-        xRange = newLow ... xRange.upperBound
-        xDrawAxis?.changeLowerBound(newLow: newLow)
-        update()
+
+    func setRange(range: ClosedRange<CGFloat>) {
+        self.xRange = range
     }
     
-    func changeUpperBound(newUp: CGFloat) {
-        xRange = xRange.lowerBound ... newUp
-        xDrawAxis?.changeUpperBound(newUp: newUp)
-        update()
-    }
-    
-    func changePoisition(newLow: CGFloat) {
-        let diff = xRange.upperBound - xRange.lowerBound
-        xRange = newLow ... newLow + diff
-        xDrawAxis?.changePoisition(newLow: newLow)
-        hideSelection()
-        update()
-    }
-    
-    func update() {
-        animateXTitles()
-        recalc()
-        moveSelection()
+    func update(animated: Bool = false) {
+        animateXTitles(animated: animated)
+        recalc(animated: animated)
+        moveSelection(animated: animated)
     }
 
     func setLinesVisibility(visibility: [Bool]) {
-        guard let drawLines = drawLines,
-            visibility.count == drawLines.count
-        else {
-            return
-        }
         for i in 0 ..< visibility.count {
-            let drawLine = drawLines[i]
+            let drawLine = dataSource.drawLines[i]
             let visible = visibility[i]
             if drawLine.isHiding == visible {
                 drawLine.isHiding = !visible
@@ -142,52 +132,30 @@ class ChartView: UIView {
         }
         fadeAnimator.animate(duration: 1, update: { [weak self] phase in
             guard let self = self else { return }
-            guard let drawLines = self.drawLines else { return }
-            for drawLine in drawLines {
+            for drawLine in self.dataSource.drawLines {
                 drawLine.alpha = drawLine.alpha + (drawLine.targetAlpha - drawLine.alpha) * phase
             }
             self.redraw()
         })
     }
     
-    func setupData(lines: [ChartLine], dates: [Date]) {
-        guard self.drawLines == nil else { return }
-        var newDrawLines = [ChartDrawLine]()
-        for line in lines {
-            newDrawLines.append(ChartDrawLine(color: line.color, points: line.values))
-            self.maxValue = max(self.maxValue, line.values.max() ?? 0)
-        }
-        self.drawLines = newDrawLines
-        self.yDrawAxis = ChartDrawAxisY(maxValue: self.maxValue, attributes: yAxisTextAttributes)
-        self.xDrawAxis = ChartDrawAxisX(dates: dates, attributes: xAxisTextAttributes)
-        
-        dateTextWidth = 0
-        for p in self.xDrawAxis!.points {
-            let width = p.title.width(withConstrainedHeight: .greatestFiniteMagnitude)
-            dateTextWidth = max(dateTextWidth, width)
-        }
-        dateTextWidth += xAxisTextSpacing
-    }
-    
     // MARK: - Private
     
-    private func updateTitleAttributes() {
-        xAxisTextAttributes = makeXAxisTextAttributes()
-        yAxisTextAttributes = makeYAxisTextAttributes()
-        
-        xDrawAxis?.attributes = xAxisTextAttributes
-        yDrawAxis?.attributes = yAxisTextAttributes
-    }
-    
-    private func animateXTitles() {
-        xAnimator.animate(duration: 2, update: { [weak self] phase in
-            guard let self = self, let xDrawAxis = self.xDrawAxis else { return }
+    private func animateXTitles(animated: Bool = true) {
+        let updateHandler: (CGFloat) -> Void = { [weak self] phase in
+            guard let self = self else { return }
+            let xDrawAxis = self.dataSource.xDrawAxis
             for i in xDrawAxis.firstIndex ... xDrawAxis.lastIndex {
                 let pt = xDrawAxis.points[i]
                 pt.alpha = pt.alpha + (pt.targetAlpha - pt.alpha) * phase
             }
-            self.redraw()
-        })
+            self.redraw(animated: animated)
+        }
+        if animated {
+            xAnimator.animate(duration: 2, update: updateHandler)
+        } else {
+            updateHandler(1)
+        }
     }
     
     private func updateYAxisDrawPositions() {
@@ -198,28 +166,18 @@ class ChartView: UIView {
             yPositions.append(pos)
             pos += yAxisGridStep
         }
-        yDrawAxis?.linePositions = yPositions
+//        yDrawAxis?.linePositions = yPositions
     }
     
     private func updateXAxisTextWidth() {
-        xDrawAxis?.changeTextWidth(newWidth: dateTextWidth / chartBounds.width)
+//        xDrawAxis?.changeTextWidth(newWidth: dateTextWidth / chartBounds.width)
     }
 
-    private func initialSetup() {
-        backgroundColor = .clear
-        layer.masksToBounds = true
-        startReceivingThemeUpdates()
-        plate = PlateView(frame: .zero)
-        plate.isHidden = true
-        plate.alpha = 0
-        addSubview(plate)
-    }
-
-    private func recalc() {
+    private func recalc(animated: Bool = true) {
         updateQueue.async { [ weak self] in
             guard let self = self else { return }
-            guard let drawLines = self.drawLines else { return }
-            guard let xDrawAxis = self.xDrawAxis else { return }
+            let drawLines = self.dataSource.drawLines
+            let xDrawAxis = self.dataSource.xDrawAxis
             var maxValue: Int = 0
             
             for i in drawLines.indices {
@@ -237,9 +195,9 @@ class ChartView: UIView {
             }
             if self.maxVisibleValue != maxValue {
                 self.maxVisibleValue = maxValue
-                self.yDrawAxis?.maxValue = maxValue
+//                self.yDrawAxis?.maxValue = maxValue
             }
-            self.redraw()
+            self.redraw(animated: animated)
         }
     }
 
@@ -252,17 +210,16 @@ class ChartView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        guard let xDrawAxis = xDrawAxis else { return }
         context.setLineCap(.round)
         context.setLineJoin(.round)
         context.setAllowsAntialiasing(true)
         context.setShouldAntialias(true)
         
         context.setLineWidth(0.5)
-        if let yDrawAxis = yDrawAxis, gridVisible {
-            let allPoints = yDrawAxis.points + yDrawAxis.hidingPoints
+        if gridVisible {
+            let allPoints = dataSource.yDrawAxis.points + dataSource.yDrawAxis.hidingPoints
             for p in allPoints {
-                let normY = maxVisibleY == 0 ? 0 : CGFloat(p.value) / maxVisibleY
+                let normY = (maxVisibleY == 0 || maxVisibleY == nil) ? 0 : CGFloat(p.value) / maxVisibleY
                 let y = chartBounds.maxY - normY * chartBounds.height
                 let height: CGFloat = 18
                 let frame = CGRect(x: chartBounds.minX,
@@ -288,8 +245,8 @@ class ChartView: UIView {
             context.move(to: CGPoint(x: chartBounds.minX, y: chartBounds.maxY))
             context.addLine(to: CGPoint(x: chartBounds.maxX, y: chartBounds.maxY))
             context.strokePath()
-            for i in xDrawAxis.points.indices {
-                let p = xDrawAxis.points[i]
+            for i in dataSource.xDrawAxis.points.indices {
+                let p = dataSource.xDrawAxis.points[i]
                 guard p.alpha > 0.01 else { continue }
                 let x = chartBounds.minX + p.x * chartBounds.width - p.titleWidth / 2
                 
@@ -303,8 +260,8 @@ class ChartView: UIView {
         }
         context.setAlpha(1)
 
-        if let selectionPos = xDrawAxis.selectionIndex {
-            let viewPos = self.chartBounds.minX + xDrawAxis.points[selectionPos].x * self.chartBounds.width
+        if let selectionPos = dataSource.xDrawAxis.selectionIndex {
+            let viewPos = self.chartBounds.minX + dataSource.xDrawAxis.points[selectionPos].x * self.chartBounds.width
             context.setStrokeColor(gridMainColor.cgColor)
             context.move(to: CGPoint(x: viewPos, y: 0))
             context.addLine(to: CGPoint(x: viewPos, y: chartBounds.maxY))
@@ -312,12 +269,12 @@ class ChartView: UIView {
         }
 
         context.setLineWidth(lineWidth)
-        for line in drawLines ?? [] {
+        for line in dataSource.drawLines {
             context.setFillColor(UIColor.clear.cgColor)
             context.setStrokeColor(line.color.withAlphaComponent(line.alpha).cgColor)
             for i in line.firstIndex ... line.lastIndex {
                 let normX = line.points[i].x
-                let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[i].value) / maxVisibleY
+                let normY = (maxVisibleY == 0 || maxVisibleY == nil) ? 0 : CGFloat(line.points[i].value) / maxVisibleY
                 let pt = CGPoint(x: self.chartBounds.minX + normX * self.chartBounds.width,
                                  y: self.chartBounds.maxY - normY * self.chartBounds.height)
                 if i == line.firstIndex {
@@ -333,9 +290,9 @@ class ChartView: UIView {
             let radius: CGFloat = 4
             context.setFillColor(backColor.cgColor)
             for i in line.firstIndex ... line.lastIndex {
-                guard xDrawAxis.points[i].isSelected else { continue }
+                guard dataSource.xDrawAxis.points[i].isSelected else { continue }
                 let normX = line.points[i].x
-                let normY = maxVisibleY == 0 ? 0 : CGFloat(line.points[i].value) / maxVisibleY
+                let normY = (maxVisibleY == 0 || maxVisibleY == nil) ? 0 : CGFloat(line.points[i].value) / maxVisibleY
                 let rect = CGRect(x: self.chartBounds.minX + normX * self.chartBounds.width - radius,
                                   y: self.chartBounds.maxY - normY * self.chartBounds.height - radius,
                                   width: 2 * radius,
@@ -350,31 +307,15 @@ class ChartView: UIView {
 // MARK: - Stylable
 
 extension ChartView: Stylable {
-
-    private func makeYAxisTextAttributes() -> [NSAttributedString.Key: Any] {
-        let style = NSMutableParagraphStyle()
-        style.alignment = .left
-        return [
-            .foregroundColor: titleColor,
-            .paragraphStyle: style
-        ]
-    }
-    private func makeXAxisTextAttributes() -> [NSAttributedString.Key: Any] {
-        let style = NSMutableParagraphStyle()
-        style.alignment = .center
-        return [
-            .paragraphStyle: style,
-            .foregroundColor: titleColor
-            ]
-    }
     
     func themeDidUpdate(theme: Theme) {
         backColor = theme.cellBackgroundColor
-        titleColor = theme.chartTitlesColor
         gridMainColor = theme.chartGridMainColor
         gridAuxColor = theme.chartGridAuxColor
-        updateTitleAttributes()
         redraw()
+
+//        titleColor = theme.chartTitlesColor
+//        updateTitleAttributes()
     }
 }
 
@@ -385,12 +326,13 @@ extension ChartView {
     private func updatePlatePosition() {
         guard !plate.isHidden else { return }
         let inset: CGFloat = 8
-        var x = selectionViewPosition
+        var x = selectionViewPosition ?? 0
         x = min(x, chartBounds.maxX - plate.frame.width / 2)
         x = max(x, chartBounds.minX + plate.frame.width / 2)
         var y = inset + plate.frame.height / 2
         var overlaps = false
-        if let selectedIndex = xDrawAxis?.selectionIndex, let drawLines = drawLines {
+        if let selectedIndex = dataSource.xDrawAxis.selectionIndex {
+            let drawLines = dataSource.drawLines
             var yPointsToAvoid = [inset, chartBounds.maxY - inset]
             drawLines.forEach { line in
                 guard !line.isHiding else { return }
@@ -419,7 +361,6 @@ extension ChartView {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        guard let xDrawAxis = xDrawAxis else { return }
         guard let pos = touches.first?.location(in: self),
             chartBounds.contains(pos),
             !(plate.frame.contains(pos) && !plate.isHidden)
@@ -429,7 +370,7 @@ extension ChartView {
         }
         let chartViewPos = (pos.x - chartBounds.minX) / chartBounds.width
         let normPos = chartViewPos * (xRange.upperBound - xRange.lowerBound) + xRange.lowerBound
-        xDrawAxis.selectionIndex = xDrawAxis.getClosestIndex(position: normPos)
+        dataSource.xDrawAxis.selectionIndex = dataSource.xDrawAxis.getClosestIndex(position: normPos)
         if plate.isHidden {
             showSelection()
         } else {
@@ -439,7 +380,6 @@ extension ChartView {
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        guard let xDrawAxis = xDrawAxis else { return }
         guard let pos = touches.first?.location(in: self),
             chartBounds.contains(pos) else {
             hideSelection()
@@ -447,7 +387,7 @@ extension ChartView {
         }
         let chartViewPos = (pos.x - chartBounds.minX) / chartBounds.width
         let normPos = chartViewPos * (xRange.upperBound - xRange.lowerBound) + xRange.lowerBound
-        xDrawAxis.selectionIndex = xDrawAxis.getClosestIndex(position: normPos)
+        dataSource.xDrawAxis.selectionIndex = dataSource.xDrawAxis.getClosestIndex(position: normPos)
         moveSelection()
     }
 
@@ -464,12 +404,11 @@ extension ChartView {
 
     private func moveSelection(animated: Bool = true) {
         guard !plate.isHidden else { return }
-        guard let xDrawAxis = xDrawAxis,
-            let selectionIndex = xDrawAxis.selectionIndex else {
+        guard let selectionIndex = dataSource.xDrawAxis.selectionIndex else {
             hideSelection()
             return
         }
-        let normPos = xDrawAxis.points[selectionIndex].x
+        let normPos = dataSource.xDrawAxis.points[selectionIndex].x
         let newPos = self.chartBounds.minX + normPos * self.chartBounds.width
         
         if normPos <= 0 || normPos >= 1 {
@@ -497,18 +436,16 @@ extension ChartView {
         UIView.animate(withDuration: 0.15, animations: {
             self.plate.alpha = 0
         }) { _ in
-            self.xDrawAxis?.selectionIndex = nil
+            self.dataSource.xDrawAxis.selectionIndex = nil
             self.plate.isHidden = true
             self.redraw()
         }
     }
 
     private func getChartCurrentData() -> (Date, [(Int, UIColor)])? {
-        guard let drawLines = drawLines,
-            let xDrawAxis = xDrawAxis,
-            let selectionIndex = xDrawAxis.selectionIndex else {
-            return nil
-        }
+        guard let selectionIndex = dataSource.xDrawAxis.selectionIndex else { return nil }
+        let xDrawAxis = dataSource.xDrawAxis
+        let drawLines = dataSource.drawLines
         let date = xDrawAxis.points[selectionIndex].value
         var numbers = [(Int, UIColor)]()
         for drawLine in drawLines {

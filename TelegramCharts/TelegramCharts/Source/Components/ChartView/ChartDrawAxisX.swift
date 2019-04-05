@@ -106,7 +106,7 @@ class ChartDrawAxisX {
         updatePoints()
     }
     
-    init(dates: [Date], attributes: [NSAttributedString.Key: Any]?) {
+    init(dates: [Date], attributes: [NSAttributedString.Key: Any]?, range: ClosedRange<CGFloat>) {
         self.points = [ChartDrawPointX]()
         for i in dates.indices {
             let x = CGFloat(i + 1) / CGFloat(dates.count + 1)
@@ -117,6 +117,8 @@ class ChartDrawAxisX {
         self.firstVisibleTitleIndex = 0
         self.lastVisibleTitleIndex = points.count - 1
         self.anchorTitleIndex = self.lastVisibleTitleIndex
+        self.range = range
+        updatePoints()
     }
     
     func getClosestIndex(position: CGFloat) -> Int {

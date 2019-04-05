@@ -18,43 +18,8 @@
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="288.5"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IAP-OI-7Fg" customClass="ChartView" customModule="TelegramCharts" customModuleProvider="target">
-                        <rect key="frame" x="16" y="0.0" width="288" height="220.5"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGz-5g-zaC" customClass="ChartView" customModule="TelegramCharts" customModuleProvider="target">
-                        <rect key="frame" x="16" y="236.5" width="288" height="36"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="36" id="Kbh-IR-6li"/>
-                        </constraints>
-                    </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NtE-fz-8OR" customClass="RangeSlider" customModule="TelegramCharts" customModuleProvider="target">
-                        <rect key="frame" x="16" y="232.5" width="288" height="44"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </view>
-                </subviews>
-                <constraints>
-                    <constraint firstItem="NtE-fz-8OR" firstAttribute="top" secondItem="bGz-5g-zaC" secondAttribute="top" constant="-4" id="44V-US-aTg"/>
-                    <constraint firstItem="IAP-OI-7Fg" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="FPB-91-bPo"/>
-                    <constraint firstItem="NtE-fz-8OR" firstAttribute="trailing" secondItem="bGz-5g-zaC" secondAttribute="trailing" id="Ywt-WT-K6F"/>
-                    <constraint firstAttribute="trailing" secondItem="IAP-OI-7Fg" secondAttribute="trailing" constant="16" id="bJ6-Hk-vtC"/>
-                    <constraint firstAttribute="bottom" secondItem="bGz-5g-zaC" secondAttribute="bottom" constant="16" id="cgP-cL-VJV"/>
-                    <constraint firstAttribute="trailing" secondItem="bGz-5g-zaC" secondAttribute="trailing" constant="16" id="fJK-t9-d9U"/>
-                    <constraint firstItem="bGz-5g-zaC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="j2d-ry-OKO"/>
-                    <constraint firstItem="NtE-fz-8OR" firstAttribute="leading" secondItem="bGz-5g-zaC" secondAttribute="leading" id="ktR-3b-EkY"/>
-                    <constraint firstItem="NtE-fz-8OR" firstAttribute="bottom" secondItem="bGz-5g-zaC" secondAttribute="bottom" constant="4" id="ldC-64-y4A"/>
-                    <constraint firstItem="IAP-OI-7Fg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="mCc-xB-MLm"/>
-                    <constraint firstItem="bGz-5g-zaC" firstAttribute="top" secondItem="IAP-OI-7Fg" secondAttribute="bottom" constant="16" id="pKB-3c-MfP"/>
-                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
-            <connections>
-                <outlet property="mainChartView" destination="IAP-OI-7Fg" id="SDS-A9-D7A"/>
-                <outlet property="mapChartView" destination="bGz-5g-zaC" id="fYz-0l-AgX"/>
-                <outlet property="rangeSlider" destination="NtE-fz-8OR" id="f2x-RA-2up"/>
-            </connections>
             <point key="canvasLocation" x="132.80000000000001" y="191.1544227886057"/>
         </tableViewCell>
     </objects>

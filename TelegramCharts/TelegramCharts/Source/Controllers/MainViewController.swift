@@ -10,32 +10,33 @@ import UIKit
 
 class MainViewController: UITableViewController {
 
-    var chart: Chart? {
+    var charts: [Chart]! {
         didSet {
-            let queue = DispatchQueue(label: "conversion", qos: .utility, attributes: [], autoreleaseFrequency: .inherit, target: nil)
-            queue.async { [weak self] in
-                guard let self = self else { return }
-                ChartConverter.convert(chart: self.chart) { converted in
+            var lines = [[ChartLine]]()
+            var dates = [[Date]]()
+            self.charts.forEach { chart in
+                ChartConverter.convert(chart: chart) { converted in
                     if let converted = converted {
-                        DispatchQueue.main.async {
-                            self.chartLines = converted.lines
-                            self.chartDates = converted.dates
-                            self.createStructure()
-                            self.tableView.reloadData()
-                        }
+                        lines.append(converted.lines)
+                        dates.append(converted.dates)
                     }
                 }
             }
+            self.chartLines = lines
+            self.chartDates = dates
+            self.createStructure()
+            self.tableView.reloadData()
         }
     }
 
-    private var chartLines: [ChartLine]?
-    private var chartDates: [Date]?
+    private var chartLines: [[ChartLine]]!
+    private var chartDates: [[Date]]!
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        charts = ChartProvider.getCharts()
         tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
@@ -61,14 +62,6 @@ class MainViewController: UITableViewController {
     private var followersHeaderModel: TableViewHeaderViewModel {
         let model = TableViewHeaderViewModel()
         model.titleText = "Followers".localized().uppercased()
-        return model
-    }
-    private var chartCellModel: ChartCellModel {
-        let model = ChartCellModel()
-        model.chartLines = chartLines
-        model.chartDates = chartDates
-        model.currentRange = 0.75 ... 1.0
-        model.topSeparatorStyle.isHidden = false
         return model
     }
     private var settingsHeaderModel: TableViewHeaderViewModel {
@@ -100,11 +93,18 @@ class MainViewController: UITableViewController {
         return model
     }
 
-    private func makeLineCellModel(line: ChartLine, lineIndex: Int) -> CheckCellModel {
+    private func makeChartCellModel(index: Int) -> ChartCellModel {
+        let model = ChartCellModel(chartIndex: index, chartLines: chartLines[index], chartDates: chartDates[index], currentRange: 0.75 ... 1.0)
+        model.topSeparatorStyle.isHidden = false
+        return model
+    }
+
+    private func makeLineCellModel(line: ChartLine, lineIndex: Int, chartIndex: Int) -> CheckCellModel {
         let model = CheckCellModel()
         model.hasCheckmark = true
         model.tagColor = line.color
         model.titleText = line.name
+        model.chartIndex = chartIndex
         model.lineIndex = lineIndex
         return model
     }
@@ -112,11 +112,13 @@ class MainViewController: UITableViewController {
     private func createStructure() {
         structure.clear()
 
-        var lineModels = [CheckCellModel]()
-        if let chartLines = chartLines {
-            for i in chartLines.indices {
-                let model = makeLineCellModel(line: chartLines[i], lineIndex: i)
-                if i == chartLines.count - 1 {
+        for k in chartLines.indices {
+            let lines = chartLines[k]
+
+            var lineModels = [CheckCellModel]()
+            for i in lines.indices {
+                let model = makeLineCellModel(line: lines[i], lineIndex: i, chartIndex: k)
+                if i == lines.count - 1 {
                     model.bottomSeparatorStyle.isHidden = false
                     model.bottomSeparatorStyle.clampToEdge = true
                 } else {
@@ -126,8 +128,9 @@ class MainViewController: UITableViewController {
                 model.cellTapAction = { [weak self] (model, cell) in
                     guard let self = self, let model = model as? CheckCellModel else { return }
                     for section in self.structure.sections {
-                        for chartModel in section.cellModels {
-                            if let chartModel = chartModel as? ChartCellModel {
+                        for i in section.cellModels.indices {
+                            let chartModel = section.cellModels[i]
+                            if let chartModel = chartModel as? ChartCellModel, k == chartModel.chartIndex {
                                 chartModel.linesVisibility![model.lineIndex] = !model.hasCheckmark
                             }
                         }
@@ -139,16 +142,17 @@ class MainViewController: UITableViewController {
                 }
                 lineModels.append(model)
             }
-        }
 
-        var chartModels: [BaseCellModel] = [chartCellModel]
-        chartModels.append(contentsOf: lineModels)
-        let chartSection = TableViewSection(headerModel: followersHeaderModel, cellModels: chartModels)
-        structure.addSection(section: chartSection)
-        
-        let settingsModels = [themeCellModel]
-        let settingsSection = TableViewSection(headerModel: settingsHeaderModel, cellModels: settingsModels)
-        structure.addSection(section: settingsSection)
+            var chartModels: [BaseCellModel] = [makeChartCellModel(index: k)]
+            chartModels.append(contentsOf: lineModels)
+            let chartSection = TableViewSection(headerModel: followersHeaderModel, cellModels: chartModels)
+            structure.addSection(section: chartSection)
+
+            let settingsModels = [themeCellModel]
+            let settingsSection = TableViewSection(headerModel: settingsHeaderModel, cellModels: settingsModels)
+            structure.addSection(section: settingsSection)
+            structure.addSection(section: TableViewSection(headerModel: settingsHeaderModel, cellModels: []))
+        }
     }
     
     // MARK: - Actions

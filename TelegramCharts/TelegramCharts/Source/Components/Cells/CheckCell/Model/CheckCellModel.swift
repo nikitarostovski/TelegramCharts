@@ -18,6 +18,7 @@ class CheckCellModel: BaseCellModel {
         return CheckCell.cellHeight
     }
 
+    var chartIndex: Int = -1
     var lineIndex: Int = -1
     var titleText = ""
     var tagColor: UIColor = .clear

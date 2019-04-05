@@ -14,22 +14,10 @@ class ChartCell: BaseCell {
         return 340
     }
     
-    @IBOutlet weak var mainChartView: ChartView! {
-        didSet {
-            mainChartView.lineWidth = 2.0
-        }
-    }
-    
-    @IBOutlet weak var mapChartView: ChartView! {
-        didSet {
-            mapChartView.lineWidth = 1.0
-        }
-    }
-    @IBOutlet weak var rangeSlider: RangeSlider! {
-        didSet {
-            rangeSlider.delegate = self
-        }
-    }
+    var mainChartView: ChartView!
+    var mapChartView: ChartView!
+
+    var rangeSlider: RangeSlider!
     
     private var currentRange: ClosedRange<CGFloat>?
     
@@ -38,71 +26,64 @@ class ChartCell: BaseCell {
         mainChartView.setLinesVisibility(visibility: visibility)
         mapChartView.setLinesVisibility(visibility: visibility)
     }
-    
-    private var chartDataIsSet = false
+
     override func updateAppearance() {
         super.updateAppearance()
-        guard let model = model as? ChartCellModel,
-            let chartLines = model.chartLines,
-            let chartDates = model.chartDates
-        else {
-            return
-        }
-        if model.currentRange == nil {
-            model.currentRange = 0 ... 1
-        }
+        guard let model = model as? ChartCellModel else { return }
         currentRange = model.currentRange
 
-        if !chartDataIsSet {
-            mainChartView.setupData(lines: chartLines, dates: chartDates)
-            mainChartView.xRange = currentRange!
-            mainChartView.changeLowerBound(newLow: currentRange!.lowerBound)
-            
-            mapChartView.setupData(lines: chartLines, dates: chartDates)
-            mapChartView.gridVisible = false
-            mapChartView.chartInsets = .zero
-            mapChartView.xRange = 0 ... 1
-            mapChartView.changeLowerBound(newLow: 0)
-            
-            if let visibility = model.linesVisibility {
-                mainChartView.setLinesVisibility(visibility: visibility)
-                mapChartView.setLinesVisibility(visibility: visibility)
-            }
+        createViews()
+
+        if let visibility = model.linesVisibility {
+            mainChartView.setLinesVisibility(visibility: visibility)
+            mapChartView.setLinesVisibility(visibility: visibility)
         }
-        let insetTop = mapChartView.frame.minY - rangeSlider.frame.minY
-        let insetBottom = rangeSlider.frame.maxY - mapChartView.frame.maxY
-        rangeSlider.tintAreaInsets = UIEdgeInsets(top: insetTop, left: 0, bottom: insetBottom, right: 0)
+
         rangeSlider.lowerValue = currentRange!.lowerBound
         rangeSlider.upperValue = currentRange!.upperBound
     }
-}
 
-extension ChartCell: RangeSliderDelegate {
-    
-    func sliderLeftDidChange(sender: RangeSlider) {
-        guard let model = model as? ChartCellModel, let currentRange = currentRange else { return }
-        if let newLow = sender.lowerValue {
-            self.currentRange = newLow ... currentRange.upperBound
-            model.currentRange = currentRange
-            mainChartView.changeLowerBound(newLow: newLow)
-        }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateFrames()
     }
-    
-    func sliderRightDidChange(sender: RangeSlider) {
-        guard let model = model as? ChartCellModel, let currentRange = currentRange else { return }
-        if let newUp = sender.upperValue {
-            self.currentRange = currentRange.lowerBound ... newUp
-            model.currentRange = currentRange
-            mainChartView.changeUpperBound(newUp: newUp)
+
+    private func createViews() {
+        if mainChartView != nil {
+            mainChartView.removeFromSuperview()
         }
+        if mapChartView != nil {
+            mapChartView.removeFromSuperview()
+        }
+        if rangeSlider != nil {
+            rangeSlider.removeFromSuperview()
+        }
+        mainChartView = ChartView(frame: .zero, dataSource: self.model as! ChartViewDataSource, range: currentRange!, lineWidth: 2.0, gridVisible: true)
+        mapChartView = ChartView(frame: .zero, dataSource: self.model as! ChartViewDataSource, range: 0 ... 1, lineWidth: 1.0, gridVisible: false)
+        mapChartView.chartInsets = .zero
+        addSubview(mapChartView)
+        addSubview(mainChartView)
+
+        rangeSlider = RangeSlider(frame: .zero)
+        rangeSlider.delegate = self.model as? RangeSliderDelegate
+        addSubview(rangeSlider)
     }
-    
-    func sliderDidScroll(sender: RangeSlider) {
-        guard let model = model as? ChartCellModel else { return }
-        if let newLow = sender.lowerValue, let newUp = sender.upperValue {
-            currentRange = newLow ... newUp
-            model.currentRange = currentRange
-            mainChartView.changePoisition(newLow: newLow)
-        }
+
+    private func updateFrames() {
+        let mapHeight: CGFloat = 36
+        let mapFrame = CGRect(x: 16, y: bounds.height - mapHeight - 16, width: bounds.width - 32, height: mapHeight)
+        let mainFrame = CGRect(x: 16, y: 0, width: bounds.width - 32, height: mapFrame.minY - 16)
+        let sliderFrame = mapFrame.inset(by: UIEdgeInsets(top: -4, left: 0, bottom: -4, right: 0))
+
+        mainChartView.frame = mainFrame
+        mapChartView.frame = mapFrame
+        rangeSlider.frame = sliderFrame
+
+        let insetTop = mapChartView.frame.minY - rangeSlider.frame.minY
+        let insetBottom = rangeSlider.frame.maxY - mapChartView.frame.maxY
+        rangeSlider.tintAreaInsets = UIEdgeInsets(top: insetTop, left: 0, bottom: insetBottom, right: 0)
+
+        mainChartView.update(animated: false)
+        mapChartView.update(animated: false)
     }
 }

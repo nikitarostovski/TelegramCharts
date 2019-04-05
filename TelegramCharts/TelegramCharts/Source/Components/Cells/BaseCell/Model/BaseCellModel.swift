@@ -18,6 +18,8 @@ struct SeparatorStyle {
 
 class BaseCellModel {
 
+    weak var cell: BaseCell?
+
     var cellIdentifier: String {
         return ""
     }

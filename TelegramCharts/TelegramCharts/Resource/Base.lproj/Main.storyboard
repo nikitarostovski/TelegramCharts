@@ -20,36 +20,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="vQK-eA-giZ" kind="relationship" relationship="rootViewController" id="dnw-pM-oki"/>
+                        <segue destination="w6o-U4-wbH" kind="relationship" relationship="rootViewController" id="VXw-nm-4rQ"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9WV-VY-jmW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-214" y="134"/>
-        </scene>
-        <!--Statistics-->
-        <scene sceneID="NBz-JK-dFi">
-            <objects>
-                <tableViewController id="vQK-eA-giZ" customClass="ListViewController" customModule="TelegramCharts" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="3sO-kW-vlN">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <connections>
-                            <outlet property="dataSource" destination="vQK-eA-giZ" id="Koy-Xk-Haw"/>
-                            <outlet property="delegate" destination="vQK-eA-giZ" id="lca-gP-7a4"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Statistics" id="UiU-0F-D4D">
-                        <barButtonItem key="backBarButtonItem" title=" " id="L4g-QH-veQ"/>
-                    </navigationItem>
-                    <connections>
-                        <segue destination="w6o-U4-wbH" kind="show" identifier="showChart" id="sQe-Dh-ymJ"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mq5-G3-aqR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="492" y="134"/>
         </scene>
         <!--Statistics-->
         <scene sceneID="bJO-qx-fRW">
@@ -71,7 +47,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4i9-aw-z4z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1207" y="134"/>
+            <point key="canvasLocation" x="636" y="134"/>
         </scene>
     </scenes>
 </document>
