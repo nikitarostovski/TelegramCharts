@@ -118,7 +118,6 @@ class ChartDrawAxisX {
         self.lastVisibleTitleIndex = points.count - 1
         self.anchorTitleIndex = self.lastVisibleTitleIndex
         self.range = range
-        updatePoints()
     }
     
     func getClosestIndex(position: CGFloat) -> Int {
@@ -172,7 +171,7 @@ class ChartDrawAxisX {
     }
     
     private func recalcTitleStep() {
-        let targetVisibleTitlesCount = Int(CGFloat(1) / textWidth)
+        let targetVisibleTitlesCount = max(1, Int(CGFloat(1) / textWidth))
         let scale = range.upperBound - range.lowerBound
         let newStep = max(1, Int(CGFloat(points.count) * scale / CGFloat(targetVisibleTitlesCount)))
         
@@ -237,6 +236,7 @@ class ChartDrawPointX {
     var isHidden = false {
         didSet {
             targetAlpha = isHidden ? 0 : 1
+            alpha = targetAlpha
         }
     }
     var attributes: [NSAttributedString.Key: Any]? {

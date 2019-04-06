@@ -54,6 +54,7 @@
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
+		119413642257BE6D0091E88C /* ChartDrawDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119413632257BE6D0091E88C /* ChartDrawDataProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,6 +107,7 @@
 		11649F29223502E00081ABA1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
+		119413632257BE6D0091E88C /* ChartDrawDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDrawDataProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +356,7 @@
 			children = (
 				1154411722397C0C00795743 /* ChartView.swift */,
 				104521AE2240F2FD0052624E /* PlateView.swift */,
+				119413632257BE6D0091E88C /* ChartDrawDataProvider.swift */,
 				113EA77622453D310003D694 /* ChartDrawAxisX.swift */,
 				113EA77A22453D750003D694 /* ChartDrawAxisY.swift */,
 				113EA77822453D3F0003D694 /* ChartDrawLine.swift */,
@@ -547,6 +550,7 @@
 				1154414422397C9100795743 /* Animator.swift in Sources */,
 				113EA77B22453D750003D694 /* ChartDrawAxisY.swift in Sources */,
 				1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */,
+				119413642257BE6D0091E88C /* ChartDrawDataProvider.swift in Sources */,
 				1154413822397C0D00795743 /* CheckCellModel.swift in Sources */,
 				1154414222397C0D00795743 /* Theme.swift in Sources */,
 				1154413C22397C0D00795743 /* RootNavigationController.swift in Sources */,

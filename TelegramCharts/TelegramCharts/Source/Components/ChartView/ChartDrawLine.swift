@@ -23,11 +23,15 @@ class ChartDrawLine {
     
     var targetAlpha: CGFloat = 1
     
+    var maxValue: Int
+    
     init(color: UIColor, points: [Int]) {
         self.color = color
         self.points = [ChartDrawPoint]()
+        self.maxValue = 0
         for i in points.indices {
             self.points.append(ChartDrawPoint(x: CGFloat(i) / CGFloat(points.count - 1), value: points[i]))
+            self.maxValue = max(self.maxValue, points[i])
         }
     }
 }

@@ -131,13 +131,9 @@ class MainViewController: UITableViewController {
                         for i in section.cellModels.indices {
                             let chartModel = section.cellModels[i]
                             if let chartModel = chartModel as? ChartCellModel, k == chartModel.chartIndex {
-                                chartModel.linesVisibility![model.lineIndex] = !model.hasCheckmark
+                                chartModel.setLineVisibility(index: model.lineIndex, visible: !model.hasCheckmark)
                             }
                         }
-                    }
-                    for cell in self.tableView.visibleCells {
-                        guard let cell = cell as? ChartCell else { continue }
-                        cell.updateLinesVisibility()
                     }
                 }
                 lineModels.append(model)

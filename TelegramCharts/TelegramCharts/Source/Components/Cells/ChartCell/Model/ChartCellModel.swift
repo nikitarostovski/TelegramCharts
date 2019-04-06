@@ -8,18 +8,10 @@
 
 import UIKit
 
-class ChartCellModel: BaseCellModel, ChartViewDataSource {
-
-    var drawLines: [ChartDrawLine] = [ChartDrawLine]()
-    var xDrawAxis: ChartDrawAxisX
-    var yDrawAxis: ChartDrawAxisY
-    var dateTextWidth: CGFloat
-    var maxValue: Int
-    var xAxisTextSpacing: CGFloat = 20
-
-    var linesVisibility: [Bool]?
+class ChartCellModel: BaseCellModel {
+    
+    var dataProvider: ChartDrawDataProvider
     var chartIndex: Int
-    var currentRange: ClosedRange<CGFloat>
 
     override var cellIdentifier: String {
         return ChartCell.cellIdentifier()
@@ -31,28 +23,13 @@ class ChartCellModel: BaseCellModel, ChartViewDataSource {
     
     init(chartIndex: Int, chartLines: [ChartLine], chartDates: [Date], currentRange: ClosedRange<CGFloat>) {
         self.chartIndex = chartIndex
-        self.currentRange = currentRange
-        maxValue = 0
-        var newDrawLines = [ChartDrawLine]()
-        linesVisibility = [Bool]()
-        for line in chartLines {
-            newDrawLines.append(ChartDrawLine(color: line.color, points: line.values))
-            maxValue = max(maxValue, line.values.max() ?? 0)
-            linesVisibility!.append(true)
-        }
-        self.drawLines = newDrawLines
-
-        self.yDrawAxis = ChartDrawAxisY(maxValue: maxValue, attributes: [:])
-        self.xDrawAxis = ChartDrawAxisX(dates: chartDates, attributes: [:], range: currentRange)
-
-        dateTextWidth = 0
-        for p in xDrawAxis.points {
-            let width = p.title.width(withConstrainedHeight: .greatestFiniteMagnitude)
-            dateTextWidth = max(dateTextWidth, width)
-        }
-        dateTextWidth += xAxisTextSpacing
+        self.dataProvider = ChartDrawDataProvider(lines: chartLines, dates: chartDates, range: currentRange)
         super.init()
         isTouchable = false
+    }
+    
+    func setLineVisibility(index: Int, visible: Bool) {
+        dataProvider.setLineVisibility(index: index, visible: visible)
     }
 
     // styles
@@ -78,34 +55,20 @@ class ChartCellModel: BaseCellModel, ChartViewDataSource {
 extension ChartCellModel: RangeSliderDelegate {
 
     func sliderLeftDidChange(sender: RangeSlider) {
-        guard let cell = cell as? ChartCell else { return }
         if let newLow = sender.lowerValue {
-            self.currentRange = newLow ... currentRange.upperBound
-            xDrawAxis.changeLowerBound(newLow: newLow)
-            cell.mainChartView.setRange(range: currentRange)
-            cell.mainChartView.update()
+            dataProvider.changeLowerBound(newLow: newLow)
         }
     }
 
     func sliderRightDidChange(sender: RangeSlider) {
-        guard let cell = cell as? ChartCell else { return }
         if let newUp = sender.upperValue {
-            self.currentRange = currentRange.lowerBound ... newUp
-            xDrawAxis.changeUpperBound(newUp: newUp)
-            cell.mainChartView.setRange(range: currentRange)
-            cell.mainChartView.update()
+            dataProvider.changeUpperBound(newUp: newUp)
         }
     }
 
     func sliderDidScroll(sender: RangeSlider) {
-        guard let cell = cell as? ChartCell else { return }
         if let newLow = sender.lowerValue {
-            let diff = currentRange.upperBound - currentRange.lowerBound
-            currentRange = newLow ... newLow + diff
-            xDrawAxis.changePoisition(newLow: newLow)
-            cell.mainChartView.hideSelection()
-            cell.mainChartView.setRange(range: currentRange)
-            cell.mainChartView.update()
+            dataProvider.changePoisition(newLow: newLow)
         }
     }
 }
