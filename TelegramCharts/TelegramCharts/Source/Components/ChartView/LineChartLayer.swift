@@ -14,6 +14,10 @@ protocol ChartLayerProtocol: CALayer {
     func updatePoints(xPos: [CGFloat], yVal: [Int])
     func updateMaxValue(maxValue: Int)
     func updateAlpha(alpha: CGFloat)
+    
+    func select(index: Int)
+    func moveSelection(index: Int)
+    func hideSelection()
 }
 
 class LineChartLayer: CALayer, ChartLayerProtocol {
@@ -73,5 +77,17 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
             path.addLine(to: point)
         }
         shapeLayer.path = path.cgPath
+    }
+    
+    func select(index: Int) {
+        
+    }
+    
+    func moveSelection(index: Int) {
+        
+    }
+    
+    func hideSelection() {
+        
     }
 }

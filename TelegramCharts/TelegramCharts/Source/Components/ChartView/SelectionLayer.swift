@@ -8,10 +8,6 @@
 
 import UIKit
 
-enum SelectionStyle {
-    case lineChart
-}
-
 struct SelectionData {
     var date: Date?
     var format: DateFormat?
@@ -32,9 +28,6 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
     
     private var data: SelectionData?
     
-    private var lineLayer: CAShapeLayer?
-    private var pointsLayers: [CAShapeLayer]?
-    
     private var plateLayer: CAShapeLayer
     private var titleLayer: CATextLayer?
     private var valuesLayers: [CATextLayer]
@@ -43,30 +36,20 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
     private var plateColor: UIColor = .white
     private var titleColor: UIColor = .black
     private var textColor: UIColor = .darkGray
-    private var gridColor: UIColor = .darkGray
     
     private let topInset: CGFloat = 6
     private let lineSpacing: CGFloat = 2
     private let insets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
     
-    private var viewStyle: SelectionStyle
-    
-    init(style: SelectionStyle) {
-        self.viewStyle = style
+    override init() {
         plateLayer = CAShapeLayer()
         plateLayer.cornerRadius = 6
         plateLayer.masksToBounds = true
         
         valuesLayers = [CATextLayer]()
         titlesLayers = [CATextLayer]()
-        pointsLayers = [CAShapeLayer]()
         
         super.init()
-        
-        if viewStyle == .lineChart {
-            lineLayer = CAShapeLayer()
-            addSublayer(lineLayer!)
-        }
         addSublayer(plateLayer)
         
         startReceivingThemeUpdates()
@@ -80,13 +63,6 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
         stopReceivingThemeUpdates()
     }
     
-    override func layoutSublayers() {
-        super.layoutSublayers()
-        if let lineLayer = lineLayer {
-            lineLayer.frame.size = CGSize(width: 1, height: bounds.height)
-        }
-    }
-    
     func setData(data: SelectionData) {
         self.data = data
         update()
@@ -96,13 +72,14 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
         isHidden = false
         let x = x * bounds.size.width - plateLayer.frame.size.width / 2
         plateLayer.frame.origin = CGPoint(x: x, y: topInset)
-        lineLayer?.frame.origin = CGPoint(x: x, y: 0)
     }
     
     func move(toX x: CGFloat) {
         let x = x * bounds.size.width - plateLayer.frame.size.width / 2
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         plateLayer.frame.origin = CGPoint(x: x, y: topInset)
-        lineLayer?.frame.origin = CGPoint(x: x, y: 0)
+        CATransaction.commit()
     }
     
     func hide() {
@@ -216,7 +193,6 @@ extension SelectionLayer: Stylable {
         plateColor = theme.selectionBackColor
         titleColor = theme.selectionTextColor
         textColor = theme.selectionTextColor
-        gridColor = theme.chartGridMainColor
         
         plateLayer.fillColor = plateColor.cgColor
         if let titleLayer = titleLayer {
@@ -224,9 +200,6 @@ extension SelectionLayer: Stylable {
         }
         for l in titlesLayers {
             l.foregroundColor = textColor.cgColor
-        }
-        if let lineLayer = lineLayer {
-            lineLayer.strokeColor = gridColor.cgColor
         }
     }
 }

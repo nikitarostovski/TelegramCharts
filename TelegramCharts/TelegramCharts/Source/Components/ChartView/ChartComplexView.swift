@@ -51,7 +51,7 @@ class ChartComplexView: UIView {
         self.chartLines = [ChartLayerProtocol]()
         self.yGrid = YGridLayer(step: 40)
         self.xGrid = XGridLayer()
-        self.selection = SelectionLayer(style: .lineChart)
+        self.selection = SelectionLayer()
         
         super.init(frame: .zero)
         self.layer.addSublayer(xGrid)
@@ -64,9 +64,6 @@ class ChartComplexView: UIView {
         self.layer.addSublayer(selection)
         backgroundColor = .clear
         layer.masksToBounds = true
-        
-        let tapGr = UITapGestureRecognizer(target: self, action: #selector(tap))
-        addGestureRecognizer(tapGr)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -114,20 +111,65 @@ class ChartComplexView: UIView {
         }
     }
     
-    @objc private func tap(gr: UITapGestureRecognizer) {
-        let pos = gr.location(in: self)
+    // MARK: Touches, Selection
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        let pos = touches.first!.location(in: self)
         guard chartBounds.contains(pos) else {
-            selection.hide()
+            hideSelection()
+            return
+        }
+        
+        let x = (pos.x - chartBounds.origin.x) / chartBounds.size.width
+        showSelection(x: x)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        let pos = touches.first!.location(in: self)
+        guard chartBounds.contains(pos) else {
             return
         }
         let x = (pos.x - chartBounds.origin.x) / chartBounds.size.width
+        moveSelection(x: x)
+    }
+    
+    private func showSelection(x: CGFloat) {
         let index = dataSource.xDrawAxis.getClosestIndex(position: x)
         dataSource.xDrawAxis.selectionIndex = index
         guard let data = dataSource.plateData else {
-            selection.hide()
+            hideSelection()
             return
         }
         selection.setData(data: data)
         selection.show(x: x)
+        yGrid.showSelection(x: x)
+        for line in chartLines {
+            line.select(index: index)
+        }
+    }
+    
+    private func moveSelection(x: CGFloat) {
+        let index = dataSource.xDrawAxis.getClosestIndex(position: x)
+        dataSource.xDrawAxis.selectionIndex = index
+        guard let data = dataSource.plateData else {
+            hideSelection()
+            return
+        }
+        selection.setData(data: data)
+        selection.move(toX: x)
+        yGrid.moveSelection(x: x)
+        for line in chartLines {
+            line.moveSelection(index: index)
+        }
+    }
+    
+    private func hideSelection() {
+        selection.hide()
+        yGrid.hideSelection()
+        for line in chartLines {
+            line.hideSelection()
+        }
     }
 }

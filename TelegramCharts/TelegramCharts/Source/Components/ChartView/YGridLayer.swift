@@ -12,14 +12,18 @@ protocol YGridLayerProtocol: CALayer {
     
     init(step: CGFloat)
     func updateMaxVisiblePosition(newMax: Int)
+    func showSelection(x: CGFloat)
+    func moveSelection(x: CGFloat)
+    func hideSelection()
 }
 
-class YGridLayer: CALayer, YGridLayerProtocol {
+class YGridLayer: CALayer, YGridLayerProtocol, Stylable {
     
     var linePositions = [CGFloat]()
     
     fileprivate var lineShapes = [LineLayer]()
     fileprivate var hidingLineShapes = [LineLayer]()
+    private var selectionLineLayer: CAShapeLayer
     
     /// Defines how much must maxValue changed to reset points. 1.05 means 5 percent difference
     var updateThreshold: CGFloat = 1.05
@@ -35,11 +39,19 @@ class YGridLayer: CALayer, YGridLayerProtocol {
     
     required init(step: CGFloat) {
         self.step = step
+        selectionLineLayer = CAShapeLayer()
+        selectionLineLayer.lineWidth = 1
         super.init()
+        addSublayer(selectionLineLayer)
+        startReceivingThemeUpdates()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        stopReceivingThemeUpdates()
     }
     
     override func layoutSublayers() {
@@ -47,6 +59,7 @@ class YGridLayer: CALayer, YGridLayerProtocol {
         hidingLineShapes.forEach { $0.frame = bounds }
         calcLinePositions()
         super.layoutSublayers()
+        selectionLineLayer.frame = bounds
     }
     
     private func calcLinePositions() {
@@ -79,7 +92,7 @@ class YGridLayer: CALayer, YGridLayerProtocol {
             let targetY = newMax != 0 ? CGFloat(value) / CGFloat(newMax) : 0
             let lineLayer = LineLayer(value: value, y: y, targetY: targetY, removeHandler: removeHandler)
             
-            addSublayer(lineLayer)
+            insertSublayer(lineLayer, below: selectionLineLayer)
             lineShapes.append(lineLayer)
         }
         hidingLineShapes.forEach {
@@ -94,6 +107,35 @@ class YGridLayer: CALayer, YGridLayerProtocol {
         hidingLineShapes.forEach {
             $0.targetY = maxVisibleValue != 0 ? CGFloat($0.value) / CGFloat(maxY) : 0
         }
+    }
+    
+    func showSelection(x: CGFloat) {
+        let x = x * bounds.width
+        let ptA = CGPoint(x: x, y: 0)
+        let ptB = CGPoint(x: x, y: bounds.height)
+        let path = UIBezierPath()
+        path.move(to: ptA)
+        path.addLine(to: ptB)
+        selectionLineLayer.path = path.cgPath
+        selectionLineLayer.isHidden = false
+    }
+    
+    func moveSelection(x: CGFloat) {
+        let x = x * bounds.width
+        let ptA = CGPoint(x: x, y: 0)
+        let ptB = CGPoint(x: x, y: bounds.height)
+        let path = UIBezierPath()
+        path.move(to: ptA)
+        path.addLine(to: ptB)
+        selectionLineLayer.path = path.cgPath
+    }
+    
+    func hideSelection() {
+        selectionLineLayer.isHidden = true
+    }
+    
+    func themeDidUpdate(theme: Theme) {
+        selectionLineLayer.strokeColor = theme.chartGridMainColor.cgColor
     }
 }
 
@@ -204,7 +246,11 @@ private class LineLayer: CALayer, Stylable {
     }
     
     func themeDidUpdate(theme: Theme) {
-        lineLayer.strokeColor = theme.chartGridAuxColor.cgColor
+        if value == 0 {
+            lineLayer.strokeColor = theme.chartGridMainColor.cgColor
+        } else {
+            lineLayer.strokeColor = theme.chartGridAuxColor.cgColor
+        }
         textLayer.foregroundColor = theme.chartTitlesColor.cgColor
     }
 }

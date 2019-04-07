@@ -19,16 +19,27 @@ class XGridLayer: CALayer, XGridLayerProtocol {
     private var dates = [Date]()
     private var titleLayers = [TitleLayer]()
     
+    override init() {
+        
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func updatePoints(xPos: [CGFloat], dates: [Date]) {
         self.xPositions = xPos
         self.dates = dates
-        
     }
     
 //    private func
     
     private func resetLayers() {
         
+    }
+    
+    func themeDidUpdate(theme: Theme) {
     }
 }
 
