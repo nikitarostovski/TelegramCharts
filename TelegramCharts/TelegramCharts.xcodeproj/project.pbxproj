@@ -11,6 +11,11 @@
 		104521AF2240F2FD0052624E /* PlateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104521AE2240F2FD0052624E /* PlateView.swift */; };
 		1074DA38223913B6006C1D51 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1074DA37223913B6006C1D51 /* chart_data.json */; };
 		1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1102AD5C223C148D000F64A9 /* Date+Formatter.swift */; };
+		1119EA472259F53C00F6315C /* LineChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1119EA462259F53C00F6315C /* LineChartLayer.swift */; };
+		1119EA492259F55400F6315C /* XGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1119EA482259F55400F6315C /* XGridLayer.swift */; };
+		1119EA4B2259F56200F6315C /* YGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1119EA4A2259F56200F6315C /* YGridLayer.swift */; };
+		1119EA4D2259F57700F6315C /* SelectionLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1119EA4C2259F57700F6315C /* SelectionLayer.swift */; };
+		1119EA4F2259F58F00F6315C /* ChartComplexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1119EA4E2259F58F00F6315C /* ChartComplexView.swift */; };
 		1123B45E224163F600107BE5 /* String+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123B45D224163F600107BE5 /* String+Format.swift */; };
 		113C82E0223E996100723D10 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 113C82DC223E996000723D10 /* ItemCell.xib */; };
 		113C82E1223E996100723D10 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82DD223E996000723D10 /* ItemCell.swift */; };
@@ -55,6 +60,8 @@
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
 		119413642257BE6D0091E88C /* ChartDrawDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119413632257BE6D0091E88C /* ChartDrawDataProvider.swift */; };
+		119413682258BAF80091E88C /* Simplifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119413672258BAF80091E88C /* Simplifier.swift */; };
+		11941370225936130091E88C /* chart_data_insane.json in Resources */ = {isa = PBXBuildFile; fileRef = 1194136F225936130091E88C /* chart_data_insane.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +69,11 @@
 		104521AE2240F2FD0052624E /* PlateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateView.swift; sourceTree = "<group>"; };
 		1074DA37223913B6006C1D51 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data.json; sourceTree = "<group>"; };
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
+		1119EA462259F53C00F6315C /* LineChartLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartLayer.swift; sourceTree = "<group>"; };
+		1119EA482259F55400F6315C /* XGridLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XGridLayer.swift; sourceTree = "<group>"; };
+		1119EA4A2259F56200F6315C /* YGridLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YGridLayer.swift; sourceTree = "<group>"; };
+		1119EA4C2259F57700F6315C /* SelectionLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionLayer.swift; sourceTree = "<group>"; };
+		1119EA4E2259F58F00F6315C /* ChartComplexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartComplexView.swift; sourceTree = "<group>"; };
 		1123B45D224163F600107BE5 /* String+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Format.swift"; sourceTree = "<group>"; };
 		113C82DC223E996000723D10 /* ItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
 		113C82DD223E996000723D10 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
@@ -108,6 +120,8 @@
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
 		119413632257BE6D0091E88C /* ChartDrawDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDrawDataProvider.swift; sourceTree = "<group>"; };
+		119413672258BAF80091E88C /* Simplifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Simplifier.swift; sourceTree = "<group>"; };
+		1194136F225936130091E88C /* chart_data_insane.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chart_data_insane.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,12 +368,18 @@
 		1154411622397C0C00795743 /* ChartView */ = {
 			isa = PBXGroup;
 			children = (
+				1119EA4E2259F58F00F6315C /* ChartComplexView.swift */,
+				1119EA462259F53C00F6315C /* LineChartLayer.swift */,
+				1119EA482259F55400F6315C /* XGridLayer.swift */,
+				1119EA4A2259F56200F6315C /* YGridLayer.swift */,
+				1119EA4C2259F57700F6315C /* SelectionLayer.swift */,
 				1154411722397C0C00795743 /* ChartView.swift */,
 				104521AE2240F2FD0052624E /* PlateView.swift */,
 				119413632257BE6D0091E88C /* ChartDrawDataProvider.swift */,
 				113EA77622453D310003D694 /* ChartDrawAxisX.swift */,
 				113EA77A22453D750003D694 /* ChartDrawAxisY.swift */,
 				113EA77822453D3F0003D694 /* ChartDrawLine.swift */,
+				119413672258BAF80091E88C /* Simplifier.swift */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
@@ -444,6 +464,7 @@
 				11649F27223502E00081ABA1 /* Main.storyboard */,
 				11649F29223502E00081ABA1 /* Info.plist */,
 				11649FE722353E180081ABA1 /* Localizable.strings */,
+				1194136F225936130091E88C /* chart_data_insane.json */,
 				1074DA37223913B6006C1D51 /* chart_data.json */,
 			);
 			path = Resource;
@@ -507,6 +528,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11941370225936130091E88C /* chart_data_insane.json in Resources */,
 				113C82E0223E996100723D10 /* ItemCell.xib in Resources */,
 				1074DA38223913B6006C1D51 /* chart_data.json in Resources */,
 				1154412822397C0D00795743 /* ButtonCell.xib in Resources */,
@@ -550,13 +572,18 @@
 				1154414422397C9100795743 /* Animator.swift in Sources */,
 				113EA77B22453D750003D694 /* ChartDrawAxisY.swift in Sources */,
 				1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */,
+				1119EA4B2259F56200F6315C /* YGridLayer.swift in Sources */,
+				1119EA492259F55400F6315C /* XGridLayer.swift in Sources */,
 				119413642257BE6D0091E88C /* ChartDrawDataProvider.swift in Sources */,
+				1119EA4F2259F58F00F6315C /* ChartComplexView.swift in Sources */,
 				1154413822397C0D00795743 /* CheckCellModel.swift in Sources */,
 				1154414222397C0D00795743 /* Theme.swift in Sources */,
 				1154413C22397C0D00795743 /* RootNavigationController.swift in Sources */,
+				1119EA4D2259F57700F6315C /* SelectionLayer.swift in Sources */,
 				1154412922397C0D00795743 /* ButtonCell.swift in Sources */,
 				113C82E2223E996100723D10 /* ItemCellModel.swift in Sources */,
 				1154413F22397C0D00795743 /* TableViewStructure.swift in Sources */,
+				119413682258BAF80091E88C /* Simplifier.swift in Sources */,
 				1154413922397C0D00795743 /* SliderThumbView.swift in Sources */,
 				104521AF2240F2FD0052624E /* PlateView.swift in Sources */,
 				104521AD223F8C400052624E /* ChartConverter.swift in Sources */,
@@ -564,6 +591,7 @@
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
+				1119EA472259F53C00F6315C /* LineChartLayer.swift in Sources */,
 				1123B45E224163F600107BE5 /* String+Format.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -720,6 +748,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4DZU58EZPK;
 				INFOPLIST_FILE = "$(SRCROOT)/TelegramCharts/Resource/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -741,6 +770,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4DZU58EZPK;
 				INFOPLIST_FILE = "$(SRCROOT)/TelegramCharts/Resource/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

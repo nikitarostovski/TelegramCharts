@@ -14,9 +14,12 @@ class ChartCell: BaseCell {
         return 340
     }
     
-    var mainChartView: ChartView!
-    var mapChartView: ChartView!
+//    var mainChartView: ChartView!
+//    var mapChartView: ChartView!
 
+    var mainChartView: ChartComplexView!
+    var mapChartView: ChartComplexView!
+    
     var rangeSlider: RangeSlider!
 
     override func updateAppearance() {
@@ -25,13 +28,22 @@ class ChartCell: BaseCell {
         createViews()
         
         model.dataProvider.redrawHandler = { [weak self] in
-            self?.mainChartView.setNeedsDisplay()
-            self?.mapChartView.setNeedsDisplay()
+            self?.mainChartView.updateChartPositions()
+        }
+        model.dataProvider.mapRedrawHandler = { [weak self] in
+            self?.mapChartView.updateChartPositions()
+        }
+        model.dataProvider.updateAlphaHandler = { [weak self] in
+            self?.mainChartView.updateChartAlpha()
+            self?.mapChartView.updateChartAlpha()
         }
         
-        model.dataProvider.hideSelectionHandler = { [weak self] in
-            self?.mainChartView.hideSelection()
-        }
+//        model.dataProvider.hideSelectionHandler = { [weak self] in
+//            self?.mainChartView.hideSelection()
+//        }
+//        model.dataProvider.updateSelectionHandler = { [weak self] in
+//            self?.mainChartView.moveSelection(animated: true)
+//        }
         
         rangeSlider.lowerValue = model.dataProvider.range.lowerBound
         rangeSlider.upperValue = model.dataProvider.range.upperBound
@@ -53,10 +65,10 @@ class ChartCell: BaseCell {
         if rangeSlider != nil {
             rangeSlider.removeFromSuperview()
         }
-        let dataSource = model.dataProvider as ChartViewDataSource
-        mainChartView = ChartView(dataSource: dataSource, lineWidth: 2.0, gridVisible: true)
-        mapChartView = ChartView(dataSource: dataSource, lineWidth: 1.0, gridVisible: false)
-        mapChartView.chartInsets = .zero
+        let dataSource = model.dataProvider as ChartDataSource
+        mainChartView = ChartComplexView(dataSource: dataSource, lineWidth: 2.0, isMap: false)
+        mapChartView = ChartComplexView(dataSource: dataSource, lineWidth: 1.0, isMap: true)
+//        mapChartView.chartInsets = .zero
         addSubview(mapChartView)
         addSubview(mainChartView)
 

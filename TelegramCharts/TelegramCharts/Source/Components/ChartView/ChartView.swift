@@ -11,6 +11,7 @@ import UIKit
 typealias ChartLine = (values: [Int], color: UIColor, name: String)
 
 protocol ChartViewDataSource {
+    var visibleIndices: [Int] { get }
     var yDrawAxis: ChartDrawAxisY { get }
     var xDrawAxis: ChartDrawAxisX { get }
     var drawLines: [ChartDrawLine] { get }
@@ -22,6 +23,8 @@ protocol ChartViewDataSource {
     var gridAuxColor: UIColor { get }
     var backColor: UIColor { get }
     
+    var plateData: (Date, [(Int, UIColor)])? { get }
+    
     func viewSizeChanged(newSize: CGSize)
 }
 
@@ -30,6 +33,7 @@ class ChartView: UIView {
     private var dataSource: ChartViewDataSource
     private var lineWidth: CGFloat
     private var gridVisible: Bool
+    private var isMap: Bool
 
     var chartInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
 
@@ -44,8 +48,9 @@ class ChartView: UIView {
     
     // MARK: - Lifecycle
 
-    init(dataSource: ChartViewDataSource, lineWidth: CGFloat, gridVisible: Bool) {
-        self.gridVisible = gridVisible
+    init(dataSource: ChartViewDataSource, lineWidth: CGFloat, isMap: Bool) {
+        self.isMap = isMap
+        self.gridVisible = !isMap
         self.lineWidth = lineWidth
         self.dataSource = dataSource
 
@@ -140,43 +145,43 @@ class ChartView: UIView {
             context.setFillColor(UIColor.clear.cgColor)
             context.setStrokeColor(line.color.withAlphaComponent(line.alpha).cgColor)
             
-            if !gridVisible {
-                let maxY = CGFloat(dataSource.maxTotalVisibleY)
-                for i in line.points.indices {
-                    let normX = line.points[i].originalX
-                    let normY = maxY == 0 ? 0 : CGFloat(line.points[i].value) / maxY
-                    let pt = CGPoint(x: self.chartBounds.minX + normX * self.chartBounds.width,
-                                     y: self.chartBounds.maxY - normY * self.chartBounds.height)
-                    if i == 0 {
-                        context.move(to: pt)
-                        continue
-                    } else {
-                        context.addLine(to: pt)
-                    }
-                }
-                context.strokePath()
-            } else {
-                for i in line.firstIndex ... line.lastIndex {
-                    let normX = line.points[i].x
-                    let normY = dataSource.maxVisibleY == 0 ? 0 : CGFloat(line.points[i].value) / dataSource.maxVisibleY
-                    let pt = CGPoint(x: self.chartBounds.minX + normX * self.chartBounds.width,
-                                     y: self.chartBounds.maxY - normY * self.chartBounds.height)
-                    if i == line.firstIndex {
-                        context.move(to: pt)
-                        continue
-                    } else {
-                        context.addLine(to: pt)
-                    }
-                }
-                context.strokePath()
+            var indices = Array(0 ... line.points.count - 1)
+            var maxY = CGFloat(dataSource.maxTotalVisibleY)
+            if !isMap {
+                indices = dataSource.visibleIndices
+                maxY = dataSource.maxVisibleY
             }
+            var points = [CGPoint]()
+            for i in indices {
+                var normX: CGFloat
+                if isMap {
+                    normX = dataSource.xDrawAxis.points[i].originalX
+                } else {
+                    normX = dataSource.xDrawAxis.points[i].x
+                }
+                let normY = maxY == 0 ? 0 : CGFloat(line.points[i].value) / maxY
+                let pt = CGPoint(x: self.chartBounds.minX + normX * self.chartBounds.width,
+                                 y: self.chartBounds.maxY - normY * self.chartBounds.height)
+                points.append(pt)
+            }
+//            points = Simplifier.simplify(points, tolerance: line.tolerance)
+            for i in points.indices {
+                let pt = points[i]
+                if i == 0 {
+                    context.move(to: pt)
+                    continue
+                } else {
+                    context.addLine(to: pt)
+                }
+            }
+            context.strokePath()
             
             guard gridVisible, !line.isHiding else { continue }
             let radius: CGFloat = 4
             context.setFillColor(dataSource.backColor.cgColor)
-            for i in line.firstIndex ... line.lastIndex {
+            for i in dataSource.visibleIndices {
                 guard dataSource.xDrawAxis.points[i].isSelected else { continue }
-                let normX = line.points[i].x
+                let normX = dataSource.xDrawAxis.points[i].x
                 let normY = dataSource.maxVisibleY == 0 ? 0 : CGFloat(line.points[i].value) / dataSource.maxVisibleY
                 let rect = CGRect(x: self.chartBounds.minX + normX * self.chartBounds.width - radius,
                                   y: self.chartBounds.maxY - normY * self.chartBounds.height - radius,
@@ -276,7 +281,7 @@ extension ChartView {
         redraw()
     }
 
-    private func moveSelection(animated: Bool = true) {
+    func moveSelection(animated: Bool = true) {
         guard !plate.isHidden else { return }
         guard let selectionIndex = dataSource.xDrawAxis.selectionIndex else {
             hideSelection()
@@ -289,7 +294,7 @@ extension ChartView {
             hideSelection()
             return
         }
-        if let data = getChartCurrentData() {
+        if let data = dataSource.plateData {
             plate.update(date: data.0, numbers: data.1)
         }
         let transitionClosure = {
@@ -314,20 +319,5 @@ extension ChartView {
             self.plate.isHidden = true
             self.redraw()
         }
-    }
-
-    private func getChartCurrentData() -> (Date, [(Int, UIColor)])? {
-        guard let selectionIndex = dataSource.xDrawAxis.selectionIndex else { return nil }
-        let xDrawAxis = dataSource.xDrawAxis
-        let drawLines = dataSource.drawLines
-        let date = xDrawAxis.points[selectionIndex].value
-        var numbers = [(Int, UIColor)]()
-        for drawLine in drawLines {
-            guard !drawLine.isHiding else { continue }
-            let number = drawLine.points[selectionIndex].value
-            let color = drawLine.color
-            numbers.append((number, color))
-        }
-        return (date, numbers)
     }
 }

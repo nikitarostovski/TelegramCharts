@@ -31,20 +31,10 @@ class ChartDrawAxisX {
         }
     }
     
-    /// Index of first visible chart point
-    private (set) var firstIndex = 0
-    /// Index of last visible chart point
-    private (set) var lastIndex = 0
-    
     /// Visible area range
-    private (set) var range: ClosedRange<CGFloat> = 0 ... 1 {
-        didSet {
-            recalcIndices()
-            recalcTitleStep()
-        }
-    }
+    private (set) var range: ClosedRange<CGFloat>
     
-    private var textWidth: CGFloat = 1 {
+    /*private var textWidth: CGFloat = 1 {
         didSet {
             recalcTitleStep()
             if anchorTitleIndex == firstVisibleTitleIndex {
@@ -63,33 +53,35 @@ class ChartDrawAxisX {
             }
             updatePoints()
         }
-    }
+    }*/
     
     // MARK: - Public methods
     
-    func changeTextWidth(newWidth: CGFloat) {
+    /*func changeTextWidth(newWidth: CGFloat) {
         textWidth = newWidth
         updatePoints()
-    }
+    }*/
     
     func changeLowerBound(newLow: CGFloat) {
         let step = range.lowerBound - newLow
         range = newLow ... range.upperBound
-        scaleTitlesFromRight()
+//        recalcTitleStep()
+//        scaleTitlesFromRight()
         updatePoints(step: step)
     }
     
     func changeUpperBound(newUp: CGFloat) {
         let step = range.upperBound - newUp
         range = range.lowerBound ... newUp
-        scaleTitlesFormLeft()
+//        recalcTitleStep()
+//        scaleTitlesFormLeft()
         updatePoints(step: step)
     }
     
     func changePoisition(newLow: CGFloat) {
         let diff = range.upperBound - range.lowerBound
         range = newLow ... newLow + diff
-        if anchorTitleIndex == firstVisibleTitleIndex {
+        /*if anchorTitleIndex == firstVisibleTitleIndex {
             calcLastVisibleTitleIndex()
         } else {
             calcFirstVisibleTitleIndex()
@@ -102,7 +94,7 @@ class ChartDrawAxisX {
                 points[i].isHidden = true
                 points[i].alpha = 0
             }
-        }
+        }*/
         updatePoints()
     }
     
@@ -114,10 +106,11 @@ class ChartDrawAxisX {
             points.append(point)
         }
         self.attributes = attributes
-        self.firstVisibleTitleIndex = 0
+        /*self.firstVisibleTitleIndex = 0
         self.lastVisibleTitleIndex = points.count - 1
-        self.anchorTitleIndex = self.lastVisibleTitleIndex
+        self.anchorTitleIndex = self.lastVisibleTitleIndex*/
         self.range = range
+//        recalcTitleStep()
     }
     
     func getClosestIndex(position: CGFloat) -> Int {
@@ -126,22 +119,16 @@ class ChartDrawAxisX {
     
     // MARK: - Private methods
     
-    private func recalcIndices() {
-        firstIndex = max(Int(range.lowerBound * CGFloat(points.count) - 0.5), 0)
-        lastIndex = min(Int(range.upperBound * CGFloat(points.count) + 0.5), points.count - 1)
-    }
-    
     private func updatePoints(step: CGFloat = 0) {
-        let step = abs(step) / textWidth
-        for i in points.indices {
-            points[i].x = (points[i].originalX - range.lowerBound) / (range.upperBound - range.lowerBound)
-            points[i].alpha += step * (points[i].isHidden ? -1 : 1)
-        }
+//        let step = abs(step) / textWidth
+//        for i in firstIndex ... lastIndex {
+            //points[i].alpha += step * (points[i].isHidden ? -1 : 1)
+//        }
     }
     
     // MARK: - Titles calculations
     
-    private var firstVisibleTitleIndex: Int
+    /*private var firstVisibleTitleIndex: Int
     private var lastVisibleTitleIndex: Int
     
     private var anchorTitleIndex: Int
@@ -222,7 +209,7 @@ class ChartDrawAxisX {
     var titleEndIndex: Int {
         let offset = Int(pointsPerTitle() + 0.5)
         return min(lastIndex + offset, points.count - 1)
-    }
+    }*/
 }
 
 class ChartDrawPointX {
@@ -253,11 +240,15 @@ class ChartDrawPointX {
         self.alpha = initialAlpha
         self.targetAlpha = initialAlpha
         self.attributes = attributes
+        
+        self.title = NSAttributedString()
+        self.titleWidth = 0
         updateTitle()
     }
     
     private func updateTitle() {
-        title = NSAttributedString(string: value.monthDayShortString(), attributes: attributes)
-        titleWidth = title.width(withConstrainedHeight: .greatestFiniteMagnitude)
+        // TODO: bottleneck
+//        title = NSAttributedString(string: value.monthDayShortString(), attributes: attributes)
+//        titleWidth = title.width(withConstrainedHeight: .greatestFiniteMagnitude)
     }
 }

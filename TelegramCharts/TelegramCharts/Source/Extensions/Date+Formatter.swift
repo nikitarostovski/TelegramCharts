@@ -8,17 +8,17 @@
 
 import UIKit
 
+enum DateFormat: String {
+    case year = "YYYY"
+    case monthDay = "MMM d"
+    case weekdayDayMonthYear = "EEE, d MMM yyyy"
+}
+
 extension Date {
 
-    func yearString() -> String {
+    func string(format: DateFormat) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "YYYY"
-        return dateFormatter.string(from: self)
-    }
-
-    func monthDayShortString() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d"
+        dateFormatter.dateFormat = format.rawValue
         return dateFormatter.string(from: self)
     }
 }

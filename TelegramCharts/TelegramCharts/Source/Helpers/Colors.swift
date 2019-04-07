@@ -30,7 +30,7 @@ extension UIColor {
 
 struct Colors {
     
-    static let lightGray = UIColor(hexString: "f7f7f7")
+    static let lightGray = UIColor(hexString: "f4f4f7")
     static let mediumGray = UIColor(hexString: "efeff4")
     static let gray = UIColor(hexString: "c8c7cc")
     static let darkGray = UIColor(hexString: "6d6d72")
@@ -41,7 +41,7 @@ struct Colors {
     static let darkBlue = UIColor(hexString: "18222d")
     static let veryDarkBlue = UIColor(hexString: "121a23")
     
-    static let darkGrayBlue = UIColor(hexString: "1c2938")
+    static let darkGrayBlue = UIColor(hexString: "19232f")
     static let grayBlue = UIColor(hexString: "37485c")
     static let mediumGrayBlue = UIColor(hexString: "c8d1db")
     static let lightGrayBlue = UIColor(hexString: "f2f5f7")

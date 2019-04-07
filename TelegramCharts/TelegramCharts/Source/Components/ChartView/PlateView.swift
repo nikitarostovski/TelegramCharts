@@ -132,8 +132,8 @@ class PlateView: UIView {
             .foregroundColor: dateTextColor,
             .font: UIFont.systemFont(ofSize: 12)
         ]
-        let topLineText = NSAttributedString(string: date.monthDayShortString(), attributes: topLineAttribs)
-        let bottomLineText = NSAttributedString(string: date.yearString(), attributes: bottomLineAttribs)
+        let topLineText = NSAttributedString(string: date.string(format: .monthDay), attributes: topLineAttribs)
+        let bottomLineText = NSAttributedString(string: date.string(format: .year), attributes: bottomLineAttribs)
         let nlText = NSAttributedString(string: "\n")
         let result = NSMutableAttributedString(attributedString: topLineText)
         result.append(nlText)

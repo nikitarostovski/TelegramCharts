@@ -155,4 +155,22 @@ enum Theme: Int {
             return Colors.gridDarkAux
         }
     }
+    
+    var selectionBackColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.lightGray
+        case .night:
+            return Colors.darkGrayBlue
+        }
+    }
+    
+    var selectionTextColor: UIColor {
+        switch self {
+        case .day:
+            return Colors.darkGray
+        case .night:
+            return Colors.white
+        }
+    }
 }
