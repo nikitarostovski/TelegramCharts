@@ -11,7 +11,7 @@ import UIKit
 protocol YGridLayerProtocol where Self: CALayer {
     
     init(step: CGFloat, minVisibleValue: Int, maxVisibleValue: Int)
-    func redraw()
+    func resize()
     func updateMaxVisiblePosition(newMax: Int)
     func showSelection(x: CGFloat)
     func moveSelection(x: CGFloat)
@@ -61,7 +61,7 @@ class YGridLayer: CALayer, YGridLayerProtocol, Stylable {
         stopReceivingThemeUpdates()
     }
 
-    func redraw() {
+    func resize() {
         calcLinePositions()
         updateLines()
         sublayers?.forEach {

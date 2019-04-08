@@ -15,7 +15,7 @@ protocol ChartLayerProtocol where Self: CALayer {
     func updateScale(newScale: CGFloat)
     func updateAlpha(alpha: CGFloat)
 
-    func redraw()
+    func resize()
     
     func select(index: Int)
     func moveSelection(index: Int)
@@ -67,7 +67,7 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
 
     // MARK: - ChartLayerProtocol
 
-    func redraw() {
+    func resize() {
         recalcPoints()
     }
     
@@ -77,7 +77,7 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
     
     func updateScale(newScale: CGFloat) {
         self.scale = newScale
-        redraw()
+        recalcPoints()
     }
     
     func updateAlpha(alpha: CGFloat) {

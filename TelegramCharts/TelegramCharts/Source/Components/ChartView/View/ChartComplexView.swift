@@ -55,7 +55,7 @@ class ChartComplexView: UIView {
     
     init(dataSource: ChartDataSourceProtocol, lineWidth: CGFloat, isMap: Bool) {
         self.isMap = isMap
-        if isMap {
+        if !isMap {
             insetTop = 8
             insetBottom = 16
         }
@@ -88,21 +88,22 @@ class ChartComplexView: UIView {
         chartBounds = CGRect(x: 0, y: insetTop, width: bounds.width, height: bounds.height - insetTop - insetBottom)
         for l in chartLines {
             l.frame = chartBounds
-            l.redraw()
+            l.resize()
         }
         selection.frame = chartBounds
         yGrid.frame = chartBounds
-        yGrid.redraw()
+        yGrid.resize()
         xGrid.frame = CGRect(x: 0, y: bounds.height - insetBottom, width: bounds.width, height: insetBottom)
+        xGrid.resize()
     }
     
     func updateChartPositions() {
         guard chartLines.count > 0 else { return }
-        var xPos = [CGFloat]()
-        var dates = [Date]()
+        var xPoints = [XGridPoint]()
         for xIndex in dataSource.visibleIndices {
-            xPos.append(dataSource.xPositions[xIndex])
-            dates.append(dataSource.dates[xIndex])
+            xPoints.append(XGridPoint(index: xIndex,
+                                      x: dataSource.xPositions[xIndex],
+                                      value: dataSource.dates[xIndex]))
         }
         let scale = CGFloat(1) / CGFloat(dataSource.maxVisibleValue)
         for lineIndex in dataSource.lines.indices {
@@ -110,14 +111,13 @@ class ChartComplexView: UIView {
             for i in dataSource.visibleIndices.indices {
                 let xIndex = dataSource.visibleIndices[i]
                 let y = dataSource.lines[lineIndex].points[xIndex].value
-                linePoints.append(LineChartPoint(index: xIndex, x: xPos[i], value: y))
+                linePoints.append(LineChartPoint(index: xIndex, x: xPoints[i].x, value: y))
             }
             chartLines[lineIndex].updatePoints(points: linePoints)
             chartLines[lineIndex].updateScale(newScale: scale)
-            chartLines[lineIndex].redraw()
         }
         yGrid.updateMaxVisiblePosition(newMax: dataSource.maxVisibleValue)
-        xGrid.updatePoints(xPos: xPos, dates: dates)
+        xGrid.updatePoints(points: xPoints)
     }
     
     func updateChartAlpha() {
