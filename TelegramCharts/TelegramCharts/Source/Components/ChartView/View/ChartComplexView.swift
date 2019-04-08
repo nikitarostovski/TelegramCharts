@@ -63,7 +63,7 @@ class ChartComplexView: UIView {
         self.lineWidth = lineWidth
         self.dataSource = dataSource
         self.chartLines = [ChartLayerProtocolType]()
-        self.yGrid = YGridLayer(step: 40, maxVisibleValue: dataSource.maxVisibleValue)
+        self.yGrid = YGridLayer(step: 40, minVisibleValue: 0, maxVisibleValue: dataSource.maxVisibleValue)
         self.xGrid = XGridLayer()
         self.selection = SelectionLayer()
         super.init(frame: .zero)
