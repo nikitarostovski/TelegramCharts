@@ -8,17 +8,9 @@
 
 import UIKit
 
-struct SelectionData {
-    var date: Date?
-    var format: DateFormat?
-    var values: [Int]
-    var colors: [UIColor]
-    var titles: [String]
-}
-
-protocol SelectionLayerProtocol: CALayer {
+protocol SelectionLayerProtocol where Self: CALayer {
     
-    func setData(data: SelectionData)
+    func setData(data: ChartSelectionData)
     func show(x: CGFloat)
     func move(toX x: CGFloat)
     func hide()
@@ -26,7 +18,7 @@ protocol SelectionLayerProtocol: CALayer {
 
 class SelectionLayer: CALayer, SelectionLayerProtocol {
     
-    private var data: SelectionData?
+    private var data: ChartSelectionData?
     
     private var plateLayer: CAShapeLayer
     private var titleLayer: CATextLayer?
@@ -63,7 +55,7 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
         stopReceivingThemeUpdates()
     }
     
-    func setData(data: SelectionData) {
+    func setData(data: ChartSelectionData) {
         self.data = data
         update()
     }

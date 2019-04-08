@@ -9,8 +9,8 @@
 import UIKit
 
 class ChartCellModel: BaseCellModel {
-    
-    var dataProvider: ChartDrawDataProvider
+
+    var dataProvider: ChartDataSourceProtocol
     var chartIndex: Int
 
     override var cellIdentifier: String {
@@ -23,13 +23,13 @@ class ChartCellModel: BaseCellModel {
     
     init(chartIndex: Int, chartLines: [ChartLine], chartDates: [Date], currentRange: ClosedRange<CGFloat>) {
         self.chartIndex = chartIndex
-        self.dataProvider = ChartDrawDataProvider(lines: chartLines, dates: chartDates, range: currentRange)
+        self.dataProvider = ChartDataSource(lines: chartLines, dates: chartDates, range: currentRange)
         super.init()
         isTouchable = false
     }
     
     func setLineVisibility(index: Int, visible: Bool) {
-        dataProvider.setLineVisibility(index: index, visible: visible)
+//        dataProvider.setLineVisibility(index: index, visible: visible)
     }
 
     // styles

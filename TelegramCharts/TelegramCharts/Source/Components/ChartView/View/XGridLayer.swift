@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol XGridLayerProtocol: CALayer {
+protocol XGridLayerProtocol where Self: CALayer {
     
     func updatePoints(xPos: [CGFloat], dates: [Date])
 }

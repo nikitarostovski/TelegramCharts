@@ -8,58 +8,71 @@
 
 import UIKit
 
-protocol ChartDataSource {
-    var visibleIndices: [Int] { get }
-    var yDrawAxis: ChartDrawAxisY { get }
-    var xDrawAxis: ChartDrawAxisX { get }
-    var drawLines: [ChartDrawLine] { get }
+typealias ChartLayerProtocolType = (ChartLayerProtocol & CALayer)
+typealias XGridLayerProtocolType = (XGridLayerProtocol & CALayer)
+typealias YGridLayerProtocolType = (YGridLayerProtocol & CALayer)
+typealias SelectionLayerProtocolType = (SelectionLayerProtocol & CALayer)
+
+protocol ChartDataSourceProtocol {
+
     var range: ClosedRange<CGFloat> { get }
+
+    var lines: [ChartLineData] { get }
+    var dates: [Date] { get }
+    var xPositions: [CGFloat]  { get }
+    var plateData: ChartSelectionData? { get }
+
+    var selectionIndex: Int? { get }
+    var visibleIndices: [Int] { get }
     var maxVisibleValue: Int { get }
-    var maxVisibleY: CGFloat { get }
-    var maxTotalVisibleY: CGFloat { get }
-    
-    var gridMainColor: UIColor { get }
-    var gridAuxColor: UIColor { get }
-    var backColor: UIColor { get }
-    
-    var plateData: SelectionData? { get }
-    
-    func viewSizeChanged(newSize: CGSize)
+
+    func trySelect(x: CGFloat)
+    func setLineVisibility(index: Int, visible: Bool)
+    func changeLowerBound(newLow: CGFloat)
+    func changeUpperBound(newUp: CGFloat)
+    func changePoisition(newLow: CGFloat)
+
+    var xUpdateHandler: (() -> Void)? { get set }
+    var yUpdateHandler: (() -> Void)? { get set }
+    var alphaUpdateHandler: (() -> Void)? { get set }
 }
 
 class ChartComplexView: UIView {
     
-    private let insetTop: CGFloat = 0
-    private let insetBottom: CGFloat = 0
+    private var insetTop: CGFloat = 0
+    private var insetBottom: CGFloat = 0
     private var chartBounds: CGRect = .zero
 
-    private var dataSource: ChartDataSource
+    private var dataSource: ChartDataSourceProtocol
     private var lineWidth: CGFloat
     private var gridVisible: Bool
     private var isMap: Bool
     
-    private var chartLines: [ChartLayerProtocol]
-    private var yGrid: YGridLayerProtocol
-    private var xGrid: XGridLayerProtocol
-    private var selection: SelectionLayerProtocol
+    private var chartLines: [ChartLayerProtocolType]
+    private var yGrid: YGridLayerProtocolType
+    private var xGrid: XGridLayerProtocolType
+    private var selection: SelectionLayerProtocolType
     
-    init(dataSource: ChartDataSource, lineWidth: CGFloat, isMap: Bool) {
+    init(dataSource: ChartDataSourceProtocol, lineWidth: CGFloat, isMap: Bool) {
         self.isMap = isMap
+        if isMap {
+            insetTop = 8
+            insetBottom = 16
+        }
         self.gridVisible = !isMap
         self.lineWidth = lineWidth
         self.dataSource = dataSource
-        self.chartLines = [ChartLayerProtocol]()
-        self.yGrid = YGridLayer(step: 40)
+        self.chartLines = [ChartLayerProtocolType]()
+        self.yGrid = YGridLayer(step: 40, maxVisibleValue: dataSource.maxVisibleValue)
         self.xGrid = XGridLayer()
         self.selection = SelectionLayer()
-        
         super.init(frame: .zero)
         self.layer.addSublayer(xGrid)
         self.layer.addSublayer(yGrid)
-        for line in dataSource.drawLines {
-            let layer = LineChartLayer(color: line.color, lineWidth: lineWidth)
-            self.chartLines.append(layer)
-            self.layer.addSublayer(layer)
+        for line in dataSource.lines {
+            let l = LineChartLayer(color: line.color, lineWidth: lineWidth)
+            self.chartLines.append(l)
+            self.layer.addSublayer(l)
         }
         self.layer.addSublayer(selection)
         backgroundColor = .clear
@@ -73,11 +86,13 @@ class ChartComplexView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         chartBounds = CGRect(x: 0, y: insetTop, width: bounds.width, height: bounds.height - insetTop - insetBottom)
-        for layer in chartLines {
-            layer.frame = chartBounds
+        for l in chartLines {
+            l.frame = chartBounds
+            l.redraw()
         }
         selection.frame = chartBounds
         yGrid.frame = chartBounds
+        yGrid.redraw()
         xGrid.frame = CGRect(x: 0, y: bounds.height - insetBottom, width: bounds.width, height: insetBottom)
     }
     
@@ -86,28 +101,28 @@ class ChartComplexView: UIView {
         var xPos = [CGFloat]()
         var dates = [Date]()
         for xIndex in dataSource.visibleIndices {
-            let scaleX = chartLines.first!.frame.size.width
-            let x = dataSource.xDrawAxis.points[xIndex].x * scaleX
-            xPos.append(x)
-            dates.append(dataSource.xDrawAxis.points[xIndex].value)
+            xPos.append(dataSource.xPositions[xIndex])
+            dates.append(dataSource.dates[xIndex])
         }
-        for lineIndex in chartLines.indices {
-            var yVal = [Int]()
-            for xIndex in dataSource.visibleIndices {
-                let y = dataSource.drawLines[lineIndex].points[xIndex].value
-                yVal.append(y)
+        let scale = CGFloat(1) / CGFloat(dataSource.maxVisibleValue)
+        for lineIndex in dataSource.lines.indices {
+            var linePoints = [LineChartPoint]()
+            for i in dataSource.visibleIndices.indices {
+                let xIndex = dataSource.visibleIndices[i]
+                let y = dataSource.lines[lineIndex].points[xIndex].value
+                linePoints.append(LineChartPoint(index: xIndex, x: xPos[i], value: y))
             }
-            chartLines[lineIndex].updatePoints(xPos: xPos, yVal: yVal)
-            chartLines[lineIndex].updateMaxValue(maxValue: dataSource.maxVisibleValue)
+            chartLines[lineIndex].updatePoints(points: linePoints)
+            chartLines[lineIndex].updateScale(newScale: scale)
+            chartLines[lineIndex].redraw()
         }
-        
         yGrid.updateMaxVisiblePosition(newMax: dataSource.maxVisibleValue)
         xGrid.updatePoints(xPos: xPos, dates: dates)
     }
     
     func updateChartAlpha() {
         for lineIndex in chartLines.indices {
-            chartLines[lineIndex].updateAlpha(alpha: dataSource.drawLines[lineIndex].alpha)
+            chartLines[lineIndex].updateAlpha(alpha: dataSource.lines[lineIndex].visible ? 1 : 0)
         }
     }
     
@@ -136,9 +151,8 @@ class ChartComplexView: UIView {
     }
     
     private func showSelection(x: CGFloat) {
-        let index = dataSource.xDrawAxis.getClosestIndex(position: x)
-        dataSource.xDrawAxis.selectionIndex = index
-        guard let data = dataSource.plateData else {
+        dataSource.trySelect(x: x)
+        guard let index = dataSource.selectionIndex, let data = dataSource.plateData else {
             hideSelection()
             return
         }
@@ -146,14 +160,13 @@ class ChartComplexView: UIView {
         selection.show(x: x)
         yGrid.showSelection(x: x)
         for line in chartLines {
-            line.select(index: index)
+//            line.select(index: index)
         }
     }
     
     private func moveSelection(x: CGFloat) {
-        let index = dataSource.xDrawAxis.getClosestIndex(position: x)
-        dataSource.xDrawAxis.selectionIndex = index
-        guard let data = dataSource.plateData else {
+        dataSource.trySelect(x: x)
+        guard let index = dataSource.selectionIndex, let data = dataSource.plateData else {
             hideSelection()
             return
         }

@@ -13,9 +13,6 @@ class ChartCell: BaseCell {
     override class var cellHeight: CGFloat {
         return 340
     }
-    
-//    var mainChartView: ChartView!
-//    var mapChartView: ChartView!
 
     var mainChartView: ChartComplexView!
     var mapChartView: ChartComplexView!
@@ -26,17 +23,24 @@ class ChartCell: BaseCell {
         super.updateAppearance()
         guard let model = model as? ChartCellModel else { return }
         createViews()
-        
-        model.dataProvider.redrawHandler = { [weak self] in
+
+        model.dataProvider.xUpdateHandler = {  [weak self] in
             self?.mainChartView.updateChartPositions()
         }
+        model.dataProvider.yUpdateHandler = {  [weak self] in
+            self?.mainChartView.updateChartPositions()
+        }
+        model.dataProvider.alphaUpdateHandler = { [weak self] in
+            self?.mainChartView.updateChartPositions()
+        }
+        /*
         model.dataProvider.mapRedrawHandler = { [weak self] in
             self?.mapChartView.updateChartPositions()
         }
         model.dataProvider.updateAlphaHandler = { [weak self] in
             self?.mainChartView.updateChartAlpha()
             self?.mapChartView.updateChartAlpha()
-        }
+        }*/
         
 //        model.dataProvider.hideSelectionHandler = { [weak self] in
 //            self?.mainChartView.hideSelection()
@@ -52,6 +56,11 @@ class ChartCell: BaseCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         updateFrames()
+
+        mainChartView.updateChartPositions()
+        mainChartView.updateChartAlpha()
+        mapChartView.updateChartPositions()
+        mapChartView.updateChartAlpha()
     }
 
     private func createViews() {
@@ -65,10 +74,8 @@ class ChartCell: BaseCell {
         if rangeSlider != nil {
             rangeSlider.removeFromSuperview()
         }
-        let dataSource = model.dataProvider as ChartDataSource
-        mainChartView = ChartComplexView(dataSource: dataSource, lineWidth: 2.0, isMap: false)
-        mapChartView = ChartComplexView(dataSource: dataSource, lineWidth: 1.0, isMap: true)
-//        mapChartView.chartInsets = .zero
+        mainChartView = ChartComplexView(dataSource: model.dataProvider, lineWidth: 2.0, isMap: false)
+        mapChartView = ChartComplexView(dataSource: model.dataProvider, lineWidth: 1.0, isMap: true)
         addSubview(mapChartView)
         addSubview(mainChartView)
 
@@ -90,8 +97,5 @@ class ChartCell: BaseCell {
         let insetTop = mapChartView.frame.minY - rangeSlider.frame.minY
         let insetBottom = rangeSlider.frame.maxY - mapChartView.frame.maxY
         rangeSlider.tintAreaInsets = UIEdgeInsets(top: insetTop, left: 0, bottom: insetBottom, right: 0)
-
-        mainChartView.setNeedsDisplay()
-        mapChartView.setNeedsDisplay()
     }
 }

@@ -8,9 +8,10 @@
 
 import UIKit
 
-protocol YGridLayerProtocol: CALayer {
+protocol YGridLayerProtocol where Self: CALayer {
     
-    init(step: CGFloat)
+    init(step: CGFloat, maxVisibleValue: Int)
+    func redraw()
     func updateMaxVisiblePosition(newMax: Int)
     func showSelection(x: CGFloat)
     func moveSelection(x: CGFloat)
@@ -29,16 +30,27 @@ class YGridLayer: CALayer, YGridLayerProtocol, Stylable {
     var updateThreshold: CGFloat = 1.05
     
     private var step: CGFloat
-    private var maxVisibleValue: Int = 0
+    private var maxVisibleValue: Int
     
     private lazy var removeHandler: LineLayer.RemoveHandler = { [weak self] lineLayer in
         guard let self = self else { return }
-        lineLayer.removeFromSuperlayer()
-        self.hidingLineShapes = self.hidingLineShapes.filter { $0.value != lineLayer.value }
+        CATransaction.begin()
+        let fadeAnim = CABasicAnimation(keyPath: "opacity")
+        fadeAnim.duration = 0.5
+        fadeAnim.toValue = 0
+        fadeAnim.fromValue = lineLayer.opacity
+        lineLayer.add(fadeAnim, forKey: "opacity")
+        CATransaction.setCompletionBlock({ [weak self] in
+            guard let self = self else { return }
+            lineLayer.removeFromSuperlayer()
+            self.hidingLineShapes = self.hidingLineShapes.filter { $0.value != lineLayer.value }
+        })
+        CATransaction.commit()
     }
     
-    required init(step: CGFloat) {
+    required init(step: CGFloat, maxVisibleValue: Int) {
         self.step = step
+        self.maxVisibleValue = maxVisibleValue
         selectionLineLayer = CAShapeLayer()
         selectionLineLayer.lineWidth = 1
         super.init()
@@ -53,13 +65,9 @@ class YGridLayer: CALayer, YGridLayerProtocol, Stylable {
     deinit {
         stopReceivingThemeUpdates()
     }
-    
-    override func layoutSublayers() {
-        lineShapes.forEach { $0.frame = bounds }
-        hidingLineShapes.forEach { $0.frame = bounds }
-        calcLinePositions()
-        super.layoutSublayers()
-        selectionLineLayer.frame = bounds
+
+    func redraw() {
+        updateLines(newMax: maxVisibleValue)
     }
     
     private func calcLinePositions() {
@@ -80,7 +88,7 @@ class YGridLayer: CALayer, YGridLayerProtocol, Stylable {
             updateLines(newMax: newMax)
             maxVisibleValue = newMax
         }
-        updateLinesTargetPositions(forMaxY: newMax)
+        updateLinesPositions(forMaxY: newMax)
     }
     
     private func updateLines(newMax: Int) {
@@ -89,8 +97,7 @@ class YGridLayer: CALayer, YGridLayerProtocol, Stylable {
         for pos in linePositions {
             let value = Int(pos * CGFloat(newMax))
             let y = maxVisibleValue != 0 ? CGFloat(value) / CGFloat(maxVisibleValue) : 0
-            let targetY = newMax != 0 ? CGFloat(value) / CGFloat(newMax) : 0
-            let lineLayer = LineLayer(value: value, y: y, targetY: targetY, removeHandler: removeHandler)
+            let lineLayer = LineLayer(value: value, y: y, alpha: nil, removeHandler: removeHandler)
             
             insertSublayer(lineLayer, below: selectionLineLayer)
             lineShapes.append(lineLayer)
@@ -100,13 +107,24 @@ class YGridLayer: CALayer, YGridLayerProtocol, Stylable {
         }
     }
     
-    private func updateLinesTargetPositions(forMaxY maxY: Int) {
+    private func updateLinesPositions(forMaxY maxY: Int) {
         lineShapes.forEach {
-            $0.targetY = maxVisibleValue != 0 ? CGFloat($0.value) / CGFloat(maxY) : 0
+            $0.y = CGFloat($0.value) / CGFloat(maxY)
         }
         hidingLineShapes.forEach {
-            $0.targetY = maxVisibleValue != 0 ? CGFloat($0.value) / CGFloat(maxY) : 0
+            $0.y = CGFloat($0.value) / CGFloat(maxY)
         }
+    }
+
+    private func clear() {
+        hidingLineShapes.forEach {
+            $0.removeFromSuperlayer()
+        }
+        hidingLineShapes.removeAll()
+        lineShapes.forEach {
+            $0.removeFromSuperlayer()
+        }
+        lineShapes.removeAll()
     }
     
     func showSelection(x: CGFloat) {
@@ -152,25 +170,21 @@ private class LineLayer: CALayer, Stylable {
     private (set) var value: Int
     
     private var animator = Animator()
+
+    var y: CGFloat {
+        didSet {
+            updatePosition()
+        }
+    }
     
-    var targetY: CGFloat {
+    var targetAlpha: CGFloat {
         didSet {
             animator.animate(duration: animDuration, update: { [weak self] phase in
                 guard let self = self else { return }
-                self.y = self.y + (self.targetY - self.y) * phase
-                
-                let alphaPhase: CGFloat = phase//min(self.y, self.targetY) / max(self.y, self.targetY)
-                self.alpha = self.alpha + (self.targetAlpha - self.alpha) * alphaPhase
+                self.alpha = self.alpha + (self.targetAlpha - self.alpha) * phase
             })
         }
     }
-    var y: CGFloat {
-        didSet {
-            updateFrame()
-        }
-    }
-    
-    var targetAlpha: CGFloat
     var alpha: CGFloat {
         didSet {
             if alpha < alphaRemoveThreshold {
@@ -182,11 +196,10 @@ private class LineLayer: CALayer, Stylable {
     
     var removeHandler: RemoveHandler
     
-    required init(value: Int, y: CGFloat, targetY: CGFloat, removeHandler: @escaping RemoveHandler) {
+    required init(value: Int, y: CGFloat, alpha: CGFloat?, removeHandler: @escaping RemoveHandler) {
         self.removeHandler = removeHandler
         self.value = value
         self.y = y
-        self.targetY = targetY
         lineLayer = CAShapeLayer()
         lineLayer.lineWidth = 1.0
         
@@ -195,10 +208,13 @@ private class LineLayer: CALayer, Stylable {
         textLayer.fontSize = 12
         textLayer.string = String(number: value)
         
-        alpha = alphaRemoveThreshold
+        self.alpha = alphaRemoveThreshold
         targetAlpha = 1
         
         super.init()
+        if let alpha = alpha {
+            self.alpha = alpha
+        }
         startReceivingThemeUpdates()
         addSublayer(lineLayer)
         addSublayer(textLayer)
@@ -206,14 +222,13 @@ private class LineLayer: CALayer, Stylable {
     
     override init(layer: Any) {
         guard let layer = layer as? LineLayer else { fatalError() }
-        self.value = layer.value
-        self.y = layer.y
-        self.targetY = layer.targetY
-        self.alpha = layer.alpha
-        self.targetAlpha = layer.targetAlpha
+        self.removeHandler = layer.removeHandler
         self.lineLayer = layer.lineLayer
         self.textLayer = layer.textLayer
-        self.removeHandler = layer.removeHandler
+        self.value = layer.value
+        self.y = layer.y
+        self.alpha = layer.alpha
+        self.targetAlpha = layer.targetAlpha
         super.init(layer: layer)
         
         addSublayer(lineLayer)
@@ -236,13 +251,20 @@ private class LineLayer: CALayer, Stylable {
     private func updateFrame() {
         let linePath = UIBezierPath()
         linePath.move(to: CGPoint(x: 0, y: 0))
-        linePath.addLine(to: CGPoint(x: bounds.width, y: 0))
-        
-        lineLayer.position = CGPoint(x: 0, y: (CGFloat(1) - y) * bounds.height)
+        linePath.addLine(to: CGPoint(x: lineLayer.bounds.width, y: 0))
+
+        lineLayer.frame.size = CGSize(width: bounds.width, height: 1)
         lineLayer.path = linePath.cgPath
         
         let height: CGFloat = 16
-        textLayer.frame = CGRect(x: 0, y: lineLayer.position.y - height, width: bounds.width, height: height)
+        textLayer.frame.size = CGSize(width: bounds.width, height: height)
+
+        updatePosition()
+    }
+
+    private func updatePosition() {
+        lineLayer.position = CGPoint(x: lineLayer.frame.size.width / 2, y: (CGFloat(1) - y) * bounds.height)
+        textLayer.position = CGPoint(x: textLayer.frame.size.width / 2, y: lineLayer.position.y - lineLayer.frame.height / 2 - textLayer.frame.height / 2)
     }
     
     func themeDidUpdate(theme: Theme) {
