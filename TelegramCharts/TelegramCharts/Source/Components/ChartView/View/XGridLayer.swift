@@ -8,6 +8,12 @@
 
 import UIKit
 
+struct XGridPoint {
+    var index: Int
+    var x: CGFloat
+    var value: Date
+}
+
 protocol XGridLayerProtocol where Self: CALayer {
     
     func updatePoints(xPos: [CGFloat], dates: [Date])

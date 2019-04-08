@@ -22,7 +22,6 @@ class YGridLayer: CALayer, YGridLayerProtocol, Stylable {
     
     var linePositions = [CGFloat]()
     
-//    fileprivate var lineShapes = [LineLayer]()
     private var selectionLineLayer: CAShapeLayer
     
     /// Defines how much must maxValue changed to reset points. 1.05 means 5 percent difference

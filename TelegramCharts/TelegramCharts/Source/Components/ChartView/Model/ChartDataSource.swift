@@ -88,19 +88,19 @@ class ChartDataSource {
         var newMaxVisiblePointIndex = 0
         var newMaxVisibleLineIndex = 0
 
-        var loSet = false
-        var hiSet = false
+        var newLo = 0
+        var newHi = xPositions.count - 1
         for i in xPositions.indices {
             xPositions[i] = calcXForIndex(i: i, count: xPositions.count)
-            if !loSet, xPositions[i] >= 0 {
-                loSet = true
-                lo = max(0, i - 1)
+            if i > 0, xPositions[i] >= 0, xPositions[i - 1] < 0 {
+                newLo = i - 1
             }
-            if !hiSet, loSet, xPositions[i] > 1 {
-                hiSet = true
-                hi = min(xPositions.count - 1, i + 1)
+            if i < xPositions.count - 1, xPositions[i] <= 1, xPositions[i + 1] > 1 {
+                newHi = i + 1
             }
         }
+        lo = newLo
+        hi = newHi
         for lnIndex in lines.indices {
             let line = lines[lnIndex]
             guard line.visible else { continue }
@@ -121,7 +121,7 @@ class ChartDataSource {
     }
 
     private func calcXForIndex(i: Int, count: Int) -> CGFloat {
-        return (CGFloat(i) / CGFloat(count) - range.lowerBound) / (range.upperBound - range.lowerBound)
+        return (CGFloat(i) / CGFloat(count - 1) - range.lowerBound) / (range.upperBound - range.lowerBound)
     }
 }
 
