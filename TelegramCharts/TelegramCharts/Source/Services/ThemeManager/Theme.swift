@@ -105,9 +105,9 @@ enum Theme: Int {
     var sliderThumbColor: UIColor {
         switch self {
         case .day:
-            return Colors.mediumGrayBlue.withAlphaComponent(0.90)
+            return UIColor(hexString: "c0d1e1")
         case .night:
-            return Colors.grayBlue.withAlphaComponent(0.90)
+            return UIColor(hexString: "56626d")
         }
     }
     

@@ -51,21 +51,27 @@ class RangeSlider: UIControl {
     private var minValueDelta: CGFloat = 0
     private var previousLocation = CGPoint()
     private var touchResult = SliderThumbHitTestResult.none
+    
+    private var insetX: CGFloat = 0
+    private var sliderBounds: CGRect!
 
     //MARK: - Lifecycle
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, insetX: CGFloat) {
+        self.insetX = insetX
         super.init(frame: frame)
         initialSetup()
     }
     
     required init?(coder aDecoder: NSCoder) {
+        self.insetX = 0
         super.init(coder: aDecoder)
         initialSetup()
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        sliderBounds = bounds.inset(by: UIEdgeInsets(top: 0, left: insetX, bottom: 0, right: insetX))
         updateLayout()
     }
     
@@ -78,11 +84,13 @@ class RangeSlider: UIControl {
     private func initialSetup() {
         backgroundColor = .clear
 
-        thumbView = SliderThumbView(frame: .zero)
-        addSubview(thumbView)
-
         tintLayer.masksToBounds = true
+        tintLayer.cornerRadius = 8
         layer.addSublayer(tintLayer)
+        
+        thumbView = SliderThumbView(frame: .zero)
+        thumbView.insetX = self.insetX
+        addSubview(thumbView)
         
         startReceivingThemeUpdates()
     }
@@ -90,28 +98,29 @@ class RangeSlider: UIControl {
     // MARK: - Layout
     
     private func updateLayout() {
+        guard sliderBounds != nil else { return }
         thumbView.frame = bounds
         guard let lowerValue = lowerValue,
             let upperValue = upperValue else {
                 return
         }
-
         let thumbLeft = lowerValue * thumbView.bounds.width
         let thumbRight = upperValue * thumbView.bounds.width
         thumbView.leftBorder = thumbLeft
         thumbView.rightBorder = thumbRight
 
-        minValueDelta = 44.0 / thumbView.bounds.width
+        minValueDelta = 80.0 / thumbView.bounds.width
         
-        tintLayer.frame = bounds.inset(by: tintAreaInsets)
+        tintLayer.frame = sliderBounds.inset(by: tintAreaInsets)
         drawTint()
     }
 
     private func drawTint() {
-        let hollowRect = CGRect(x: thumbView.leftBorder,
+        guard sliderBounds != nil else { return }
+        let hollowRect = CGRect(x: thumbView.leftBorder + thumbView.thumbWidth,
                                 y: 0,
-                                width: thumbView.rightBorder - thumbView.leftBorder,
-                                height: bounds.height)
+                                width: thumbView.rightBorder - thumbView.leftBorder - 2 * thumbView.thumbWidth,
+                                height: sliderBounds.height)
         
         let path = UIBezierPath(rect: bounds)
         let hollowPath = UIBezierPath(rect: hollowRect)
@@ -142,7 +151,7 @@ extension RangeSlider {
         
         let location = touch.location(in: thumbView)
         let deltaLocation = location.x - previousLocation.x
-        let deltaValue = (maximumValue - minimumValue) * deltaLocation / bounds.width
+        let deltaValue = (maximumValue - minimumValue) * deltaLocation / sliderBounds.width
         previousLocation = location
 
         switch touchResult {

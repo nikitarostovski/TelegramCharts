@@ -10,34 +10,21 @@ import UIKit
 
 class MainViewController: UITableViewController {
 
-    var charts: [Chart]! {
+    @IBOutlet weak var themeBarButton: UIBarButtonItem!
+    
+    var graphs: [Graph]! {
         didSet {
-            var lines = [[ChartLine]]()
-            var dates = [[Date]]()
-            self.charts.forEach { chart in
-                ChartConverter.convert(chart: chart) { converted in
-                    if let converted = converted {
-                        lines.append(converted.lines)
-                        dates.append(converted.dates)
-                    }
-                }
-            }
-            self.chartLines = lines
-            self.chartDates = dates
             self.createStructure()
             self.tableView.reloadData()
         }
     }
-
-    private var chartLines: [[ChartLine]]!
-    private var chartDates: [[Date]]!
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.charts = ChartProvider.getCharts()
-        tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
+        self.graphs = GraphProvider.getGraphs()
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 54, right: 0)
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
         tableView.canCancelContentTouches = false
@@ -58,101 +45,39 @@ class MainViewController: UITableViewController {
     // MARK: - Structure
     
     private var structure = TableViewStructure()
+
+    private func makeGraphCellModel(index: Int) -> GraphCellModel {
+        let model = GraphCellModel(graphIndex: index, graph: graphs[index], currentRange: 0.75 ... 1.0)
+        model.topSeparatorStyle.isHidden = false
+        return model
+    }
     
-    private var followersHeaderModel: TableViewHeaderViewModel {
+    private func makeHeaderModel(text: String) -> TableViewHeaderViewModel {
         let model = TableViewHeaderViewModel()
-        model.titleText = "Followers".localized().uppercased()
-        return model
-    }
-    private var settingsHeaderModel: TableViewHeaderViewModel {
-        let model = TableViewHeaderViewModel()
-        return model
-    }
-    private var themeCellModel: ButtonCellModel {
-        let model = ButtonCellModel()
-        model.topSeparatorStyle.isHidden = false
-        model.bottomSeparatorStyle.isHidden = false
-        let dayModeTitle = "Switch to Night Mode".localized()
-        let nightModeTitle = "Switch to Day Mode".localized()
-        if ThemeManager.shared.currentTheme == .day {
-            model.buttonTitle = dayModeTitle
-        } else {
-            model.buttonTitle = nightModeTitle
-        }
-        
-        model.buttonTouchUpInsideAction = { [weak self] in
-            guard let self = self else { return }
-            if ThemeManager.shared.currentTheme == .day {
-                self.setNightTheme()
-                model.buttonTitle = nightModeTitle
-            } else {
-                self.setDayTheme()
-                model.buttonTitle = dayModeTitle
-            }
-        }
-        return model
-    }
-
-    private func makeChartCellModel(index: Int) -> ChartCellModel {
-        let model = ChartCellModel(chartIndex: index, chartLines: chartLines[index], chartDates: chartDates[index], currentRange: 0.75 ... 1.0)
-        model.topSeparatorStyle.isHidden = false
-        return model
-    }
-
-    private func makeLineCellModel(line: ChartLine, lineIndex: Int, chartIndex: Int) -> CheckCellModel {
-        let model = CheckCellModel()
-        model.hasCheckmark = true
-        model.tagColor = line.color
-        model.titleText = line.name
-        model.chartIndex = chartIndex
-        model.lineIndex = lineIndex
+        model.titleText = text
         return model
     }
     
     private func createStructure() {
         structure.clear()
-
-        for k in chartLines.indices {
-            let lines = chartLines[k]
-
-            var lineModels = [CheckCellModel]()
-            for i in lines.indices {
-                let model = makeLineCellModel(line: lines[i], lineIndex: i, chartIndex: k)
-                if i == lines.count - 1 {
-                    model.bottomSeparatorStyle.isHidden = false
-                    model.bottomSeparatorStyle.clampToEdge = true
-                } else {
-                    model.bottomSeparatorStyle.isHidden = false
-                    model.bottomSeparatorStyle.clampToEdge = false
-                }
-                model.cellTapAction = { [weak self] (model, cell) in
-                    guard let self = self, let model = model as? CheckCellModel else { return }
-                    for section in self.structure.sections {
-                        for i in section.cellModels.indices {
-                            let chartModel = section.cellModels[i]
-                            if let chartModel = chartModel as? ChartCellModel, k == chartModel.chartIndex {
-                                chartModel.setLineVisibility(index: model.lineIndex, visible: !model.hasCheckmark)
-                            }
-                        }
-                    }
-                }
-                lineModels.append(model)
-            }
-
-            var chartModels: [BaseCellModel] = [makeChartCellModel(index: k)]
-            chartModels.append(contentsOf: lineModels)
-            let chartSection = TableViewSection(headerModel: followersHeaderModel, cellModels: chartModels)
-            structure.addSection(section: chartSection)
-
-            let settingsModels = [themeCellModel]
-            let settingsSection = TableViewSection(headerModel: settingsHeaderModel, cellModels: settingsModels)
-            structure.addSection(section: settingsSection)
-            structure.addSection(section: TableViewSection(headerModel: settingsHeaderModel, cellModels: []))
+        for i in graphs.indices {
+            let header = makeHeaderModel(text: graphs[i].name)
+            let model = makeGraphCellModel(index: i)
+            let section = TableViewSection(headerModel: header, cellModels: [model])
+            structure.addSection(section: section)
         }
     }
     
     // MARK: - Actions
-
+    
+    @IBAction func themeTap(_ sender: Any) {
+        if ThemeManager.shared.currentTheme == .day {
+            setNightTheme()
+        } else {
+            setDayTheme()
+        }
+    }
+    
     private func setDayTheme() {
         ThemeManager.shared.currentTheme = .day
     }
@@ -215,5 +140,12 @@ extension MainViewController: Stylable {
     func themeDidUpdate(theme: Theme) {
         tableView.backgroundColor = theme.viewBackgroundColor
         tableView.separatorColor = theme.tableSeparatorColor
+        
+        themeBarButton.tintColor = theme.tintColor
+        if theme == .day {
+            themeBarButton.title = "Night Mode".localized()
+        } else {
+            themeBarButton.title = "Day Mode".localized()
+        }
     }
 }

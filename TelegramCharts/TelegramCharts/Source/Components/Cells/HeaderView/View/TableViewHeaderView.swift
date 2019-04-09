@@ -15,7 +15,7 @@ class TableViewHeaderView: UITableViewHeaderFooterView, Stylable {
     }
     
     class var cellHeight: CGFloat {
-        return 37
+        return 54
     }
     
     private weak var model: TableViewHeaderViewModel?
