@@ -34,7 +34,11 @@ class ChartDataSource {
             minValue = min(minValue, chart.values[i])
             maxValue = max(maxValue, chart.values[i])
         }
-        newViewport.yLo = CGFloat(minValue)
+        if chart.type == .line {
+            newViewport.yLo = CGFloat(minValue)
+        } else {
+            newViewport.yLo = 0
+        }
         newViewport.yHi = CGFloat(maxValue)
         viewport = newViewport
     }

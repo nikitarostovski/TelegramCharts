@@ -73,13 +73,14 @@ class GraphView: UIView {
         case .line:
             return LineChartLayer(source: source, lineWidth: lineWidth)
         case .bar:
-            return LineChartLayer(source: source, lineWidth: lineWidth)
+            return BarChartLayer(source: source, lineWidth: lineWidth)
         case .area:
-            return LineChartLayer(source: source, lineWidth: lineWidth)
+            return AreaChartLayer(source: source, lineWidth: lineWidth)
         }
     }
     
     func redraw() {
+        guard bounds != .zero else { return }
         charts.forEach {
             $0.update()
         }

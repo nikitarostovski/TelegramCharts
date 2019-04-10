@@ -56,6 +56,8 @@
 		1159FC01225D024E005E5251 /* overview1.json in Resources */ = {isa = PBXBuildFile; fileRef = 1159F619225D024C005E5251 /* overview1.json */; };
 		1159FD6F225D024E005E5251 /* overview4.json in Resources */ = {isa = PBXBuildFile; fileRef = 1159F795225D024C005E5251 /* overview4.json */; };
 		1159FEDD225D024F005E5251 /* overview3.json in Resources */ = {isa = PBXBuildFile; fileRef = 1159F911225D024D005E5251 /* overview3.json */; };
+		115D3915225E7DFD0074836F /* BarChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115D3913225E7DFD0074836F /* BarChartLayer.swift */; };
+		115D3916225E7DFD0074836F /* AreaChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115D3914225E7DFD0074836F /* AreaChartLayer.swift */; };
 		11649F30223502E00081ABA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11649F24223502E00081ABA1 /* Assets.xcassets */; };
 		11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F25223502E00081ABA1 /* LaunchScreen.storyboard */; };
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
@@ -116,6 +118,8 @@
 		1159F911225D024D005E5251 /* overview3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = overview3.json; sourceTree = "<group>"; };
 		1159FA8D225D024D005E5251 /* overview2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = overview2.json; sourceTree = "<group>"; };
 		1159FB0E225D024D005E5251 /* overview5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = overview5.json; sourceTree = "<group>"; };
+		115D3913225E7DFD0074836F /* BarChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarChartLayer.swift; sourceTree = "<group>"; };
+		115D3914225E7DFD0074836F /* AreaChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartLayer.swift; sourceTree = "<group>"; };
 		11649F0E223502800081ABA1 /* TelegramCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TelegramCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11649F24223502E00081ABA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11649F26223502E00081ABA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -145,6 +149,8 @@
 				10AB12F3225B819E0094EEFC /* GraphView.swift */,
 				1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */,
 				10AB12F6225B819E0094EEFC /* LineChartLayer.swift */,
+				115D3913225E7DFD0074836F /* BarChartLayer.swift */,
+				115D3914225E7DFD0074836F /* AreaChartLayer.swift */,
 				10AB12F7225B819E0094EEFC /* XGridLayer.swift */,
 				10AB12F5225B819E0094EEFC /* YGridLayer.swift */,
 				10AB12F4225B819E0094EEFC /* SelectionLayer.swift */,
@@ -599,6 +605,7 @@
 				1154413E22397C0D00795743 /* UITableView+Structure.swift in Sources */,
 				1154413422397C0D00795743 /* GraphCell.swift in Sources */,
 				10AB12FE225B819F0094EEFC /* LineChartLayer.swift in Sources */,
+				115D3916225E7DFD0074836F /* AreaChartLayer.swift in Sources */,
 				10AB12FC225B819F0094EEFC /* SelectionLayer.swift in Sources */,
 				10AB12FF225B819F0094EEFC /* XGridLayer.swift in Sources */,
 				1154413722397C0D00795743 /* CheckCell.swift in Sources */,
@@ -616,6 +623,7 @@
 				1154413F22397C0D00795743 /* TableViewStructure.swift in Sources */,
 				10AB1301225B819F0094EEFC /* Simplifier.swift in Sources */,
 				1154413922397C0D00795743 /* SliderThumbView.swift in Sources */,
+				115D3915225E7DFD0074836F /* BarChartLayer.swift in Sources */,
 				10AB12FB225B819F0094EEFC /* GraphView.swift in Sources */,
 				115900C9225D04FB005E5251 /* GraphConverter.swift in Sources */,
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,

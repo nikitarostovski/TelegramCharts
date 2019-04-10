@@ -25,10 +25,10 @@ class GraphDataSource {
             let source = ChartDataSource(chart: $0, viewport: ChartViewport(), visible: true)
             chartDataSources.append(source)
         }
-//        update()
+        recalc()
     }
 
-    private func redraw() {
+    private func recalc() {
         var maxViewport: ChartViewport? = nil
         chartDataSources.forEach {
             $0.updateVisibleRange(range: range)
@@ -41,29 +41,34 @@ class GraphDataSource {
             maxViewport!.xHi = max(maxViewport!.xHi, $0.viewport.xHi)
             maxViewport!.yHi = max(maxViewport!.yHi, $0.viewport.yHi)
         }
-        
         if maxViewport != nil {
             chartDataSources.forEach {
                 guard !$0.chart.yScaled else { return }
                 $0.viewport = maxViewport!
             }
         }
+    }
+    
+    private func redraw() {
         redrawHandler?()
     }
     
     func changeLowerBound(newLow: CGFloat) {
         self.range = newLow ... range.upperBound
+        recalc()
         redraw()
     }
     
     func changeUpperBound(newUp: CGFloat) {
         self.range = range.lowerBound ... newUp
+        recalc()
         redraw()
     }
     
     func changePoisition(newLow: CGFloat) {
         let diff = range.upperBound - range.lowerBound
         range = newLow ... newLow + diff
+        recalc()
         redraw()
     }
 }
