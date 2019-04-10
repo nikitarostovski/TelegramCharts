@@ -49,11 +49,10 @@ class RangeSlider: UIControl {
     private var unselectedTintColor: UIColor = UIColor.black.withAlphaComponent(0.9)
 
     private var minValueDelta: CGFloat = 0
-    private var previousLocation = CGPoint()
+    private var previousLocationX: CGFloat = 0
     private var touchResult = SliderThumbHitTestResult.none
     
     private var insetX: CGFloat = 0
-    private var sliderBounds: CGRect!
 
     //MARK: - Lifecycle
 
@@ -71,7 +70,6 @@ class RangeSlider: UIControl {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        sliderBounds = bounds.inset(by: UIEdgeInsets(top: 0, left: insetX, bottom: 0, right: insetX))
         updateLayout()
     }
     
@@ -98,7 +96,6 @@ class RangeSlider: UIControl {
     // MARK: - Layout
     
     private func updateLayout() {
-        guard sliderBounds != nil else { return }
         thumbView.frame = bounds
         guard let lowerValue = lowerValue,
             let upperValue = upperValue else {
@@ -111,16 +108,15 @@ class RangeSlider: UIControl {
 
         minValueDelta = 80.0 / thumbView.bounds.width
         
-        tintLayer.frame = sliderBounds.inset(by: tintAreaInsets)
+        tintLayer.frame = bounds.insetBy(dx: insetX, dy: 0).inset(by: tintAreaInsets)
         drawTint()
     }
 
     private func drawTint() {
-        guard sliderBounds != nil else { return }
         let hollowRect = CGRect(x: thumbView.leftBorder + thumbView.thumbWidth,
                                 y: 0,
                                 width: thumbView.rightBorder - thumbView.leftBorder - 2 * thumbView.thumbWidth,
-                                height: sliderBounds.height)
+                                height: bounds.height)
         
         let path = UIBezierPath(rect: bounds)
         let hollowPath = UIBezierPath(rect: hollowRect)
@@ -138,8 +134,8 @@ class RangeSlider: UIControl {
 extension RangeSlider {
 
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        previousLocation = touch.location(in: thumbView)
-        touchResult = thumbView.hitTest(point: previousLocation)
+        previousLocationX = touch.location(in: thumbView).x
+        touchResult = thumbView.hitTest(x: previousLocationX)
         return touchResult != .none
     }
 
@@ -149,10 +145,10 @@ extension RangeSlider {
                 return false
         }
         
-        let location = touch.location(in: thumbView)
-        let deltaLocation = location.x - previousLocation.x
-        let deltaValue = (maximumValue - minimumValue) * deltaLocation / sliderBounds.width
-        previousLocation = location
+        let locationX = touch.location(in: thumbView).x
+        let deltaLocation = locationX - previousLocationX
+        let deltaValue = (maximumValue - minimumValue) * deltaLocation / (bounds.width + 2 * insetX)
+        previousLocationX = locationX
 
         switch touchResult {
         case .none:
@@ -172,6 +168,7 @@ extension RangeSlider {
             }
             self.lowerValue! += newDelta
             self.upperValue! += newDelta
+            print(lowerValue, " ... ", upperValue)
             delegate?.sliderDidScroll(sender: self)
         }
         
