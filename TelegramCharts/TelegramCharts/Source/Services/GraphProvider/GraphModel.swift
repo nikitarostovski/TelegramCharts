@@ -13,6 +13,9 @@ struct GraphModel {
     let names: [String: String]
     let types: [String: String]
     let colors: [String: String]
+    let stacked: Bool
+    let y_scaled: Bool
+    let percentage: Bool
 }
 
 extension GraphModel: Codable {
@@ -23,6 +26,10 @@ extension GraphModel: Codable {
         colors = try container.decode(type(of: colors).self, forKey: .colors)
         names = try container.decode(type(of: names).self, forKey: .names)
         types = try container.decode(type(of: types).self, forKey: .types)
+        
+        stacked = (try? container.decode(type(of: stacked).self, forKey: .stacked)) ?? false
+        y_scaled = (try? container.decode(type(of: y_scaled).self, forKey: .y_scaled)) ?? false
+        percentage = (try? container.decode(type(of: y_scaled).self, forKey: .percentage)) ?? false
         
         var columnsContainer = try container.nestedUnkeyedContainer(forKey: .columns)
         var columns = [String: [Int]]()

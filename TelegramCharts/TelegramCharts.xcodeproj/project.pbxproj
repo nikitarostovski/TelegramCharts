@@ -61,6 +61,7 @@
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
+		1196CE4D225E571E00A6FB35 /* ChartLayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -120,6 +121,7 @@
 		11649F29223502E00081ABA1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
+		1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartLayerProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				10AB12F3225B819E0094EEFC /* GraphView.swift */,
+				1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */,
 				10AB12F6225B819E0094EEFC /* LineChartLayer.swift */,
 				10AB12F7225B819E0094EEFC /* XGridLayer.swift */,
 				10AB12F5225B819E0094EEFC /* YGridLayer.swift */,
@@ -611,6 +614,7 @@
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
+				1196CE4D225E571E00A6FB35 /* ChartLayerProtocol.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
 				1123B45E224163F600107BE5 /* String+Format.swift in Sources */,
 			);

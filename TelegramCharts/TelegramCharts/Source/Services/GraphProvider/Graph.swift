@@ -31,7 +31,7 @@ class Chart {
     var name: String
     var color: UIColor
     var values: [Int]
-    var showPercent: Bool
+    var percentage: Bool
     var stacked: Bool
     var yScaled: Bool
     
@@ -39,13 +39,13 @@ class Chart {
          name: String,
          color: UIColor,
          values: [Int],
-         showPercent: Bool = false,
+         percentage: Bool = false,
          stacked: Bool = false,
          yScaled: Bool = false) {
         
         self.type = type
         self.yScaled = yScaled
-        self.showPercent = showPercent
+        self.percentage = percentage
         self.stacked = stacked
         self.name = name
         self.color = color

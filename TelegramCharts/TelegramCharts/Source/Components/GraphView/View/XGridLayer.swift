@@ -111,7 +111,6 @@ class XGridLayer: CALayer, XGridLayerProtocol {
                 return
             }
             l.position.x = x * bounds.width
-            print(l.position.x)
         }
     }
     

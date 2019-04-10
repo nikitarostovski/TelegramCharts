@@ -144,7 +144,7 @@ extension RangeSlider {
             let upperValue = upperValue else {
                 return false
         }
-        
+
         let locationX = touch.location(in: thumbView).x
         let deltaLocation = locationX - previousLocationX
         let deltaValue = (maximumValue - minimumValue) * deltaLocation / (bounds.width + 2 * insetX)
@@ -168,7 +168,6 @@ extension RangeSlider {
             }
             self.lowerValue! += newDelta
             self.upperValue! += newDelta
-            print(lowerValue, " ... ", upperValue)
             delegate?.sliderDidScroll(sender: self)
         }
         

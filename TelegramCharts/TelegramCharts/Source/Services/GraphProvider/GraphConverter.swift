@@ -16,18 +16,21 @@ class GraphConverter {
         
         for (name, values) in model.columns {
             guard let type = model.types[name] else { continue }
+            
             if type == "x" {
                 dates = values.map { Date(timeIntervalSince1970: TimeInterval($0 / 1000)) }
             } else {
+                guard let title = model.names[name] else { continue }
                 guard let colorHex = model.colors[name] else { continue }
                 guard let chartType = typeFromString(s: type) else { continue }
+                
                 let chart = Chart(type: chartType,
-                                  name: name,
+                                  name: title,
                                   color: UIColor(hexString: colorHex),
                                   values: values,
-                                  showPercent: false,
-                                  stacked: false,
-                                  yScaled: false)
+                                  percentage: model.percentage,
+                                  stacked: model.stacked,
+                                  yScaled: model.y_scaled)
                 charts.append(chart)
             }
         }
