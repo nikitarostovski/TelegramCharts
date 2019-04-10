@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+/*
 class XGridPoint {
     var index: Int
     var x: CGFloat
@@ -128,3 +128,4 @@ class XGridLayer: CALayer, XGridLayerProtocol {
 fileprivate class XTextLayer: CATextLayer {
     var index: Int!
 }
+*/

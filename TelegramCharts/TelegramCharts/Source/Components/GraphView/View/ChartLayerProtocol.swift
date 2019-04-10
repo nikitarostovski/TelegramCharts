@@ -10,14 +10,6 @@ import UIKit
 
 protocol ChartLayerProtocol where Self: CALayer {
     
-    init(color: UIColor, lineWidth: CGFloat)
-    func updatePoints(points: [LineChartPoint])
-    func updateScale(newScale: CGFloat)
-    func updateAlpha(alpha: CGFloat)
-    
-    func resize()
-    
-    func select(index: Int)
-    func moveSelection(index: Int)
-    func hideSelection()
+    init(source: ChartDataSource, lineWidth: CGFloat)
+    func update()
 }

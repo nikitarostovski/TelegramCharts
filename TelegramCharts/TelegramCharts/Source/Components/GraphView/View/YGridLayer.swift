@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol YGridLayerProtocol where Self: CALayer {
+/*protocol YGridLayerProtocol where Self: CALayer {
     
     init(step: CGFloat, minVisibleValue: Int, maxVisibleValue: Int)
     func resize()
@@ -245,3 +245,4 @@ private class LineLayer: CALayer, Stylable {
         textLayer.foregroundColor = theme.chartTitlesColor.cgColor
     }
 }
+*/

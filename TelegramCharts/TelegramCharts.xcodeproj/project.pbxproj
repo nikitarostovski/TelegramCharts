@@ -62,6 +62,8 @@
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
 		1196CE4D225E571E00A6FB35 /* ChartLayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */; };
+		1196CE4F225E5AFF00A6FB35 /* ChartViewport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */; };
+		1196CE51225E5B0D00A6FB35 /* ChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -122,6 +124,8 @@
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
 		1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartLayerProtocol.swift; sourceTree = "<group>"; };
+		1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewport.swift; sourceTree = "<group>"; };
+		1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +156,8 @@
 			isa = PBXGroup;
 			children = (
 				10AB12F9225B819F0094EEFC /* GraphDataSource.swift */,
+				1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */,
+				1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */,
 				10AB12FA225B819F0094EEFC /* Simplifier.swift */,
 			);
 			path = Model;
@@ -603,6 +609,7 @@
 				1154413822397C0D00795743 /* CheckCellModel.swift in Sources */,
 				1154414222397C0D00795743 /* Theme.swift in Sources */,
 				1154413C22397C0D00795743 /* RootNavigationController.swift in Sources */,
+				1196CE51225E5B0D00A6FB35 /* ChartDataSource.swift in Sources */,
 				10AB12FD225B819F0094EEFC /* YGridLayer.swift in Sources */,
 				1154412922397C0D00795743 /* ButtonCell.swift in Sources */,
 				113C82E2223E996100723D10 /* ItemCellModel.swift in Sources */,
@@ -612,6 +619,7 @@
 				10AB12FB225B819F0094EEFC /* GraphView.swift in Sources */,
 				115900C9225D04FB005E5251 /* GraphConverter.swift in Sources */,
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,
+				1196CE4F225E5AFF00A6FB35 /* ChartViewport.swift in Sources */,
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
 				1196CE4D225E571E00A6FB35 /* ChartLayerProtocol.swift in Sources */,

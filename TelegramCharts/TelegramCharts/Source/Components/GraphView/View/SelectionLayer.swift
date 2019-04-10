@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SelectionLayerProtocol where Self: CALayer {
+/*protocol SelectionLayerProtocol where Self: CALayer {
     
     func setData(data: ChartSelectionData)
     func show(x: CGFloat)
@@ -195,3 +195,4 @@ extension SelectionLayer: Stylable {
         }
     }
 }
+*/

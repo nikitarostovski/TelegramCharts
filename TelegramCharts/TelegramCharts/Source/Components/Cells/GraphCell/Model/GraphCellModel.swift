@@ -10,7 +10,7 @@ import UIKit
 
 class GraphCellModel: BaseCellModel {
 
-    var dataProvider: GraphDataSourceProtocol
+    var dataProvider: GraphDataSource
     var graphIndex: Int
 
     override var cellIdentifier: String {

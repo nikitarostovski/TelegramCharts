@@ -24,14 +24,9 @@ class GraphCell: BaseCell {
         guard let model = model as? GraphCellModel else { return }
         createViews()
 
-        model.dataProvider.xUpdateHandler = {  [weak self] in
-            self?.mainGraphView.updateChartPositions()
-        }
-        model.dataProvider.yUpdateHandler = {  [weak self] in
-            self?.mainGraphView.updateChartPositions()
-        }
-        model.dataProvider.alphaUpdateHandler = { [weak self] in
-            self?.mainGraphView.updateChartPositions()
+        model.dataProvider.redrawHandler = {  [weak self] in
+            self?.mainGraphView.redraw()
+            self?.mapGraphView.redraw()
         }
         /*
         model.dataProvider.mapRedrawHandler = { [weak self] in
@@ -57,10 +52,8 @@ class GraphCell: BaseCell {
         super.layoutSubviews()
         updateFrames()
 
-        mainGraphView.updateChartPositions()
-        mainGraphView.updateChartAlpha()
-        mapGraphView.updateChartPositions()
-        mapGraphView.updateChartAlpha()
+        mainGraphView.redraw()
+        mapGraphView.redraw()
     }
 
     private func createViews() {

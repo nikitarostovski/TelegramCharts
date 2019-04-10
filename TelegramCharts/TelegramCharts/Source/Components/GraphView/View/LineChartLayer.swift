@@ -8,43 +8,24 @@
 
 import UIKit
 
-struct LineChartPoint {
-    var index: Int
-    var x: CGFloat
-    var value: Int
-}
-
 class LineChartLayer: CALayer, ChartLayerProtocol {
 
-    private var selectionTargetRadius: CGFloat
-
-    private var color: UIColor
     private var shapeLayer: CAShapeLayer
-    private var selectionLayer: CAShapeLayer
-
-    private var scale: CGFloat?
-    private var points = [LineChartPoint]()
+    private weak var dataSource: ChartDataSource?
 
     // MARK: - Lifecycle
 
-    required init(color: UIColor, lineWidth: CGFloat) {
-        self.selectionTargetRadius = lineWidth * 4
-        self.color = color
+    required init(source: ChartDataSource, lineWidth: CGFloat) {
+        self.dataSource = source
         self.shapeLayer = CAShapeLayer()
-        shapeLayer.strokeColor = color.cgColor
+        shapeLayer.strokeColor = source.chart.color.cgColor
         shapeLayer.lineWidth = lineWidth
         shapeLayer.lineCap = .round
         shapeLayer.lineJoin = .round
         shapeLayer.fillColor = UIColor.clear.cgColor
-
-        selectionLayer = CAShapeLayer()
-        selectionLayer.fillColor = UIColor.clear.cgColor
-        selectionLayer.strokeColor = color.cgColor
-        selectionLayer.lineWidth = lineWidth
         
         super.init()
         addSublayer(shapeLayer)
-        addSublayer(selectionLayer)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,37 +33,34 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
     }
 
     // MARK: - ChartLayerProtocol
-
-    func resize() {
-        recalcPoints()
-    }
     
-    func updatePoints(points: [LineChartPoint]) {
-        self.points = points
-    }
-    
-    func updateScale(newScale: CGFloat) {
-        self.scale = newScale
-        recalcPoints()
-    }
-    
-    func updateAlpha(alpha: CGFloat) {
-        shapeLayer.opacity = Float(alpha)
-    }
-    
-    private func recalcPoints() {
-        guard let scale = scale else { return }
-        guard bounds.size != .zero else { return }
+    func update() {
+        guard let dataSource = dataSource,
+            dataSource.viewport.width > 0,
+            bounds != .zero
+        else {
+            return
+        }
+        let lastIndex = dataSource.chart.values.count - 1
+        
+        var lo = Int(dataSource.viewport.xLo * CGFloat(lastIndex) - 0.5)
+        var hi = Int(dataSource.viewport.xHi * CGFloat(lastIndex) + 0.5)
+        lo = max(lo, 0)
+        hi = min(hi, lastIndex)
+        
         let path = UIBezierPath()
-        for i in points.indices {
-            let p = points[i]
-            let y = CGFloat(p.value) * scale * bounds.height
-            let point = CGPoint(x: p.x * bounds.width, y: bounds.height - y)
-            if i == 0 {
+        for i in lo ... hi {
+            let xNorm = CGFloat(i) / CGFloat(dataSource.chart.values.count - 1)
+            let x = bounds.width * (xNorm - dataSource.viewport.xLo) / dataSource.viewport.width
+            
+            let y = bounds.height - ((CGFloat(dataSource.chart.values[i]) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
+            
+            let point = CGPoint(x: x, y: y)
+            if i == lo {
                 path.move(to: point)
-                continue
+            } else {
+                path.addLine(to: point)
             }
-            path.addLine(to: point)
         }
         shapeLayer.path = path.cgPath
     }
@@ -90,7 +68,7 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
 
 // MARK: Selection
 
-extension LineChartLayer {
+/*extension LineChartLayer {
 
     func updateSelectionPosition(index: Int) {
         guard let scale = scale else { return }
@@ -114,4 +92,4 @@ extension LineChartLayer {
     func hideSelection() {
         selectionLayer.path = nil
     }
-}
+}*/
