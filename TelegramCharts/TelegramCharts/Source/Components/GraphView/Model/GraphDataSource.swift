@@ -10,13 +10,20 @@ import UIKit
 
 class GraphDataSource {
 
+    private let animationDuration: TimeInterval = 0.15
+    private var viewportAnimator = Animator()
+    
     private (set) var range: ClosedRange<CGFloat>
     private (set) var chartDataSources: [ChartDataSource]
     private (set) weak var graph: Graph?
     
     var dates: [Date]
     var selectionIndex: Int?
-    var redrawHandler: (() -> Void)?
+    var redrawHandler: (() -> Void)? {
+        didSet {
+            recalc(animated: false)
+        }
+    }
 
     init(graph: Graph, range: ClosedRange<CGFloat>) {
         self.graph = graph
@@ -26,10 +33,9 @@ class GraphDataSource {
         graph.charts.forEach {
             chartDataSources.append(sourceForChart($0))
         }
-        recalc()
     }
 
-    private func recalc() {
+    private func recalc(animated: Bool = true) {
         guard let graph = graph else { return }
         chartDataSources.forEach {
             $0.updateViewportX(range: range)
@@ -56,14 +62,15 @@ class GraphDataSource {
             var maxViewport: ChartViewport? = nil
             chartDataSources.forEach {
                 if maxViewport == nil {
-                    maxViewport = $0.viewport
+                    maxViewport = $0.targetViewport
                     return
                 }
-                maxViewport!.yLo = min(maxViewport!.yLo, $0.viewport.yLo)
-                maxViewport!.yHi = max(maxViewport!.yHi, $0.viewport.yHi)
+                maxViewport!.yLo = min(maxViewport!.yLo, $0.targetViewport.yLo)
+                maxViewport!.yHi = max(maxViewport!.yHi, $0.targetViewport.yHi)
             }
             chartDataSources.forEach {
-                $0.viewport = maxViewport!
+                $0.targetViewport.yLo = maxViewport!.yLo
+                $0.targetViewport.yHi = maxViewport!.yHi
             }
         }
         if graph.percentage {
@@ -79,6 +86,38 @@ class GraphDataSource {
             chartDataSources.forEach { source in
                 source.setSumValues(sums)
             }
+        }
+        if animated {
+            chartDataSources.forEach { source in
+                source.viewport.xLo = source.targetViewport.xLo
+                source.viewport.xHi = source.targetViewport.xHi
+            }
+            viewportAnimator.animate(duration: 0, easing: .linear, update: { [weak self] (phase) in
+                guard let self = self else { return }
+                self.chartDataSources.forEach { source in
+                    print("UPDATING......")
+                    source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
+                    source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
+                    
+                    print(source.chart.name)
+                    print(source.lastViewport)
+                    print(source.viewport)
+                    print(source.targetViewport)
+                }
+
+                self.redraw()
+            }, finish: { [weak self] in
+                guard let self = self else { return }
+                self.chartDataSources.forEach { source in
+                    source.lastViewport = source.viewport
+                }
+            })
+        } else {
+            chartDataSources.forEach { source in
+                source.lastViewport = source.viewport
+                source.viewport = source.targetViewport
+            }
+            redraw()
         }
     }
     
@@ -100,19 +139,16 @@ class GraphDataSource {
     func changeLowerBound(newLow: CGFloat) {
         self.range = newLow ... range.upperBound
         recalc()
-        redraw()
     }
     
     func changeUpperBound(newUp: CGFloat) {
         self.range = range.lowerBound ... newUp
         recalc()
-        redraw()
     }
     
     func changePoisition(newLow: CGFloat) {
         let diff = range.upperBound - range.lowerBound
         range = newLow ... newLow + diff
         recalc()
-        redraw()
     }
 }

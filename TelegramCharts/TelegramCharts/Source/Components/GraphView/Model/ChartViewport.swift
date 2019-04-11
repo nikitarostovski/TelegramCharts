@@ -22,20 +22,6 @@ class ChartViewport {
     var height: CGFloat {
         return yHi - yLo
     }
-    
-    /*private (set) var current: CGRect
-    private (set) var last: CGRect
-    var target: CGRect {
-        didSet {
-            current = target
-        }
-    }
-    
-    init(rect: CGRect) {
-        last = rect
-        current = rect
-        target = rect
-    }*/
 }
 
 

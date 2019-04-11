@@ -26,18 +26,16 @@ class AreaChartDataSource: ChartDataSource {
     var yValues = [AreaChartValueDataSource]()
     
     override func updateViewportX(range: ClosedRange<CGFloat>) {
-        let newViewport = ChartViewport()
-        newViewport.xLo = range.lowerBound
-        newViewport.xHi = range.upperBound
-        viewport = newViewport
+        targetViewport.xLo = range.lowerBound
+        targetViewport.xHi = range.upperBound
     }
     
     override func updatePointsX() {
         yValues = [AreaChartValueDataSource]()
         let lastIndex = chart.values.count - 1
         
-        lo = Int(viewport.xLo * CGFloat(lastIndex) - 0.5)
-        hi = Int(viewport.xHi * CGFloat(lastIndex) + 0.5)
+        lo = Int(targetViewport.xLo * CGFloat(lastIndex) - 0.5)
+        hi = Int(targetViewport.xHi * CGFloat(lastIndex) + 0.5)
         lo = max(lo, 0)
         hi = min(hi, lastIndex)
         
@@ -66,8 +64,8 @@ class AreaChartDataSource: ChartDataSource {
         for i in lo ... hi {
             maxValue = max(maxValue, yValues[i - lo].offset + yValues[i - lo].value)
         }
-        viewport.yLo = 0
-        viewport.yHi = CGFloat(maxValue)
+        targetViewport.yLo = 0
+        targetViewport.yHi = CGFloat(maxValue)
     }
     
     override func getOffsets() -> [Int] {
@@ -78,7 +76,7 @@ class AreaChartDataSource: ChartDataSource {
         yValues.indices.forEach {
             yValues[$0].sumValue = sums[$0]
         }
-        viewport.yLo = 0
-        viewport.yHi = 1
+        targetViewport.yLo = 0
+        targetViewport.yHi = 1
     }
 }

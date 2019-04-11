@@ -19,11 +19,11 @@ class GraphProvider {
     ]
     
     static private let titles = [
-        "STATISTICS",
-        "STATISTICS",
-        "STATISTICS",
-        "STATISTICS",
-        "STATISTICS"
+        "STATISTICS 1",
+        "STATISTICS 2",
+        "STATISTICS 3",
+        "STATISTICS 4",
+        "STATISTICS 5"
     ]
     
     static func getGraphs() -> [Graph] {
@@ -38,9 +38,7 @@ class GraphProvider {
                 results.append(graph)
             }
         }
-        return results.sorted(by: { (a, b) -> Bool in
-            a.name > b.name
-        })
+        return results
     }
     
     static private func loadGraphs() -> [GraphModel] {

@@ -38,6 +38,7 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
     func update() {
         guard let dataSource = dataSource,
             dataSource.viewport.width > 0,
+            dataSource.viewport.height > 0,
             bounds != .zero
         else {
             return

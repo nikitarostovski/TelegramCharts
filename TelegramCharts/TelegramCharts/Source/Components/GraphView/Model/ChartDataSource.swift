@@ -10,6 +10,8 @@ import UIKit
 
 class ChartDataSource {
     var viewport: ChartViewport
+    var lastViewport: ChartViewport
+    var targetViewport: ChartViewport
     var visible: Bool
     var chart: Chart
     
@@ -21,6 +23,8 @@ class ChartDataSource {
         self.visible = visible
         self.chart = chart
         self.viewport = viewport
+        self.lastViewport = viewport
+        self.targetViewport = viewport
         self.xIndices = []
         self.lo = 0
         self.hi = 0

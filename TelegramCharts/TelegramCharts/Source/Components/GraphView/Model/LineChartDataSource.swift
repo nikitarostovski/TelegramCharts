@@ -21,18 +21,16 @@ class LineChartDataSource: ChartDataSource {
     var yValues = [LineChartValueDataSource]()
     
     override func updateViewportX(range: ClosedRange<CGFloat>) {
-        let newViewport = ChartViewport()
-        newViewport.xLo = range.lowerBound
-        newViewport.xHi = range.upperBound
-        viewport = newViewport
+        targetViewport.xLo = range.lowerBound
+        targetViewport.xHi = range.upperBound
     }
     
     override func updatePointsX() {
         yValues = [LineChartValueDataSource]()
         let lastIndex = chart.values.count - 1
         
-        lo = Int(viewport.xLo * CGFloat(lastIndex) - 0.5)
-        hi = Int(viewport.xHi * CGFloat(lastIndex) + 0.5)
+        lo = Int(targetViewport.xLo * CGFloat(lastIndex) - 0.5)
+        hi = Int(targetViewport.xHi * CGFloat(lastIndex) + 0.5)
         lo = max(lo, 0)
         hi = min(hi, lastIndex)
         
@@ -58,7 +56,7 @@ class LineChartDataSource: ChartDataSource {
             minValue = min(minValue, yValues[i - lo].value)
             maxValue = max(maxValue, yValues[i - lo].value)
         }
-        viewport.yLo = CGFloat(minValue)
-        viewport.yHi = CGFloat(maxValue)
+        targetViewport.yLo = CGFloat(minValue)
+        targetViewport.yHi = CGFloat(maxValue)
     }
 }
