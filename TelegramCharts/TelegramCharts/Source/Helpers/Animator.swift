@@ -74,6 +74,7 @@ typealias EasingFunction = (TimeInterval, TimeInterval) -> CGFloat
 enum AnimationEasingType {
     case linear
     case easeOutCubic
+    case easeInCubic
 }
 
 extension Animator {
@@ -84,6 +85,8 @@ extension Animator {
             return easingLinear
         case .easeOutCubic:
             return easingOutCubic
+        case .easeInCubic:
+            return easingInCubic
         }
     }
     
@@ -95,5 +98,10 @@ extension Animator {
         var position = CGFloat(elapsed) / CGFloat(duration)
         position -= 1.0
         return (position * position * position + 1.0)
+    }
+    
+    private func easingInCubic(elapsed: TimeInterval, duration: TimeInterval) -> CGFloat {
+        let position = CGFloat(elapsed) / CGFloat(duration)
+        return position * position * position
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 
 class GraphDataSource {
 
-    private let animationDuration: TimeInterval = 0.05
+    private let animationDuration: TimeInterval = 0.25
     private var viewportAnimator = Animator()
     
     private (set) var range: ClosedRange<CGFloat>
@@ -92,7 +92,7 @@ class GraphDataSource {
                 source.viewport.xLo = source.targetViewport.xLo
                 source.viewport.xHi = source.targetViewport.xHi
             }
-            viewportAnimator.animate(duration: animationDuration, easing: .linear, update: { [weak self] (phase) in
+            viewportAnimator.animate(duration: animationDuration, easing: AnimationEasingType.easeOutCubic, update: { [weak self] (phase) in
                 guard let self = self else { return }
                 self.chartDataSources.forEach { source in
                     source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
