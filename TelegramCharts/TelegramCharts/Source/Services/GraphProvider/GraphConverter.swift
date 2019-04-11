@@ -27,14 +27,11 @@ class GraphConverter {
                 let chart = Chart(type: chartType,
                                   name: title,
                                   color: UIColor(hexString: colorHex),
-                                  values: values,
-                                  percentage: model.percentage,
-                                  stacked: model.stacked,
-                                  yScaled: model.y_scaled)
+                                  values: values)
                 charts.append(chart)
             }
         }
-        return Graph(name: name, charts: charts, dates: dates)
+        return Graph(name: name, charts: charts, dates: dates, percentage: model.percentage, stacked: model.stacked, yScaled: model.y_scaled)
     }
     
     private static func typeFromString(s: String) -> ChartType? {

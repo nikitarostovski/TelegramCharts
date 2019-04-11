@@ -12,11 +12,17 @@ class Graph {
     var name: String
     var charts: [Chart]
     var dates: [Date]
+    var percentage: Bool
+    var stacked: Bool
+    var yScaled: Bool
     
-    init(name: String, charts: [Chart], dates: [Date]) {
+    init(name: String, charts: [Chart], dates: [Date], percentage: Bool, stacked: Bool, yScaled: Bool) {
         self.name = name
         self.dates = dates
         self.charts = charts
+        self.yScaled = yScaled
+        self.percentage = percentage
+        self.stacked = stacked
     }
 }
 
@@ -31,22 +37,13 @@ class Chart {
     var name: String
     var color: UIColor
     var values: [Int]
-    var percentage: Bool
-    var stacked: Bool
-    var yScaled: Bool
     
     init(type: ChartType,
          name: String,
          color: UIColor,
-         values: [Int],
-         percentage: Bool = false,
-         stacked: Bool = false,
-         yScaled: Bool = false) {
+         values: [Int]) {
         
         self.type = type
-        self.yScaled = yScaled
-        self.percentage = percentage
-        self.stacked = stacked
         self.name = name
         self.color = color
         self.values = values

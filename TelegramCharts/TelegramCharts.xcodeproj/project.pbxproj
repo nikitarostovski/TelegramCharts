@@ -66,6 +66,9 @@
 		1196CE4D225E571E00A6FB35 /* ChartLayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */; };
 		1196CE4F225E5AFF00A6FB35 /* ChartViewport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */; };
 		1196CE51225E5B0D00A6FB35 /* ChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */; };
+		F4D90B7B225F1888005DBBFB /* LineChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D90B7A225F1888005DBBFB /* LineChartDataSource.swift */; };
+		F4D90B7E225F19F8005DBBFB /* AreaChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D90B7C225F19F8005DBBFB /* AreaChartDataSource.swift */; };
+		F4D90B7F225F19F8005DBBFB /* BarChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D90B7D225F19F8005DBBFB /* BarChartDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,6 +133,9 @@
 		1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartLayerProtocol.swift; sourceTree = "<group>"; };
 		1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewport.swift; sourceTree = "<group>"; };
 		1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataSource.swift; sourceTree = "<group>"; };
+		F4D90B7A225F1888005DBBFB /* LineChartDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartDataSource.swift; sourceTree = "<group>"; };
+		F4D90B7C225F19F8005DBBFB /* AreaChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartDataSource.swift; sourceTree = "<group>"; };
+		F4D90B7D225F19F8005DBBFB /* BarChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarChartDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +169,9 @@
 			children = (
 				10AB12F9225B819F0094EEFC /* GraphDataSource.swift */,
 				1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */,
+				F4D90B7A225F1888005DBBFB /* LineChartDataSource.swift */,
+				F4D90B7D225F19F8005DBBFB /* BarChartDataSource.swift */,
+				F4D90B7C225F19F8005DBBFB /* AreaChartDataSource.swift */,
 				1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */,
 				10AB12FA225B819F0094EEFC /* Simplifier.swift */,
 			);
@@ -588,6 +597,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4D90B7E225F19F8005DBBFB /* AreaChartDataSource.swift in Sources */,
 				115900CB225D0543005E5251 /* Graph.swift in Sources */,
 				113C82E7223EB1AC00723D10 /* GraphModel.swift in Sources */,
 				1154413D22397C0D00795743 /* MainViewController.swift in Sources */,
@@ -599,6 +609,7 @@
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
 				1154413522397C0D00795743 /* GraphCellModel.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
+				F4D90B7B225F1888005DBBFB /* LineChartDataSource.swift in Sources */,
 				1154414122397C0D00795743 /* ThemeManager.swift in Sources */,
 				1154412722397C0D00795743 /* NSObject+Theme.swift in Sources */,
 				1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */,
@@ -623,6 +634,7 @@
 				1154413F22397C0D00795743 /* TableViewStructure.swift in Sources */,
 				10AB1301225B819F0094EEFC /* Simplifier.swift in Sources */,
 				1154413922397C0D00795743 /* SliderThumbView.swift in Sources */,
+				F4D90B7F225F19F8005DBBFB /* BarChartDataSource.swift in Sources */,
 				115D3915225E7DFD0074836F /* BarChartLayer.swift in Sources */,
 				10AB12FB225B819F0094EEFC /* GraphView.swift in Sources */,
 				115900C9225D04FB005E5251 /* GraphConverter.swift in Sources */,
@@ -812,6 +824,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4DZU58EZPK;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = "$(SRCROOT)/TelegramCharts/Resource/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (

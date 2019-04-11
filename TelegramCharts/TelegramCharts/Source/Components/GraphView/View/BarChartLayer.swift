@@ -11,12 +11,13 @@ import UIKit
 class BarChartLayer: CALayer, ChartLayerProtocol {
 
     private var shapeLayer: CAShapeLayer
-    private weak var dataSource: ChartDataSource?
+    private weak var dataSource: BarChartDataSource?
 
     // MARK: - Lifecycle
 
     required init(source: ChartDataSource, lineWidth: CGFloat) {
-        self.dataSource = source
+        guard let barSource = source as? BarChartDataSource else { fatalError() }
+        self.dataSource = barSource
         self.shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = UIColor.clear.cgColor
         shapeLayer.fillColor = source.chart.color.cgColor
@@ -38,31 +39,24 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
         else {
             return
         }
-        let lastIndex = dataSource.chart.values.count - 1
-        
-        var lo = Int(dataSource.viewport.xLo * CGFloat(lastIndex) - 0.5)
-        var hi = Int(dataSource.viewport.xHi * CGFloat(lastIndex) + 0.5)
-        lo = max(lo, 0)
-        hi = min(hi, lastIndex)
-        
         let columnWidth = CGFloat(1) / dataSource.viewport.width
         
         let path = UIBezierPath()
-        for i in lo ... hi {
-            let xNorm = CGFloat(i) / CGFloat(dataSource.chart.values.count - 1)
-            let x = bounds.width * (xNorm - dataSource.viewport.xLo) / dataSource.viewport.width
+        for i in dataSource.lo ... dataSource.hi {
+            let x = bounds.width * (dataSource.xIndices[i - dataSource.lo] - dataSource.viewport.xLo) / dataSource.viewport.width
+            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
+            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset + dataSource.yValues[i - dataSource.lo].value) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
             
-            let y = bounds.height - ((CGFloat(dataSource.chart.values[i]) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
-            let pointLeft = CGPoint(x: x - columnWidth / 2, y: y)
-            let pointRight = CGPoint(x: x + columnWidth / 2, y: y)
-            if i == lo {
-                path.move(to: CGPoint(x: pointLeft.x, y: bounds.height))
-            }
-            path.addLine(to: pointLeft)
-            path.addLine(to: pointRight)
-            if i == hi {
-                path.addLine(to: CGPoint(x: pointRight.x, y: bounds.height))
-            }
+            let pointBottomLeft = CGPoint(x: x - columnWidth / 2, y: yLo)
+            let pointBottomRight = CGPoint(x: x + columnWidth / 2, y: yLo)
+            let pointTopLeft = CGPoint(x: x - columnWidth / 2, y: yHi)
+            let pointTopRight = CGPoint(x: x + columnWidth / 2, y: yHi)
+            
+            path.move(to: pointTopLeft)
+            path.addLine(to: pointTopRight)
+            path.addLine(to: pointBottomRight)
+            path.addLine(to: pointBottomLeft)
+            
         }
         shapeLayer.path = path.cgPath
     }

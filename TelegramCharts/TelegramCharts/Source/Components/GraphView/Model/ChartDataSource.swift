@@ -13,33 +13,30 @@ class ChartDataSource {
     var visible: Bool
     var chart: Chart
     
+    var lo: Int
+    var hi: Int
+    var xIndices: [CGFloat]
+    
     init(chart: Chart, viewport: ChartViewport, visible: Bool) {
         self.visible = visible
         self.chart = chart
         self.viewport = viewport
+        self.xIndices = []
+        self.lo = 0
+        self.hi = 0
     }
     
-    func updateVisibleRange(range: ClosedRange<CGFloat>) {
-        let newViewport = ChartViewport()
-        newViewport.xLo = range.lowerBound
-        newViewport.xHi = range.upperBound
-        
-        let lastIndex = chart.values.count - 1
-        let lo = max(Int(viewport.xLo * CGFloat(lastIndex) - 0.5), 0)
-        let hi = min(Int(viewport.xHi * CGFloat(lastIndex) + 0.5), lastIndex)
-        
-        var minValue: Int = chart.values[lo]
-        var maxValue: Int = chart.values[lo]
-        for i in lo ... hi {
-            minValue = min(minValue, chart.values[i])
-            maxValue = max(maxValue, chart.values[i])
-        }
-        if chart.type == .line {
-            newViewport.yLo = CGFloat(minValue)
-        } else {
-            newViewport.yLo = 0
-        }
-        newViewport.yHi = CGFloat(maxValue)
-        viewport = newViewport
+    func updateViewportX(range: ClosedRange<CGFloat>) { }
+    
+    func updatePointsX() { }
+    
+    func updatePointsY(offsets: [Int]?) { }
+    
+    func updateViewportY() { }
+    
+    func getOffsets() -> [Int] {
+        return []
     }
+    
+    func setSumValues(_ sums: [Int]) { }
 }

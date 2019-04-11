@@ -11,12 +11,13 @@ import UIKit
 class AreaChartLayer: CALayer, ChartLayerProtocol {
 
     private var shapeLayer: CAShapeLayer
-    private weak var dataSource: ChartDataSource?
+    private weak var dataSource: AreaChartDataSource?
 
     // MARK: - Lifecycle
 
     required init(source: ChartDataSource, lineWidth: CGFloat) {
-        self.dataSource = source
+        guard let areaSource = source as? AreaChartDataSource else { fatalError() }
+        self.dataSource = areaSource
         self.shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = UIColor.clear.cgColor
         shapeLayer.fillColor = source.chart.color.cgColor
@@ -38,29 +39,29 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
             else {
                 return
         }
-        let lastIndex = dataSource.chart.values.count - 1
-        
-        var lo = Int(dataSource.viewport.xLo * CGFloat(lastIndex) - 0.5)
-        var hi = Int(dataSource.viewport.xHi * CGFloat(lastIndex) + 0.5)
-        lo = max(lo, 0)
-        hi = min(hi, lastIndex)
-        
         let columnWidth = CGFloat(1) / dataSource.viewport.width
         
         let path = UIBezierPath()
-        for i in lo ... hi {
-            let xNorm = CGFloat(i) / CGFloat(dataSource.chart.values.count - 1)
-            let x = bounds.width * (xNorm - dataSource.viewport.xLo) / dataSource.viewport.width
+        var yLoLast: CGFloat? = nil
+        var yHiLast: CGFloat? = nil
+        for i in dataSource.lo ... dataSource.hi {
+            let x = bounds.width * (dataSource.xIndices[i - dataSource.lo] - dataSource.viewport.xLo) / dataSource.viewport.width
+            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset) / CGFloat(dataSource.yValues[i - dataSource.lo].sumValue) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
+            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset + dataSource.yValues[i - dataSource.lo].value) / CGFloat(dataSource.yValues[i - dataSource.lo].sumValue) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
             
-            let y = bounds.height - ((CGFloat(dataSource.chart.values[i]) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
-            let point = CGPoint(x: x - columnWidth / 2, y: y)
-            if i == lo {
-                path.move(to: CGPoint(x: point.x, y: bounds.height))
+            if let yLoLast = yLoLast, let yHiLast = yHiLast {
+                let pointBottomLeft = CGPoint(x: x - columnWidth, y: yLoLast)
+                let pointBottomRight = CGPoint(x: x, y: yLo)
+                let pointTopLeft = CGPoint(x: x - columnWidth, y: yHiLast)
+                let pointTopRight = CGPoint(x: x, y: yHi)
+                
+                path.move(to: pointTopLeft)
+                path.addLine(to: pointTopRight)
+                path.addLine(to: pointBottomRight)
+                path.addLine(to: pointBottomLeft)
             }
-            path.addLine(to: point)
-            if i == hi {
-                path.addLine(to: CGPoint(x: point.x, y: bounds.height))
-            }
+            yLoLast = yLo
+            yHiLast = yHi
         }
         shapeLayer.path = path.cgPath
     }

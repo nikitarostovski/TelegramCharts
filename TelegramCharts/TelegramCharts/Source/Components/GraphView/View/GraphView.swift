@@ -8,7 +8,6 @@
 
 import UIKit
 
-typealias ChartLayerProtocolType = (ChartLayerProtocol & CALayer)
 //typealias XGridLayerProtocolType = (XGridLayerProtocol & CALayer)
 //typealias YGridLayerProtocolType = (YGridLayerProtocol & CALayer)
 
@@ -68,7 +67,7 @@ class GraphView: UIView {
         xGrid.resize()*/
     }
     
-    private func layerForChart(_ source: ChartDataSource) -> ChartLayerProtocol {
+    private func layerForChart(_ source: ChartDataSource) -> ChartLayerProtocolType {
         switch source.chart.type {
         case .line:
             return LineChartLayer(source: source, lineWidth: lineWidth)

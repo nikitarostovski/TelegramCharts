@@ -8,6 +8,8 @@
 
 import UIKit
 
+typealias ChartLayerProtocolType = (ChartLayerProtocol & CALayer)
+
 protocol ChartLayerProtocol where Self: CALayer {
     
     init(source: ChartDataSource, lineWidth: CGFloat)
