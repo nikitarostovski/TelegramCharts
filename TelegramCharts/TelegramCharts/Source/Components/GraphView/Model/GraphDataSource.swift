@@ -14,8 +14,11 @@ class GraphDataSource {
     private var viewportAnimator = Animator()
     
     private (set) var range: ClosedRange<CGFloat>
-    private (set) var chartDataSources: [ChartDataSource]
+    
     private (set) weak var graph: Graph?
+    private (set) var chartDataSources: [ChartDataSource]
+    private (set) var yAxisDataSource: YAxisDataSource
+    private var yViewMode: YAxisViewMode
     
     var dates: [Date]
     var selectionIndex: Int?
@@ -29,6 +32,11 @@ class GraphDataSource {
         self.graph = graph
         self.dates = graph.dates
         self.range = range
+        
+        self.yViewMode = graph.yScaled && graph.charts.count == 2 ? [.left, .right] : [.left]
+        let yTextMode: YValueTextMode = graph.percentage ? .percent : .value
+        self.yAxisDataSource = YAxisDataSource(viewMode: yViewMode, textMode: yTextMode)
+        
         self.chartDataSources = [ChartDataSource]()
         graph.charts.forEach {
             chartDataSources.append(sourceForChart($0))
@@ -87,6 +95,21 @@ class GraphDataSource {
                 source.setSumValues(sums)
             }
         }
+        
+        var yLeftSources: [ChartDataSource]?
+        var yRightSources: [ChartDataSource]?
+        if yViewMode.contains(.left), yViewMode.contains(.right), chartDataSources.count > 1 {
+            yLeftSources = [chartDataSources.first!]
+            yRightSources = [chartDataSources.last!]
+        } else if yViewMode.contains(.left), !yViewMode.contains(.right), !graph.yScaled {
+            yLeftSources = chartDataSources
+        } else if yViewMode.contains(.right), let lastSource = chartDataSources.last {
+            yRightSources = [lastSource]
+        } else if let firstSource = chartDataSources.first {
+            yLeftSources = [firstSource]
+        }
+        yAxisDataSource.updatePoints(leftSource: yLeftSources, rightSource: yRightSources)
+        
         if animated {
             chartDataSources.forEach { source in
                 source.viewport.xLo = source.targetViewport.xLo

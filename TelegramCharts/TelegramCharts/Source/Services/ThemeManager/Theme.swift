@@ -129,30 +129,21 @@ enum Theme: Int {
         }
     }
     
-    var chartTitlesColor: UIColor {
+    var axisTextColor: UIColor {
         switch self {
         case .day:
-            return Colors.gridLightText
+            return UIColor(hexString: "8E8E93")
         case .night:
-            return Colors.gridDarkText
+            return UIColor(hexString: "8596AB")
         }
     }
     
-    var chartGridMainColor: UIColor {
+    var gridLineColor: UIColor {
         switch self {
         case .day:
-            return Colors.gridLightMain
+            return UIColor(hexString: "182D3B").withAlphaComponent(0.1)
         case .night:
-            return Colors.gridDarkMain
-        }
-    }
-    
-    var chartGridAuxColor: UIColor {
-        switch self {
-        case .day:
-            return Colors.gridLightAux
-        case .night:
-            return Colors.gridDarkAux
+            return UIColor(hexString: "8596AB").withAlphaComponent(0.2)
         }
     }
     

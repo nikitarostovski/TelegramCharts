@@ -8,10 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		10AB12FB225B819F0094EEFC /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12F3225B819E0094EEFC /* GraphView.swift */; };
-		10AB12FC225B819F0094EEFC /* SelectionLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12F4225B819E0094EEFC /* SelectionLayer.swift */; };
-		10AB12FD225B819F0094EEFC /* YGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12F5225B819E0094EEFC /* YGridLayer.swift */; };
-		10AB12FE225B819F0094EEFC /* LineChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12F6225B819E0094EEFC /* LineChartLayer.swift */; };
-		10AB12FF225B819F0094EEFC /* XGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12F7225B819E0094EEFC /* XGridLayer.swift */; };
 		10AB1300225B819F0094EEFC /* GraphDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12F9225B819F0094EEFC /* GraphDataSource.swift */; };
 		10AB1301225B819F0094EEFC /* Simplifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12FA225B819F0094EEFC /* Simplifier.swift */; };
 		1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1102AD5C223C148D000F64A9 /* Date+Formatter.swift */; };
@@ -56,27 +52,30 @@
 		1159FC01225D024E005E5251 /* overview1.json in Resources */ = {isa = PBXBuildFile; fileRef = 1159F619225D024C005E5251 /* overview1.json */; };
 		1159FD6F225D024E005E5251 /* overview4.json in Resources */ = {isa = PBXBuildFile; fileRef = 1159F795225D024C005E5251 /* overview4.json */; };
 		1159FEDD225D024F005E5251 /* overview3.json in Resources */ = {isa = PBXBuildFile; fileRef = 1159F911225D024D005E5251 /* overview3.json */; };
-		115D3915225E7DFD0074836F /* BarChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115D3913225E7DFD0074836F /* BarChartLayer.swift */; };
-		115D3916225E7DFD0074836F /* AreaChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115D3914225E7DFD0074836F /* AreaChartLayer.swift */; };
 		11649F30223502E00081ABA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11649F24223502E00081ABA1 /* Assets.xcassets */; };
 		11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F25223502E00081ABA1 /* LaunchScreen.storyboard */; };
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
-		1196CE4D225E571E00A6FB35 /* ChartLayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */; };
-		1196CE4F225E5AFF00A6FB35 /* ChartViewport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */; };
-		1196CE51225E5B0D00A6FB35 /* ChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */; };
-		F4D90B7B225F1888005DBBFB /* LineChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D90B7A225F1888005DBBFB /* LineChartDataSource.swift */; };
-		F4D90B7E225F19F8005DBBFB /* AreaChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D90B7C225F19F8005DBBFB /* AreaChartDataSource.swift */; };
-		F4D90B7F225F19F8005DBBFB /* BarChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D90B7D225F19F8005DBBFB /* BarChartDataSource.swift */; };
+		11BD75A4225FBC2C0029E9D2 /* YGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */; };
+		11BD75A5225FBC2C0029E9D2 /* XGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759C225FBC2C0029E9D2 /* XGridLayer.swift */; };
+		11BD75A6225FBC2C0029E9D2 /* SelectionLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759E225FBC2C0029E9D2 /* SelectionLayer.swift */; };
+		11BD75A7225FBC2C0029E9D2 /* AreaChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */; };
+		11BD75A8225FBC2C0029E9D2 /* ChartLayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */; };
+		11BD75A9225FBC2C0029E9D2 /* BarChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A2225FBC2C0029E9D2 /* BarChartLayer.swift */; };
+		11BD75AA225FBC2C0029E9D2 /* LineChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A3225FBC2C0029E9D2 /* LineChartLayer.swift */; };
+		11BD75AC225FBC620029E9D2 /* YValueLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75AB225FBC620029E9D2 /* YValueLayer.swift */; };
+		11BD75B6225FBF530029E9D2 /* ChartViewport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75AE225FBF530029E9D2 /* ChartViewport.swift */; };
+		11BD75B7225FBF530029E9D2 /* ChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75AF225FBF530029E9D2 /* ChartDataSource.swift */; };
+		11BD75B8225FBF530029E9D2 /* LineChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75B0225FBF530029E9D2 /* LineChartDataSource.swift */; };
+		11BD75B9225FBF530029E9D2 /* BarChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75B1225FBF530029E9D2 /* BarChartDataSource.swift */; };
+		11BD75BA225FBF530029E9D2 /* AreaChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75B2225FBF530029E9D2 /* AreaChartDataSource.swift */; };
+		11BD75BB225FBF530029E9D2 /* YAxisDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75B5225FBF530029E9D2 /* YAxisDataSource.swift */; };
+		11BD75BF225FBFA80029E9D2 /* YValueData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75BE225FBFA80029E9D2 /* YValueData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		10AB12F3225B819E0094EEFC /* GraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
-		10AB12F4225B819E0094EEFC /* SelectionLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionLayer.swift; sourceTree = "<group>"; };
-		10AB12F5225B819E0094EEFC /* YGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YGridLayer.swift; sourceTree = "<group>"; };
-		10AB12F6225B819E0094EEFC /* LineChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartLayer.swift; sourceTree = "<group>"; };
-		10AB12F7225B819E0094EEFC /* XGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XGridLayer.swift; sourceTree = "<group>"; };
 		10AB12F9225B819F0094EEFC /* GraphDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphDataSource.swift; sourceTree = "<group>"; };
 		10AB12FA225B819F0094EEFC /* Simplifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Simplifier.swift; sourceTree = "<group>"; };
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
@@ -121,8 +120,6 @@
 		1159F911225D024D005E5251 /* overview3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = overview3.json; sourceTree = "<group>"; };
 		1159FA8D225D024D005E5251 /* overview2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = overview2.json; sourceTree = "<group>"; };
 		1159FB0E225D024D005E5251 /* overview5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = overview5.json; sourceTree = "<group>"; };
-		115D3913225E7DFD0074836F /* BarChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarChartLayer.swift; sourceTree = "<group>"; };
-		115D3914225E7DFD0074836F /* AreaChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartLayer.swift; sourceTree = "<group>"; };
 		11649F0E223502800081ABA1 /* TelegramCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TelegramCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11649F24223502E00081ABA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11649F26223502E00081ABA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -130,12 +127,21 @@
 		11649F29223502E00081ABA1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
-		1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartLayerProtocol.swift; sourceTree = "<group>"; };
-		1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewport.swift; sourceTree = "<group>"; };
-		1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataSource.swift; sourceTree = "<group>"; };
-		F4D90B7A225F1888005DBBFB /* LineChartDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartDataSource.swift; sourceTree = "<group>"; };
-		F4D90B7C225F19F8005DBBFB /* AreaChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartDataSource.swift; sourceTree = "<group>"; };
-		F4D90B7D225F19F8005DBBFB /* BarChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarChartDataSource.swift; sourceTree = "<group>"; };
+		11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YGridLayer.swift; sourceTree = "<group>"; };
+		11BD759C225FBC2C0029E9D2 /* XGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XGridLayer.swift; sourceTree = "<group>"; };
+		11BD759E225FBC2C0029E9D2 /* SelectionLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionLayer.swift; sourceTree = "<group>"; };
+		11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartLayer.swift; sourceTree = "<group>"; };
+		11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartLayerProtocol.swift; sourceTree = "<group>"; };
+		11BD75A2225FBC2C0029E9D2 /* BarChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarChartLayer.swift; sourceTree = "<group>"; };
+		11BD75A3225FBC2C0029E9D2 /* LineChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartLayer.swift; sourceTree = "<group>"; };
+		11BD75AB225FBC620029E9D2 /* YValueLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YValueLayer.swift; sourceTree = "<group>"; };
+		11BD75AE225FBF530029E9D2 /* ChartViewport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewport.swift; sourceTree = "<group>"; };
+		11BD75AF225FBF530029E9D2 /* ChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartDataSource.swift; sourceTree = "<group>"; };
+		11BD75B0225FBF530029E9D2 /* LineChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartDataSource.swift; sourceTree = "<group>"; };
+		11BD75B1225FBF530029E9D2 /* BarChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarChartDataSource.swift; sourceTree = "<group>"; };
+		11BD75B2225FBF530029E9D2 /* AreaChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartDataSource.swift; sourceTree = "<group>"; };
+		11BD75B5225FBF530029E9D2 /* YAxisDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YAxisDataSource.swift; sourceTree = "<group>"; };
+		11BD75BE225FBFA80029E9D2 /* YValueData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YValueData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,13 +159,9 @@
 			isa = PBXGroup;
 			children = (
 				10AB12F3225B819E0094EEFC /* GraphView.swift */,
-				1196CE4C225E571E00A6FB35 /* ChartLayerProtocol.swift */,
-				10AB12F6225B819E0094EEFC /* LineChartLayer.swift */,
-				115D3913225E7DFD0074836F /* BarChartLayer.swift */,
-				115D3914225E7DFD0074836F /* AreaChartLayer.swift */,
-				10AB12F7225B819E0094EEFC /* XGridLayer.swift */,
-				10AB12F5225B819E0094EEFC /* YGridLayer.swift */,
-				10AB12F4225B819E0094EEFC /* SelectionLayer.swift */,
+				11BD759F225FBC2C0029E9D2 /* Charts */,
+				11BD759A225FBC2C0029E9D2 /* Grids */,
+				11BD759D225FBC2C0029E9D2 /* Selection */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -168,12 +170,10 @@
 			isa = PBXGroup;
 			children = (
 				10AB12F9225B819F0094EEFC /* GraphDataSource.swift */,
-				1196CE50225E5B0D00A6FB35 /* ChartDataSource.swift */,
-				F4D90B7A225F1888005DBBFB /* LineChartDataSource.swift */,
-				F4D90B7D225F19F8005DBBFB /* BarChartDataSource.swift */,
-				F4D90B7C225F19F8005DBBFB /* AreaChartDataSource.swift */,
-				1196CE4E225E5AFF00A6FB35 /* ChartViewport.swift */,
 				10AB12FA225B819F0094EEFC /* Simplifier.swift */,
+				11BD75AD225FBF530029E9D2 /* Charts */,
+				11BD75B4225FBF530029E9D2 /* Axis */,
+				11BD75B3225FBF530029E9D2 /* Selection */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -515,6 +515,63 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
+		11BD759A225FBC2C0029E9D2 /* Grids */ = {
+			isa = PBXGroup;
+			children = (
+				11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */,
+				11BD75AB225FBC620029E9D2 /* YValueLayer.swift */,
+				11BD759C225FBC2C0029E9D2 /* XGridLayer.swift */,
+			);
+			path = Grids;
+			sourceTree = "<group>";
+		};
+		11BD759D225FBC2C0029E9D2 /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				11BD759E225FBC2C0029E9D2 /* SelectionLayer.swift */,
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		11BD759F225FBC2C0029E9D2 /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */,
+				11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */,
+				11BD75A2225FBC2C0029E9D2 /* BarChartLayer.swift */,
+				11BD75A3225FBC2C0029E9D2 /* LineChartLayer.swift */,
+			);
+			path = Charts;
+			sourceTree = "<group>";
+		};
+		11BD75AD225FBF530029E9D2 /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				11BD75AE225FBF530029E9D2 /* ChartViewport.swift */,
+				11BD75AF225FBF530029E9D2 /* ChartDataSource.swift */,
+				11BD75B0225FBF530029E9D2 /* LineChartDataSource.swift */,
+				11BD75B1225FBF530029E9D2 /* BarChartDataSource.swift */,
+				11BD75B2225FBF530029E9D2 /* AreaChartDataSource.swift */,
+			);
+			path = Charts;
+			sourceTree = "<group>";
+		};
+		11BD75B3225FBF530029E9D2 /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		11BD75B4225FBF530029E9D2 /* Axis */ = {
+			isa = PBXGroup;
+			children = (
+				11BD75B5225FBF530029E9D2 /* YAxisDataSource.swift */,
+				11BD75BE225FBFA80029E9D2 /* YValueData.swift */,
+			);
+			path = Axis;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -597,7 +654,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4D90B7E225F19F8005DBBFB /* AreaChartDataSource.swift in Sources */,
 				115900CB225D0543005E5251 /* Graph.swift in Sources */,
 				113C82E7223EB1AC00723D10 /* GraphModel.swift in Sources */,
 				1154413D22397C0D00795743 /* MainViewController.swift in Sources */,
@@ -608,42 +664,46 @@
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
 				1154413522397C0D00795743 /* GraphCellModel.swift in Sources */,
+				11BD75AC225FBC620029E9D2 /* YValueLayer.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
-				F4D90B7B225F1888005DBBFB /* LineChartDataSource.swift in Sources */,
 				1154414122397C0D00795743 /* ThemeManager.swift in Sources */,
 				1154412722397C0D00795743 /* NSObject+Theme.swift in Sources */,
 				1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */,
+				11BD75B6225FBF530029E9D2 /* ChartViewport.swift in Sources */,
 				1154413E22397C0D00795743 /* UITableView+Structure.swift in Sources */,
 				1154413422397C0D00795743 /* GraphCell.swift in Sources */,
-				10AB12FE225B819F0094EEFC /* LineChartLayer.swift in Sources */,
-				115D3916225E7DFD0074836F /* AreaChartLayer.swift in Sources */,
-				10AB12FC225B819F0094EEFC /* SelectionLayer.swift in Sources */,
-				10AB12FF225B819F0094EEFC /* XGridLayer.swift in Sources */,
 				1154413722397C0D00795743 /* CheckCell.swift in Sources */,
+				11BD75B7225FBF530029E9D2 /* ChartDataSource.swift in Sources */,
 				1154413122397C0D00795743 /* BaseCell.swift in Sources */,
 				113C82E1223E996100723D10 /* ItemCell.swift in Sources */,
 				1154414422397C9100795743 /* Animator.swift in Sources */,
 				1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */,
 				1154413822397C0D00795743 /* CheckCellModel.swift in Sources */,
+				11BD75A4225FBC2C0029E9D2 /* YGridLayer.swift in Sources */,
 				1154414222397C0D00795743 /* Theme.swift in Sources */,
 				1154413C22397C0D00795743 /* RootNavigationController.swift in Sources */,
-				1196CE51225E5B0D00A6FB35 /* ChartDataSource.swift in Sources */,
-				10AB12FD225B819F0094EEFC /* YGridLayer.swift in Sources */,
 				1154412922397C0D00795743 /* ButtonCell.swift in Sources */,
+				11BD75A8225FBC2C0029E9D2 /* ChartLayerProtocol.swift in Sources */,
+				11BD75A7225FBC2C0029E9D2 /* AreaChartLayer.swift in Sources */,
 				113C82E2223E996100723D10 /* ItemCellModel.swift in Sources */,
 				1154413F22397C0D00795743 /* TableViewStructure.swift in Sources */,
 				10AB1301225B819F0094EEFC /* Simplifier.swift in Sources */,
+				11BD75A9225FBC2C0029E9D2 /* BarChartLayer.swift in Sources */,
 				1154413922397C0D00795743 /* SliderThumbView.swift in Sources */,
-				F4D90B7F225F19F8005DBBFB /* BarChartDataSource.swift in Sources */,
-				115D3915225E7DFD0074836F /* BarChartLayer.swift in Sources */,
 				10AB12FB225B819F0094EEFC /* GraphView.swift in Sources */,
+				11BD75BB225FBF530029E9D2 /* YAxisDataSource.swift in Sources */,
+				11BD75B9225FBF530029E9D2 /* BarChartDataSource.swift in Sources */,
+				11BD75A6225FBC2C0029E9D2 /* SelectionLayer.swift in Sources */,
+				11BD75BA225FBF530029E9D2 /* AreaChartDataSource.swift in Sources */,
+				11BD75BF225FBFA80029E9D2 /* YValueData.swift in Sources */,
+				11BD75B8225FBF530029E9D2 /* LineChartDataSource.swift in Sources */,
 				115900C9225D04FB005E5251 /* GraphConverter.swift in Sources */,
+				11BD75AA225FBC2C0029E9D2 /* LineChartLayer.swift in Sources */,
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,
-				1196CE4F225E5AFF00A6FB35 /* ChartViewport.swift in Sources */,
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
-				1196CE4D225E571E00A6FB35 /* ChartLayerProtocol.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
+				11BD75A5225FBC2C0029E9D2 /* XGridLayer.swift in Sources */,
 				1123B45E224163F600107BE5 /* String+Format.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
