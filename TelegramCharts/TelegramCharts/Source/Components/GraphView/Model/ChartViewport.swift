@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChartViewport {
+struct ChartViewport {
     
     var xLo: CGFloat = 0
     var xHi: CGFloat = 0
@@ -23,7 +23,6 @@ class ChartViewport {
         return yHi - yLo
     }
 }
-
 
 extension ChartViewport: CustomStringConvertible {
     
