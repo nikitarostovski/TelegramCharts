@@ -35,6 +35,7 @@ class YAxisDataSource {
         self.lines = []
     }
     
+    // TODO: pass Graph (or init)
     func updatePoints(leftSource: [ChartDataSource]?, rightSource: [ChartDataSource]?) {
         lines = []
         for pos in gridPositions {
@@ -66,25 +67,36 @@ class YAxisDataSource {
     
     private func getValue(atPos pos: CGFloat, fromSources sources: [ChartDataSource]) -> String {
         var maxVisibleValue: CGFloat = 0
+        var minVisibleValue: CGFloat = CGFloat.greatestFiniteMagnitude
         guard textMode != .percent else {
             return String(number: Int(100 * pos))
         }
         for i in sources.indices {
             var sourceMax: CGFloat = 0
+            var sourceMin: CGFloat = CGFloat.greatestFiniteMagnitude
             if let sourceA = sources[i] as? LineChartDataSource,
-                let valA = sourceA.yValues.max(by: { $0.value > $1.value })?.value {
-                sourceMax = max(sourceMax, CGFloat(valA))
+                let aValMax = sourceA.yValues.max(by: { $0.value > $1.value })?.value,
+                let aValMin = sourceA.yValues.min(by: { $0.value > $1.value })?.value {
+                sourceMax = max(sourceMax, CGFloat(aValMax))
+                sourceMin = min(sourceMin, CGFloat(aValMin))
             } else if let sourceA = sources[i] as? BarChartDataSource,
-                let valA = sourceA.yValues.max(by: { $0.value > $1.value })?.value {
-                sourceMax = max(sourceMax, CGFloat(valA))
+                let aValMax = sourceA.yValues.max(by: { $0.value > $1.value })?.value,
+                let aValMin = sourceA.yValues.min(by: { $0.value > $1.value })?.value {
+                sourceMax = max(sourceMax, CGFloat(aValMax))
+                sourceMin = min(sourceMin, CGFloat(aValMin))
             } else if let sourceA = sources[i] as? AreaChartDataSource,
-                let a = sourceA.yValues.max(by: {
+                let aMax = sourceA.yValues.max(by: {
+                    CGFloat($0.value) / CGFloat($0.sumValue) > CGFloat($1.value) / CGFloat($1.sumValue)
+                }),
+                let aMin = sourceA.yValues.min(by: {
                     CGFloat($0.value) / CGFloat($0.sumValue) > CGFloat($1.value) / CGFloat($1.sumValue)
                 }) {
-                sourceMax = max(sourceMax, CGFloat(a.value) / CGFloat(a.sumValue))
+                sourceMax = max(sourceMax, CGFloat(aMax.value) / CGFloat(aMax.sumValue))
+                sourceMin = min(sourceMin, CGFloat(aMin.value) / CGFloat(aMin.sumValue))
             }
             maxVisibleValue = max(maxVisibleValue, sourceMax)
+            minVisibleValue = min(minVisibleValue, sourceMin)
         }
-        return String(number: Int(maxVisibleValue * pos))
+        return String(number: Int((minVisibleValue + (maxVisibleValue - minVisibleValue)) * pos))
     }
 }
