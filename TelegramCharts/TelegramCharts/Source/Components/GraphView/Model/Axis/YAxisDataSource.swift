@@ -23,43 +23,50 @@ class YAxisDataSource {
     
     private weak var graph: Graph?
     private var gridPositions: [CGFloat]
-    private var viewport: Viewport
     
     private (set) var textMode: YValueTextMode
-    private (set) var lines: [YValueData]
+    private (set) var lastValues: [YValueData]
+    private (set) var values: [YValueData]
     
     var color: UIColor? = nil
     var alignment: Alignment = .fill
     
+    var lastViewport: Viewport
+    var viewport: Viewport
+    var targetViewport: Viewport
+    
     init(graph: Graph) {
         self.graph = graph
         self.viewport = Viewport()
+        self.lastViewport = Viewport()
+        self.targetViewport = Viewport()
         self.textMode = graph.percentage ? .percent : .value
         self.gridPositions = [0, 0.25, 0.5, 0.75, 1]
-        self.lines = []
+        self.lastValues = []
+        self.values = []
     }
     
     func updatePoints(chartSources: [ChartDataSource]) {
         guard chartSources.count > 0, let graph = graph else { return }
-        lines = []
+        lastValues = values
+        lastValues.forEach {
+            $0.fadeLastPhase = $0.fadePhase
+            $0.fadeTargetPhase = 0
+        }
+        values = []
         if textMode == .percent {
-            self.viewport.yLo = 0
-            self.viewport.yHi = 100
+            self.targetViewport.yLo = 0
+            self.targetViewport.yHi = 100
         } else {
             if graph.yScaled {
                 color = chartSources.first!.chart.color
             }
-            calculateViewport(viewport: &viewport, sources: chartSources)
+            calculateViewport(viewport: &targetViewport, sources: chartSources)
         }
         for pos in gridPositions {
-            var text: String? = nil
-            let val = viewport.yLo + viewport.height * pos
-            if !val.isNaN, !val.isInfinite {
-                text = String(number: Int(val))
-            }
-            guard text != nil else { continue }
-            let line = YValueData(text: text!, pos: pos)
-            lines.append(line)
+            let val = targetViewport.yLo + targetViewport.height * pos
+            let line = YValueData(value: val)
+            values.append(line)
         }
     }
     
@@ -70,8 +77,8 @@ class YAxisDataSource {
                 newViewport = source.viewport
                 return
             }
-            newViewport!.yLo = min(newViewport!.yLo, source.viewport.yLo)
-            newViewport!.yHi = max(newViewport!.yHi, source.viewport.yHi)
+            newViewport!.yLo = min(newViewport!.yLo, source.targetViewport.yLo)
+            newViewport!.yHi = max(newViewport!.yHi, source.targetViewport.yHi)
         }
         var valueMin: CGFloat? = nil
         var valueMax: CGFloat? = nil

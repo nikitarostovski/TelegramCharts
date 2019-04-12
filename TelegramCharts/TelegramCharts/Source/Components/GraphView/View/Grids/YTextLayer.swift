@@ -43,9 +43,11 @@ class YTextLayer: CALayer {
         }
         sublayers?.forEach { $0.removeFromSuperlayer() }
         let textHeight: CGFloat = 14
-        for source in dataSource.lines {
-            let y = (1 - source.pos) * bounds.height - textHeight
+        for source in dataSource.values {
+            let normY = dataSource.viewport.yLo + source.value / dataSource.viewport.height
+            let y = (1 - normY) * bounds.height - textHeight
             let titleLayer = CATextLayer()
+            titleLayer.opacity = Float(source.fadePhase)
             titleLayer.frame = CGRect(x: 0, y: y, width: bounds.width, height: textHeight)
             titleLayer.contentsScale = UIScreen.main.scale
             titleLayer.fontSize = 12

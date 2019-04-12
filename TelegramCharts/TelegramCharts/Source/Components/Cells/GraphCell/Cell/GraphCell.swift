@@ -9,14 +9,16 @@
 import UIKit
 
 class GraphCell: BaseCell {
-
+    
     override class var cellHeight: CGFloat {
-        return 340
+        return 320
     }
-
+    
+    @IBOutlet weak var mainContainer: UIView!
+    @IBOutlet weak var mapContainer: UIView!
+    
     var mainGraphView: GraphView!
     var mapGraphView: GraphView!
-    
     var rangeSlider: RangeSlider!
 
     override func updateAppearance() {
@@ -28,21 +30,6 @@ class GraphCell: BaseCell {
             self?.mainGraphView.redraw()
             self?.mapGraphView.redraw()
         }
-        /*
-        model.dataProvider.mapRedrawHandler = { [weak self] in
-            self?.mapChartView.updateChartPositions()
-        }
-        model.dataProvider.updateAlphaHandler = { [weak self] in
-            self?.mainChartView.updateChartAlpha()
-            self?.mapChartView.updateChartAlpha()
-        }*/
-        
-//        model.dataProvider.hideSelectionHandler = { [weak self] in
-//            self?.mainChartView.hideSelection()
-//        }
-//        model.dataProvider.updateSelectionHandler = { [weak self] in
-//            self?.mainChartView.moveSelection(animated: true)
-//        }
         
         rangeSlider.lowerValue = model.dataProvider.range.lowerBound
         rangeSlider.upperValue = model.dataProvider.range.upperBound
@@ -50,8 +37,6 @@ class GraphCell: BaseCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        updateFrames()
-
         mainGraphView.redraw()
         mapGraphView.redraw()
     }
@@ -68,30 +53,36 @@ class GraphCell: BaseCell {
             rangeSlider.removeFromSuperview()
         }
         mainGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 2.0, isMap: false)
+        mainGraphView.translatesAutoresizingMaskIntoConstraints = false
+        mainContainer.addSubview(mainGraphView)
+        
         mapGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 1.0, isMap: true)
-        addSubview(mapGraphView)
-        addSubview(mainGraphView)
+        mapGraphView.translatesAutoresizingMaskIntoConstraints = false
+        mapContainer.addSubview(mapGraphView)
 
         rangeSlider = RangeSlider(frame: .zero, insetX: 16)
+        rangeSlider.translatesAutoresizingMaskIntoConstraints = false
         rangeSlider.delegate = self.model as? RangeSliderDelegate
-        addSubview(rangeSlider)
-    }
-
-    private func updateFrames() {
-        let mapHeight: CGFloat = 40
-        let mapFrame = CGRect(x: 16, y: bounds.height - mapHeight - 16, width: bounds.width - 32, height: mapHeight)
-        let mainFrame = CGRect(x: 16, y: 0, width: bounds.width - 32, height: mapFrame.minY - 16)
-        let sliderFrame = CGRect(x: 0, y: mapFrame.origin.y - 1, width: bounds.width, height: mapFrame.size.height + 2)
-
-        mainGraphView.frame = mainFrame
-        mapGraphView.frame = mapFrame
-        rangeSlider.frame = sliderFrame
+        rangeSlider.tintAreaInsets = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
+        mapContainer.addSubview(rangeSlider)
         
-        mapGraphView.layer.cornerRadius = 8
-        mapGraphView.layer.masksToBounds = true
-
-        let insetTop = mapGraphView.frame.minY - rangeSlider.frame.minY
-        let insetBottom = rangeSlider.frame.maxY - mapGraphView.frame.maxY
-        rangeSlider.tintAreaInsets = UIEdgeInsets(top: insetTop, left: 0, bottom: insetBottom, right: 0)
+        mainContainer.addConstraints([
+            NSLayoutConstraint(item: mainGraphView, attribute: .top, relatedBy: .equal, toItem: mainContainer, attribute: .top, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: mainGraphView, attribute: .bottom, relatedBy: .equal, toItem: mainContainer, attribute: .bottom, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: mainGraphView, attribute: .leading, relatedBy: .equal, toItem: mainContainer, attribute: .leading, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: mainGraphView, attribute: .trailing, relatedBy: .equal, toItem: mainContainer, attribute: .trailing, multiplier: 1, constant: 0)
+        ])
+        mapContainer.addConstraints([
+            NSLayoutConstraint(item: mapGraphView, attribute: .top, relatedBy: .equal, toItem: mapContainer, attribute: .top, multiplier: 1, constant: 1),
+            NSLayoutConstraint(item: mapGraphView, attribute: .bottom, relatedBy: .equal, toItem: mapContainer, attribute: .bottom, multiplier: 1, constant: -1),
+            NSLayoutConstraint(item: mapGraphView, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: mapGraphView, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: 0)
+        ])
+        mapContainer.addConstraints([
+            NSLayoutConstraint(item: rangeSlider, attribute: .top, relatedBy: .equal, toItem: mapContainer, attribute: .top, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: rangeSlider, attribute: .bottom, relatedBy: .equal, toItem: mapContainer, attribute: .bottom, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: rangeSlider, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: rangeSlider, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: 0)
+        ])
     }
 }

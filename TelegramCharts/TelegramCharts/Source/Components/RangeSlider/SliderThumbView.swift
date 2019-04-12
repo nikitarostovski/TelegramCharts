@@ -28,10 +28,8 @@ class SliderThumbView: UIView {
         }
     }
 
-    var insetX: CGFloat = 0
     let thumbWidth: CGFloat = 11.0
     
-    private var thumbBounds: CGRect!
     private let thumbTouchWidth: CGFloat = 44.0
     private let cornerRadius: CGFloat = 8.0
     private let borderThickness: CGFloat = 1.0
@@ -54,8 +52,8 @@ class SliderThumbView: UIView {
         let leftX = leftBorder - thumbTouchWidth + thumbWidth
         let rightX = rightBorder - thumbWidth
 
-        let leftRect = CGRect(x: leftX, y: 0, width: thumbTouchWidth, height: thumbBounds.height)
-        let rightRect = CGRect(x: rightX, y: 0, width: thumbTouchWidth, height: thumbBounds.height)
+        let leftRect = CGRect(x: leftX, y: 0, width: thumbTouchWidth, height: bounds.height)
+        let rightRect = CGRect(x: rightX, y: 0, width: thumbTouchWidth, height: bounds.height)
 
         if rightRect.contains(point) {
             return .right
@@ -94,7 +92,6 @@ class SliderThumbView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        thumbBounds = bounds.inset(by: UIEdgeInsets(top: 0, left: insetX, bottom: 0, right: insetX))
         redrawLayers()
     }
     
@@ -105,17 +102,15 @@ class SliderThumbView: UIView {
     // MARK: - Draw
 
     private func redrawLayers() {
-        guard thumbBounds != nil else { return }
-        thumbLayer.frame = thumbBounds
-        arrowsLayer.frame = thumbBounds
+        thumbLayer.frame = bounds
+        arrowsLayer.frame = bounds
         drawThumb()
         drawArrows()
     }
 
     private func drawThumb() {
-        guard thumbBounds != nil else { return }
         let cornerRadii = CGSize(width: cornerRadius, height: cornerRadius)
-        let rect = CGRect(x: leftBorder, y: 0, width: rightBorder - leftBorder, height: thumbBounds.height)
+        let rect = CGRect(x: leftBorder, y: 0, width: rightBorder - leftBorder, height: bounds.height)
         let hollowRect = CGRect(x: rect.origin.x + thumbWidth,
                                 y: rect.origin.y + borderThickness,
                                 width: rect.size.width - 2 * thumbWidth,
@@ -132,9 +127,8 @@ class SliderThumbView: UIView {
     }
     
     private func drawArrows() {
-        guard thumbBounds != nil else { return }
-        let arrowTop = (thumbBounds.height - arrowHeight) / 2
-        let arrowBottom = (thumbBounds.height + arrowHeight) / 2
+        let arrowTop = (bounds.height - arrowHeight) / 2
+        let arrowBottom = (bounds.height + arrowHeight) / 2
         let arrowCenterY = arrowTop + (arrowBottom - arrowTop) / 2
         
         let leftArrowLeft = leftBorder + (thumbWidth - arrowWidth) / 2

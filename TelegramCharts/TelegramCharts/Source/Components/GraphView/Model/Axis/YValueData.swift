@@ -9,11 +9,18 @@
 import UIKit
 
 class YValueData {
-    var pos: CGFloat
-    var text: String?
+    var fadeLastPhase: CGFloat
+    var fadePhase: CGFloat
+    var fadeTargetPhase: CGFloat
+    var value: CGFloat
+    var text: String {
+        return String(number: Int(value))
+    }
     
-    init(text: String, pos: CGFloat) {
-        self.text = text
-        self.pos = pos
+    init(value: CGFloat) {
+        self.value = value
+        self.fadeLastPhase = 0
+        self.fadePhase = 0
+        self.fadeTargetPhase = 1
     }
 }

@@ -40,7 +40,7 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
         else {
             return
         }
-        let columnWidth = CGFloat(1) / dataSource.viewport.width
+        let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo) + 1
         
         let path = UIBezierPath()
         for i in dataSource.lo ... dataSource.hi {

@@ -26,6 +26,8 @@ class MainViewController: UITableViewController {
         self.graphs = GraphProvider.getGraphs()
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 54, right: 0)
         tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 320
         tableView.tableFooterView = UIView()
         tableView.canCancelContentTouches = false
     }
@@ -52,6 +54,13 @@ class MainViewController: UITableViewController {
         return model
     }
     
+    private func makeFilterCellModel(index: Int) -> FilterCellModel {
+        let model = FilterCellModel()
+//        let model = GraphCellModel(graphIndex: index, graph: graphs[index], currentRange: 0.75 ... 1.0)
+        model.bottomSeparatorStyle.isHidden = false
+        return model
+    }
+    
     private func makeHeaderModel(text: String) -> TableViewHeaderViewModel {
         let model = TableViewHeaderViewModel()
         model.titleText = text
@@ -62,8 +71,9 @@ class MainViewController: UITableViewController {
         structure.clear()
         for i in graphs.indices {
             let header = makeHeaderModel(text: graphs[i].name)
-            let model = makeGraphCellModel(index: i)
-            let section = TableViewSection(headerModel: header, cellModels: [model])
+            let graphModel = makeGraphCellModel(index: i)
+            let filterModel = makeFilterCellModel(index: i)
+            let section = TableViewSection(headerModel: header, cellModels: [graphModel, filterModel])
             structure.addSection(section: section)
         }
     }

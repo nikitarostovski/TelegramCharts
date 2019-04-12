@@ -51,19 +51,15 @@ class RangeSlider: UIControl {
     private var minValueDelta: CGFloat = 0
     private var previousLocationX: CGFloat = 0
     private var touchResult = SliderThumbHitTestResult.none
-    
-    private var insetX: CGFloat = 0
 
     //MARK: - Lifecycle
 
     init(frame: CGRect, insetX: CGFloat) {
-        self.insetX = insetX
         super.init(frame: frame)
         initialSetup()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.insetX = 0
         super.init(coder: aDecoder)
         initialSetup()
     }
@@ -80,6 +76,7 @@ class RangeSlider: UIControl {
     // MARK: - Setup
 
     private func initialSetup() {
+        isExclusiveTouch = true
         backgroundColor = .clear
 
         tintLayer.masksToBounds = true
@@ -87,7 +84,6 @@ class RangeSlider: UIControl {
         layer.addSublayer(tintLayer)
         
         thumbView = SliderThumbView(frame: .zero)
-        thumbView.insetX = self.insetX
         addSubview(thumbView)
         
         startReceivingThemeUpdates()
@@ -108,7 +104,7 @@ class RangeSlider: UIControl {
 
         minValueDelta = 80.0 / thumbView.bounds.width
         
-        tintLayer.frame = bounds.insetBy(dx: insetX, dy: 0).inset(by: tintAreaInsets)
+        tintLayer.frame = bounds
         drawTint()
     }
 
@@ -147,7 +143,7 @@ extension RangeSlider {
 
         let locationX = touch.location(in: thumbView).x
         let deltaLocation = locationX - previousLocationX
-        let deltaValue = (maximumValue - minimumValue) * deltaLocation / (bounds.width + 2 * insetX)
+        let deltaValue = (maximumValue - minimumValue) * deltaLocation / (bounds.width)
         previousLocationX = locationX
 
         switch touchResult {

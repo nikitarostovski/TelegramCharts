@@ -41,8 +41,9 @@ class YGridLayer: CALayer {
                 return
         }
         sublayers?.forEach { $0.removeFromSuperlayer() }
-        for source in dataSource.lines {
+        for source in dataSource.values {
             let lineLayer = CAShapeLayer()
+            lineLayer.opacity = Float(source.fadePhase)
             lineLayer.strokeColor = lineColor?.cgColor
             lineLayer.lineWidth = 1
             lineLayer.lineCap = .round
@@ -54,7 +55,8 @@ class YGridLayer: CALayer {
             lineLayer.path = path.cgPath
             
             lineLayer.frame = CGRect(x: 0, y: 0, width: bounds.width, height: 1)
-            lineLayer.position.y = (1 - source.pos) * bounds.height
+            let normY = dataSource.viewport.yLo + source.value / dataSource.viewport.height
+            lineLayer.position.y = (1 - normY) * bounds.height
             addSublayer(lineLayer)
         }
     }

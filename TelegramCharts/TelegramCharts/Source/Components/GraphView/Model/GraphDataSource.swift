@@ -9,9 +9,14 @@
 import UIKit
 
 class GraphDataSource {
+    
+    private let calcQueue = DispatchQueue.global(qos: .userInitiated)
+    private var calcItem: DispatchWorkItem?
 
     private let animationDuration: TimeInterval = 0.25
     private var viewportAnimator = Animator()
+    private var yAnimator = Animator()
+    private var animationLock = false
     
     private (set) var range: ClosedRange<CGFloat>
     
@@ -23,7 +28,9 @@ class GraphDataSource {
     var selectionIndex: Int?
     var redrawHandler: (() -> Void)? {
         didSet {
-            recalc(animated: false)
+            self.calcItem?.cancel()
+            self.calcItem = DispatchWorkItem { [weak self] in self?.recalc(animated: false) }
+            calcQueue.sync(execute: self.calcItem!)
         }
     }
 
@@ -69,15 +76,6 @@ class GraphDataSource {
         chartDataSources.forEach {
             $0.updateViewportY()
         }
-        yAxisDataSources.indices.forEach { i in
-            var sources: [ChartDataSource]
-            if yAxisDataSources.count == 1 {
-                sources = chartDataSources
-            } else {
-                sources = [chartDataSources[i]]
-            }
-            yAxisDataSources[i].updatePoints(chartSources: sources)
-        }
         if !graph.yScaled || graph.stacked {
             var maxViewport: Viewport? = nil
             chartDataSources.forEach {
@@ -107,37 +105,74 @@ class GraphDataSource {
                 source.setSumValues(sums)
             }
         }
-        
+        if !animationLock {
+            yAxisDataSources.indices.forEach { i in
+                var sources: [ChartDataSource]
+                if yAxisDataSources.count == 1 {
+                    sources = chartDataSources
+                } else {
+                    sources = [chartDataSources[i]]
+                }
+                yAxisDataSources[i].updatePoints(chartSources: sources)
+            }
+        }
         if animated {
             chartDataSources.forEach { source in
                 source.viewport.xLo = source.targetViewport.xLo
                 source.viewport.xHi = source.targetViewport.xHi
             }
-            viewportAnimator.animate(duration: animationDuration, easing: AnimationEasingType.easeOutCubic, update: { [weak self] (phase) in
+            viewportAnimator.animate(duration: animationDuration, easing: .easeOutCubic, update: { [weak self] (phase) in
                 guard let self = self else { return }
                 self.chartDataSources.forEach { source in
                     source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
                     source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
                 }
-
                 self.redraw()
-            }, finish: { [weak self] in
-                guard let self = self else { return }
-                self.chartDataSources.forEach { source in
-                    source.lastViewport = source.viewport
-                }
+                }, finish: { [weak self] in
+                    guard let self = self else { return }
+                    self.chartDataSources.forEach { source in
+                        source.lastViewport = source.viewport
+                    }
             })
+            if !animationLock {
+                animationLock = true
+                yAnimator.animate(duration: animationDuration, easing: .easeOutCubic, update: { [weak self] (phase) in
+                    guard let self = self else { return }
+                    self.yAxisDataSources.forEach { source in
+                        source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
+                        source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
+                        source.values.forEach { $0.fadePhase = $0.fadeLastPhase + ($0.fadeTargetPhase - $0.fadeLastPhase) * phase }
+                        source.lastValues.forEach { $0.fadePhase = $0.fadeLastPhase + ($0.fadeTargetPhase - $0.fadeLastPhase) * phase }
+                    }
+                    self.redraw()
+                    }, finish: { [weak self] in
+                        guard let self = self else { return }
+                        self.animationLock = false
+                        self.yAxisDataSources.forEach { source in
+                            source.lastViewport = source.viewport
+                            //                            source.values.forEach { $0.fadeLastPhase = $0.fadePhase }
+                        }
+                })
+            }
         } else {
+            animationLock = false
             chartDataSources.forEach { source in
                 source.lastViewport = source.viewport
                 source.viewport = source.targetViewport
+            }
+            yAxisDataSources.forEach { source in
+                source.lastViewport = source.viewport
+                source.viewport = source.targetViewport
+                source.values.forEach { $0.fadePhase = $0.fadeTargetPhase }
             }
             redraw()
         }
     }
     
     private func redraw() {
-        redrawHandler?()
+        DispatchQueue.main.async {
+            self.redrawHandler?()
+        }
     }
     
     private func sourceForChart(_ chart: Chart) -> ChartDataSource {
@@ -153,17 +188,23 @@ class GraphDataSource {
     
     func changeLowerBound(newLow: CGFloat) {
         self.range = newLow ... range.upperBound
-        recalc()
+        self.calcItem?.cancel()
+        self.calcItem = DispatchWorkItem { [weak self] in self?.recalc() }
+        calcQueue.sync(execute: self.calcItem!)
     }
     
     func changeUpperBound(newUp: CGFloat) {
         self.range = range.lowerBound ... newUp
-        recalc()
+        self.calcItem?.cancel()
+        self.calcItem = DispatchWorkItem { [weak self] in self?.recalc() }
+        calcQueue.sync(execute: self.calcItem!)
     }
     
     func changePoisition(newLow: CGFloat) {
         let diff = range.upperBound - range.lowerBound
         range = newLow ... newLow + diff
-        recalc()
+        self.calcItem?.cancel()
+        self.calcItem = DispatchWorkItem { [weak self] in self?.recalc() }
+        calcQueue.sync(execute: self.calcItem!)
     }
 }

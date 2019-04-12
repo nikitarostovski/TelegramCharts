@@ -72,6 +72,11 @@
 		11BD75BB225FBF530029E9D2 /* YAxisDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75B5225FBF530029E9D2 /* YAxisDataSource.swift */; };
 		11BD75BF225FBFA80029E9D2 /* YValueData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75BE225FBFA80029E9D2 /* YValueData.swift */; };
 		F4F977182260789700D60123 /* YTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F977172260789700D60123 /* YTextLayer.swift */; };
+		F4F9771B2260A7AA00D60123 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F9771A2260A7AA00D60123 /* FilterButton.swift */; };
+		F4F9771D2260BA1E00D60123 /* FilterButtonContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F9771C2260BA1E00D60123 /* FilterButtonContainer.swift */; };
+		F4F977242260CE2900D60123 /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F977202260CE2900D60123 /* FilterCell.swift */; };
+		F4F977252260CE2900D60123 /* FilterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4F977212260CE2900D60123 /* FilterCell.xib */; };
+		F4F977262260CE2900D60123 /* FilterCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F977232260CE2900D60123 /* FilterCellModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -142,6 +147,11 @@
 		11BD75B5225FBF530029E9D2 /* YAxisDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YAxisDataSource.swift; sourceTree = "<group>"; };
 		11BD75BE225FBFA80029E9D2 /* YValueData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YValueData.swift; sourceTree = "<group>"; };
 		F4F977172260789700D60123 /* YTextLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTextLayer.swift; sourceTree = "<group>"; };
+		F4F9771A2260A7AA00D60123 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
+		F4F9771C2260BA1E00D60123 /* FilterButtonContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButtonContainer.swift; sourceTree = "<group>"; };
+		F4F977202260CE2900D60123 /* FilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
+		F4F977212260CE2900D60123 /* FilterCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterCell.xib; sourceTree = "<group>"; };
+		F4F977232260CE2900D60123 /* FilterCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCellModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +264,7 @@
 				115440EF22397C0C00795743 /* Cells */,
 				1154411322397C0C00795743 /* RangeSlider */,
 				1154411622397C0C00795743 /* GraphView */,
+				F4F977192260A79D00D60123 /* FilterButton */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -263,6 +274,7 @@
 			children = (
 				1154410222397C0C00795743 /* BaseCell */,
 				115440F022397C0C00795743 /* ButtonCell */,
+				F4F9771E2260CE2900D60123 /* FilterCell */,
 				115440FC22397C0C00795743 /* HeaderView */,
 				1154410722397C0C00795743 /* GraphCell */,
 				1154410D22397C0C00795743 /* CheckCell */,
@@ -564,6 +576,41 @@
 			path = Axis;
 			sourceTree = "<group>";
 		};
+		F4F977192260A79D00D60123 /* FilterButton */ = {
+			isa = PBXGroup;
+			children = (
+				F4F9771A2260A7AA00D60123 /* FilterButton.swift */,
+				F4F9771C2260BA1E00D60123 /* FilterButtonContainer.swift */,
+			);
+			path = FilterButton;
+			sourceTree = "<group>";
+		};
+		F4F9771E2260CE2900D60123 /* FilterCell */ = {
+			isa = PBXGroup;
+			children = (
+				F4F9771F2260CE2900D60123 /* Cell */,
+				F4F977222260CE2900D60123 /* Model */,
+			);
+			path = FilterCell;
+			sourceTree = "<group>";
+		};
+		F4F9771F2260CE2900D60123 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				F4F977202260CE2900D60123 /* FilterCell.swift */,
+				F4F977212260CE2900D60123 /* FilterCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		F4F977222260CE2900D60123 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F4F977232260CE2900D60123 /* FilterCellModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -634,6 +681,7 @@
 				1154413322397C0D00795743 /* GraphCell.xib in Resources */,
 				11649FE522353E180081ABA1 /* Localizable.strings in Resources */,
 				11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */,
+				F4F977252260CE2900D60123 /* FilterCell.xib in Resources */,
 				1159FC01225D024E005E5251 /* overview1.json in Resources */,
 				1154413022397C0D00795743 /* TableViewHeaderView.xib in Resources */,
 			);
@@ -655,8 +703,10 @@
 				10AB1300225B819F0094EEFC /* GraphDataSource.swift in Sources */,
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
+				F4F977262260CE2900D60123 /* FilterCellModel.swift in Sources */,
 				1154413522397C0D00795743 /* GraphCellModel.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
+				F4F9771B2260A7AA00D60123 /* FilterButton.swift in Sources */,
 				1154414122397C0D00795743 /* ThemeManager.swift in Sources */,
 				1154412722397C0D00795743 /* NSObject+Theme.swift in Sources */,
 				1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */,
@@ -673,6 +723,8 @@
 				11BD75A4225FBC2C0029E9D2 /* YGridLayer.swift in Sources */,
 				1154414222397C0D00795743 /* Theme.swift in Sources */,
 				1154413C22397C0D00795743 /* RootNavigationController.swift in Sources */,
+				F4F9771D2260BA1E00D60123 /* FilterButtonContainer.swift in Sources */,
+				F4F977242260CE2900D60123 /* FilterCell.swift in Sources */,
 				1154412922397C0D00795743 /* ButtonCell.swift in Sources */,
 				11BD75A8225FBC2C0029E9D2 /* ChartLayerProtocol.swift in Sources */,
 				11BD75A7225FBC2C0029E9D2 /* AreaChartLayer.swift in Sources */,

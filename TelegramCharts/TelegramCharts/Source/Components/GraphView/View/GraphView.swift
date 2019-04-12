@@ -19,7 +19,6 @@ class GraphView: UIView {
 
     private weak var dataSource: GraphDataSource?
     private var lineWidth: CGFloat
-    private var gridVisible: Bool
     private var isMap: Bool
     
     private var charts: [ChartLayerProtocolType]
@@ -29,22 +28,21 @@ class GraphView: UIView {
     
     init(dataSource: GraphDataSource, lineWidth: CGFloat, isMap: Bool) {
         self.isMap = isMap
-        if !isMap {
-            insetTop = 32
-            insetBottom = 16
-        }
-        self.gridVisible = !isMap
         self.lineWidth = lineWidth
         self.dataSource = dataSource
         self.charts = [ChartLayerProtocolType]()
         self.yGrids = []
         self.yTitles = []
         
-        for ySource in dataSource.yAxisDataSources {
-            self.yTitles.append(YTextLayer(source: ySource))
-            self.yGrids.append(YGridLayer(source: ySource))
+        if !isMap {
+            insetTop = 32
+            insetBottom = 16
+            for ySource in dataSource.yAxisDataSources {
+                self.yTitles.append(YTextLayer(source: ySource))
+                self.yGrids.append(YGridLayer(source: ySource))
+            }
+            //        self.xGrid = XGridLayer()
         }
-//        self.xGrid = XGridLayer()
         
         super.init(frame: .zero)
         dataSource.chartDataSources.forEach {
