@@ -1,5 +1,5 @@
 //
-//  ChartViewport.swift
+//  Viewport.swift
 //  TelegramCharts
 //
 //  Created by Rost on 10/04/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct ChartViewport {
+struct Viewport {
     
     var xLo: CGFloat = 0
     var xHi: CGFloat = 0
@@ -24,7 +24,7 @@ struct ChartViewport {
     }
 }
 
-extension ChartViewport: CustomStringConvertible {
+extension Viewport: CustomStringConvertible {
     
     var description : String {
         return "X: [\(xLo) ... \(xHi)] Y: [\(yLo) ... \(yHi)]"

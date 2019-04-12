@@ -17,8 +17,7 @@ class GraphDataSource {
     
     private (set) weak var graph: Graph?
     private (set) var chartDataSources: [ChartDataSource]
-    private (set) var yAxisDataSource: YAxisDataSource
-    private var yViewMode: YAxisViewMode
+    private (set) var yAxisDataSources: [YAxisDataSource]
     
     var dates: [Date]
     var selectionIndex: Int?
@@ -33,10 +32,14 @@ class GraphDataSource {
         self.dates = graph.dates
         self.range = range
         
-        self.yViewMode = graph.yScaled && graph.charts.count == 2 ? [.left, .right] : [.left]
-        let yTextMode: YValueTextMode = graph.percentage ? .percent : .value
-        self.yAxisDataSource = YAxisDataSource(viewMode: yViewMode, textMode: yTextMode)
-        
+        let yLeftDataSource = YAxisDataSource(graph: graph)
+        self.yAxisDataSources = [yLeftDataSource]
+        if graph.yScaled && graph.charts.count == 2 {
+            let yRightDataSource = YAxisDataSource(graph: graph)
+            self.yAxisDataSources.append(yRightDataSource)
+            yLeftDataSource.alignment = .left
+            yRightDataSource.alignment = .right
+        }
         self.chartDataSources = [ChartDataSource]()
         graph.charts.forEach {
             chartDataSources.append(sourceForChart($0))
@@ -66,8 +69,17 @@ class GraphDataSource {
         chartDataSources.forEach {
             $0.updateViewportY()
         }
+        yAxisDataSources.indices.forEach { i in
+            var sources: [ChartDataSource]
+            if yAxisDataSources.count == 1 {
+                sources = chartDataSources
+            } else {
+                sources = [chartDataSources[i]]
+            }
+            yAxisDataSources[i].updatePoints(chartSources: sources)
+        }
         if !graph.yScaled || graph.stacked {
-            var maxViewport: ChartViewport? = nil
+            var maxViewport: Viewport? = nil
             chartDataSources.forEach {
                 if maxViewport == nil {
                     maxViewport = $0.targetViewport
@@ -95,20 +107,6 @@ class GraphDataSource {
                 source.setSumValues(sums)
             }
         }
-        
-        var yLeftSources: [ChartDataSource]?
-        var yRightSources: [ChartDataSource]?
-        if yViewMode.contains(.left), yViewMode.contains(.right), chartDataSources.count > 1 {
-            yLeftSources = [chartDataSources.first!]
-            yRightSources = [chartDataSources.last!]
-        } else if yViewMode.contains(.left), !yViewMode.contains(.right), !graph.yScaled {
-            yLeftSources = chartDataSources
-        } else if yViewMode.contains(.right), let lastSource = chartDataSources.last {
-            yRightSources = [lastSource]
-        } else if let firstSource = chartDataSources.first {
-            yLeftSources = [firstSource]
-        }
-        yAxisDataSource.updatePoints(leftSource: yLeftSources, rightSource: yRightSources)
         
         if animated {
             chartDataSources.forEach { source in
@@ -145,11 +143,11 @@ class GraphDataSource {
     private func sourceForChart(_ chart: Chart) -> ChartDataSource {
         switch chart.type {
         case .line:
-            return LineChartDataSource(chart: chart, viewport: ChartViewport(), visible: true)
+            return LineChartDataSource(chart: chart, viewport: Viewport(), visible: true)
         case .bar:
-            return BarChartDataSource(chart: chart, viewport: ChartViewport(), visible: true)
+            return BarChartDataSource(chart: chart, viewport: Viewport(), visible: true)
         case .area:
-            return AreaChartDataSource(chart: chart, viewport: ChartViewport(), visible: true)
+            return AreaChartDataSource(chart: chart, viewport: Viewport(), visible: true)
         }
     }
     

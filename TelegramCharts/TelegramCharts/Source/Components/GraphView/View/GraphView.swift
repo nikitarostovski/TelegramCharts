@@ -23,7 +23,8 @@ class GraphView: UIView {
     private var isMap: Bool
     
     private var charts: [ChartLayerProtocolType]
-    private var yGrid: YGridLayer
+    private var yGrids: [YGridLayer]
+    private var yTitles: [YTextLayer]
 //    private var xGrid: XGridLayerProtocolType
     
     init(dataSource: GraphDataSource, lineWidth: CGFloat, isMap: Bool) {
@@ -36,21 +37,31 @@ class GraphView: UIView {
         self.lineWidth = lineWidth
         self.dataSource = dataSource
         self.charts = [ChartLayerProtocolType]()
-        self.yGrid = YGridLayer(source: dataSource.yAxisDataSource)
+        self.yGrids = []
+        self.yTitles = []
+        
+        for ySource in dataSource.yAxisDataSources {
+            self.yTitles.append(YTextLayer(source: ySource))
+            self.yGrids.append(YGridLayer(source: ySource))
+        }
 //        self.xGrid = XGridLayer()
         
         super.init(frame: .zero)
-        self.layer.addSublayer(yGrid)
+        dataSource.chartDataSources.forEach {
+            guard $0.chart.type != .line else { return }
+            let chartLayer = layerForChart($0)
+            layer.addSublayer(chartLayer)
+            charts.append(chartLayer)
+        }
+        yGrids.forEach { layer.addSublayer($0) }
 //        self.layer.addSublayer(xGrid)
         dataSource.chartDataSources.forEach {
+            guard $0.chart.type == .line else { return }
             let chartLayer = layerForChart($0)
+            layer.addSublayer(chartLayer)
             charts.append(chartLayer)
-            if $0.chart.type == .line {
-                layer.insertSublayer(chartLayer, above: yGrid)
-            } else {
-                layer.insertSublayer(chartLayer, below: yGrid)
-            }
         }
+        yTitles.forEach { layer.addSublayer($0) }
         backgroundColor = .clear
         layer.masksToBounds = true
     }
@@ -63,7 +74,8 @@ class GraphView: UIView {
         super.layoutSubviews()
         chartBounds = CGRect(x: 0, y: insetTop, width: bounds.width, height: bounds.height - insetTop - insetBottom)
         charts.forEach { $0.frame = chartBounds }
-        yGrid.frame = chartBounds
+        yGrids.forEach { $0.frame = chartBounds }
+        yTitles.forEach { $0.frame = chartBounds }
         redraw()
         /*selection.frame = chartBounds
         yGrid.frame = chartBounds
@@ -85,10 +97,9 @@ class GraphView: UIView {
     
     func redraw() {
         guard bounds != .zero else { return }
-        charts.forEach {
-            $0.update()
-        }
-        yGrid.update()
+        charts.forEach { $0.update() }
+        yGrids.forEach { $0.update() }
+        yTitles.forEach { $0.update() }
     }
     
     func updateChartAlpha() {

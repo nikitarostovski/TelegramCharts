@@ -8,44 +8,7 @@
 
 import UIKit
 
-class AreaChartValueDataSource {
-    var value: Int
-    var offset: Int
-    
-    var sumValue: Int
-    
-    init(_ value: Int) {
-        self.value = value
-        self.sumValue = value
-        self.offset = 0
-    }
-}
-
 class AreaChartDataSource: ChartDataSource {
-    
-    var yValues = [AreaChartValueDataSource]()
-    
-    override func updateViewportX(range: ClosedRange<CGFloat>) {
-        targetViewport.xLo = range.lowerBound
-        targetViewport.xHi = range.upperBound
-    }
-    
-    override func updatePointsX() {
-        yValues = [AreaChartValueDataSource]()
-        let lastIndex = chart.values.count - 1
-        
-        lo = Int(targetViewport.xLo * CGFloat(lastIndex) - 0.5)
-        hi = Int(targetViewport.xHi * CGFloat(lastIndex) + 0.5)
-        lo = max(lo, 0)
-        hi = min(hi, lastIndex)
-        
-        xIndices = []
-        for i in lo ... hi {
-            let xNorm = CGFloat(i) / CGFloat(chart.values.count - 1)
-            xIndices.append(xNorm)
-            yValues.append(AreaChartValueDataSource(chart.values[i]))
-        }
-    }
     
     override func updatePointsY(offsets: [Int]?) {
         for i in lo ... hi {

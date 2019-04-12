@@ -10,15 +10,10 @@ import UIKit
 
 class YValueData {
     var pos: CGFloat
-    var textLeft: String?
-    var textRight: String?
+    var text: String?
     
-    var leftColor: UIColor?
-    var rightColor: UIColor?
-    
-    init(textLeft: String?, textRight: String?, pos: CGFloat) {
-        self.textLeft = textLeft
-        self.textRight = textRight
+    init(text: String, pos: CGFloat) {
+        self.text = text
         self.pos = pos
     }
 }

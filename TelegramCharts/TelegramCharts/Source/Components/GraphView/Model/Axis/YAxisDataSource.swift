@@ -13,90 +13,89 @@ enum YValueTextMode {
     case percent
 }
 
-struct YAxisViewMode: OptionSet {
-    let rawValue: Int
-    
-    static let left = YAxisViewMode(rawValue: 1)
-    static let right = YAxisViewMode(rawValue: 2)
+enum Alignment {
+    case left
+    case right
+    case fill
 }
 
 class YAxisDataSource {
     
+    private weak var graph: Graph?
     private var gridPositions: [CGFloat]
+    private var viewport: Viewport
     
     private (set) var textMode: YValueTextMode
-    private (set) var viewMode: YAxisViewMode
     private (set) var lines: [YValueData]
     
-    init(viewMode: YAxisViewMode, textMode: YValueTextMode) {
-        self.viewMode = viewMode
-        self.textMode = textMode
+    var color: UIColor? = nil
+    var alignment: Alignment = .fill
+    
+    init(graph: Graph) {
+        self.graph = graph
+        self.viewport = Viewport()
+        self.textMode = graph.percentage ? .percent : .value
         self.gridPositions = [0, 0.25, 0.5, 0.75, 1]
         self.lines = []
     }
     
-    // TODO: pass Graph (or init)
-    func updatePoints(leftSource: [ChartDataSource]?, rightSource: [ChartDataSource]?) {
+    func updatePoints(chartSources: [ChartDataSource]) {
+        guard chartSources.count > 0, let graph = graph else { return }
         lines = []
+        if textMode == .percent {
+            self.viewport.yLo = 0
+            self.viewport.yHi = 100
+        } else {
+            if graph.yScaled {
+                color = chartSources.first!.chart.color
+            }
+            calculateViewport(viewport: &viewport, sources: chartSources)
+        }
         for pos in gridPositions {
-            var textLeft: String? = nil
-            var textRight: String? = nil
-            var colorLeft: UIColor? = nil
-            var colorRight: UIColor? = nil
-            
-            if viewMode.contains(.left), let leftSource = leftSource {
-                textLeft = getValue(atPos: pos, fromSources: leftSource)
-                if let leftSourceFirst = leftSource.first {
-                    colorLeft = leftSourceFirst.chart.color
-                }
+            var text: String? = nil
+            let val = viewport.yLo + viewport.height * pos
+            if !val.isNaN, !val.isInfinite {
+                text = String(number: Int(val))
             }
-            if viewMode.contains(.right), let rightSource = rightSource {
-                textRight = getValue(atPos: pos, fromSources: rightSource)
-                if let rightSourceFirst = rightSource.first {
-                    colorRight = rightSourceFirst.chart.color
-                }
-            }
-            let line = YValueData(textLeft: textLeft, textRight: textRight, pos: pos)
-            if colorLeft != nil, colorRight != nil {
-                line.leftColor = colorLeft
-                line.rightColor = colorRight
-            }
+            guard text != nil else { continue }
+            let line = YValueData(text: text!, pos: pos)
             lines.append(line)
         }
     }
     
-    private func getValue(atPos pos: CGFloat, fromSources sources: [ChartDataSource]) -> String {
-        var maxVisibleValue: CGFloat = 0
-        var minVisibleValue: CGFloat = CGFloat.greatestFiniteMagnitude
-        guard textMode != .percent else {
-            return String(number: Int(100 * pos))
-        }
-        for i in sources.indices {
-            var sourceMax: CGFloat = 0
-            var sourceMin: CGFloat = CGFloat.greatestFiniteMagnitude
-            if let sourceA = sources[i] as? LineChartDataSource,
-                let aValMax = sourceA.yValues.max(by: { $0.value > $1.value })?.value,
-                let aValMin = sourceA.yValues.min(by: { $0.value > $1.value })?.value {
-                sourceMax = max(sourceMax, CGFloat(aValMax))
-                sourceMin = min(sourceMin, CGFloat(aValMin))
-            } else if let sourceA = sources[i] as? BarChartDataSource,
-                let aValMax = sourceA.yValues.max(by: { $0.value > $1.value })?.value,
-                let aValMin = sourceA.yValues.min(by: { $0.value > $1.value })?.value {
-                sourceMax = max(sourceMax, CGFloat(aValMax))
-                sourceMin = min(sourceMin, CGFloat(aValMin))
-            } else if let sourceA = sources[i] as? AreaChartDataSource,
-                let aMax = sourceA.yValues.max(by: {
-                    CGFloat($0.value) / CGFloat($0.sumValue) > CGFloat($1.value) / CGFloat($1.sumValue)
-                }),
-                let aMin = sourceA.yValues.min(by: {
-                    CGFloat($0.value) / CGFloat($0.sumValue) > CGFloat($1.value) / CGFloat($1.sumValue)
-                }) {
-                sourceMax = max(sourceMax, CGFloat(aMax.value) / CGFloat(aMax.sumValue))
-                sourceMin = min(sourceMin, CGFloat(aMin.value) / CGFloat(aMin.sumValue))
+    private func calculateViewport(viewport: inout Viewport, sources: [ChartDataSource]) {
+        var newViewport: Viewport? = nil
+        sources.forEach { source in
+            guard newViewport != nil else {
+                newViewport = source.viewport
+                return
             }
-            maxVisibleValue = max(maxVisibleValue, sourceMax)
-            minVisibleValue = min(minVisibleValue, sourceMin)
+            newViewport!.yLo = min(newViewport!.yLo, source.viewport.yLo)
+            newViewport!.yHi = max(newViewport!.yHi, source.viewport.yHi)
         }
-        return String(number: Int((minVisibleValue + (maxVisibleValue - minVisibleValue)) * pos))
+        var valueMin: CGFloat? = nil
+        var valueMax: CGFloat? = nil
+        sources.forEach { source in
+            if let sourceMax = source.yValues.max(by: { $0.value > $1.value }) {
+                if valueMax == nil {
+                    valueMax = CGFloat(sourceMax.value)
+                    return
+                }
+                valueMax! = max(valueMax!, CGFloat(sourceMax.value))
+            }
+            if let sourceMin = source.yValues.min(by: { $0.value > $1.value }) {
+                if valueMin == nil {
+                    valueMin = CGFloat(sourceMin.value)
+                    return
+                }
+                valueMin! = min(valueMin!, CGFloat(sourceMin.value))
+            }
+        }
+        if valueMin != nil {
+            viewport.yLo = valueMin!
+        }
+        if valueMax != nil {
+            viewport.yHi = valueMax!
+        }
     }
 }
