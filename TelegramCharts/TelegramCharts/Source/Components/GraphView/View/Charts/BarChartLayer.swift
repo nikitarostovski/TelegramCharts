@@ -40,9 +40,10 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
         else {
             return
         }
-        let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo) + 1
-        
-        let path = UIBezierPath()
+        print("chart: ", dataSource.viewport.yLo, " ... ", dataSource.viewport.yHi)
+        let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo)
+//        let columnWidth = bounds.width * (dataSource.xIndices.last! - dataSource.xIndices.first!) / dataSource.viewport.width
+        let path = CGMutablePath()
         for i in dataSource.lo ... dataSource.hi {
             let x = bounds.width * (dataSource.xIndices[i - dataSource.lo] - dataSource.viewport.xLo) / dataSource.viewport.width
             let yLo = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
@@ -59,7 +60,7 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
             path.addLine(to: pointBottomLeft)
             
         }
-        shapeLayer.path = path.cgPath
+        shapeLayer.path = path
     }
 }
 

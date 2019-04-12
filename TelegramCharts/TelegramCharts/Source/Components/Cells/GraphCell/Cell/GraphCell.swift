@@ -26,9 +26,12 @@ class GraphCell: BaseCell {
         guard let model = model as? GraphCellModel else { return }
         createViews()
 
-        model.dataProvider.redrawHandler = {  [weak self] in
+        model.dataProvider.redrawHandler = { [weak self] in
             self?.mainGraphView.redraw()
             self?.mapGraphView.redraw()
+        }
+        model.dataProvider.resetGridValuesHandler = { [weak self] in
+            self?.mainGraphView.resetGridValues()
         }
         
         rangeSlider.lowerValue = model.dataProvider.range.lowerBound
@@ -58,6 +61,8 @@ class GraphCell: BaseCell {
         
         mapGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 1.0, isMap: true)
         mapGraphView.translatesAutoresizingMaskIntoConstraints = false
+        mapGraphView.layer.masksToBounds = true
+        mapGraphView.layer.cornerRadius = 8
         mapContainer.addSubview(mapGraphView)
 
         rangeSlider = RangeSlider(frame: .zero, insetX: 16)

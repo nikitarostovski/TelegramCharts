@@ -548,9 +548,9 @@
 			isa = PBXGroup;
 			children = (
 				11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */,
-				11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */,
-				11BD75A2225FBC2C0029E9D2 /* BarChartLayer.swift */,
 				11BD75A3225FBC2C0029E9D2 /* LineChartLayer.swift */,
+				11BD75A2225FBC2C0029E9D2 /* BarChartLayer.swift */,
+				11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */,
 			);
 			path = Charts;
 			sourceTree = "<group>";
@@ -833,7 +833,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -888,7 +888,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -907,7 +907,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4DZU58EZPK;
 				INFOPLIST_FILE = "$(SRCROOT)/TelegramCharts/Resource/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -930,7 +930,7 @@
 				DEVELOPMENT_TEAM = 4DZU58EZPK;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = "$(SRCROOT)/TelegramCharts/Resource/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

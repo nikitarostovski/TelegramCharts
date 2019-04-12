@@ -21,6 +21,7 @@ class FilterCellModel: BaseCellModel {
     var graphIndex: Int
     
     init(graphIndex: Int, graph: Graph) {
+        self.graphIndex = graphIndex
         super.init()
         isTouchable = false
     }

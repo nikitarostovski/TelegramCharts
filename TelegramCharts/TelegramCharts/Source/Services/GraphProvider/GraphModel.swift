@@ -9,7 +9,7 @@
 import Foundation
 
 struct GraphModel {
-    let columns: [String: [Int]]
+    let columns: [String: [Int64]]
     let names: [String: String]
     let types: [String: String]
     let colors: [String: String]
@@ -32,13 +32,13 @@ extension GraphModel: Codable {
         percentage = (try? container.decode(type(of: y_scaled).self, forKey: .percentage)) ?? false
         
         var columnsContainer = try container.nestedUnkeyedContainer(forKey: .columns)
-        var columns = [String: [Int]]()
+        var columns = [String: [Int64]]()
         while !columnsContainer.isAtEnd {
             var columnContainer = try columnsContainer.nestedUnkeyedContainer()
             let name = try columnContainer.decode(String.self)
-            columns[name] = [Int]()
+            columns[name] = [Int64]()
             while !columnContainer.isAtEnd {
-                columns[name]?.append(try columnContainer.decode(Int.self))
+                columns[name]?.append(try columnContainer.decode(Int64.self))
             }
         }
         self.columns = columns

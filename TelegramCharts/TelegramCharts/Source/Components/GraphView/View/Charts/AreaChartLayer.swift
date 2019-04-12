@@ -40,9 +40,9 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
             else {
                 return
         }
-        let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo) + 1
+        let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo)
         
-        let path = UIBezierPath()
+        let path = CGMutablePath()
         var yLoLast: CGFloat? = nil
         var yHiLast: CGFloat? = nil
         for i in dataSource.lo ... dataSource.hi {
@@ -64,7 +64,7 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
             yLoLast = yLo
             yHiLast = yHi
         }
-        shapeLayer.path = path.cgPath
+        shapeLayer.path = path//.cgPath
     }
 }
 

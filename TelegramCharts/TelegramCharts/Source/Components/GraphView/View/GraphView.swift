@@ -82,6 +82,19 @@ class GraphView: UIView {
         xGrid.resize()*/
     }
     
+    func redraw() {
+        guard bounds != .zero else { return }
+        charts.forEach { $0.update() }
+        yGrids.forEach { $0.updatePositions() }
+        yTitles.forEach { $0.updatePositions() }
+    }
+    
+    func resetGridValues() {
+        guard bounds != .zero else { return }
+        yGrids.forEach { $0.resetValues() }
+        yTitles.forEach { $0.resetValues() }
+    }
+    
     private func layerForChart(_ source: ChartDataSource) -> ChartLayerProtocolType {
         switch source.chart.type {
         case .line:
@@ -91,13 +104,6 @@ class GraphView: UIView {
         case .area:
             return AreaChartLayer(source: source, lineWidth: lineWidth)
         }
-    }
-    
-    func redraw() {
-        guard bounds != .zero else { return }
-        charts.forEach { $0.update() }
-        yGrids.forEach { $0.update() }
-        yTitles.forEach { $0.update() }
     }
     
     func updateChartAlpha() {

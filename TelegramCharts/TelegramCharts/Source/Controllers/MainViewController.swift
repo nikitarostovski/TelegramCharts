@@ -55,7 +55,7 @@ class MainViewController: UITableViewController {
     }
     
     private func makeFilterCellModel(index: Int) -> FilterCellModel {
-        let model = FilterCellModel()
+        let model = FilterCellModel(graphIndex: index, graph: graphs[index])
 //        let model = GraphCellModel(graphIndex: index, graph: graphs[index], currentRange: 0.75 ... 1.0)
         model.bottomSeparatorStyle.isHidden = false
         return model

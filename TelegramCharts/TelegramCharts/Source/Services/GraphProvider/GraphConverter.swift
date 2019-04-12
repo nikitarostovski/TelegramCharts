@@ -27,7 +27,7 @@ class GraphConverter {
                 let chart = Chart(type: chartType,
                                   name: title,
                                   color: UIColor(hexString: colorHex),
-                                  values: values)
+                                  values: values.map { Int($0) })
                 charts.append(chart)
             }
         }

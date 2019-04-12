@@ -10,10 +10,12 @@ import UIKit
 
 class YTextLayer: CALayer {
     
-    private var titles: [CATextLayer]
-    private weak var dataSource: YAxisDataSource?
-    
+    private let textHeight: CGFloat = 16
     private var textColor: UIColor?
+    
+    private var titles: [CATextLayer]
+    private var values: [YValueData]
+    private weak var dataSource: YAxisDataSource?
     
     // MARK: - Lifecycle
     
@@ -21,6 +23,7 @@ class YTextLayer: CALayer {
         self.dataSource = source
         self.textColor = source.color
         self.titles = []
+        self.values = []
         super.init()
         startReceivingThemeUpdates()
     }
@@ -35,26 +38,43 @@ class YTextLayer: CALayer {
     
     // MARK: - Public
     
-    func update() {
+    func resetValues() {
         guard let dataSource = dataSource,
             bounds != .zero
-            else {
-                return
+        else {
+            return
         }
-        sublayers?.forEach { $0.removeFromSuperlayer() }
-        let textHeight: CGFloat = 14
-        for source in dataSource.values {
-            let normY = dataSource.viewport.yLo + source.value / dataSource.viewport.height
-            let y = (1 - normY) * bounds.height - textHeight
+        titles.forEach { $0.removeFromSuperlayer() }
+        titles = []
+        values = dataSource.values + dataSource.lastValues
+        for source in values {
+            let titleFrame = CGRect(x: 0, y: 0, width: bounds.width, height: textHeight)
             let titleLayer = CATextLayer()
+            titleLayer.frame = titleFrame
             titleLayer.opacity = Float(source.fadePhase)
-            titleLayer.frame = CGRect(x: 0, y: y, width: bounds.width, height: textHeight)
             titleLayer.contentsScale = UIScreen.main.scale
             titleLayer.fontSize = 12
             titleLayer.foregroundColor = textColor?.cgColor
             titleLayer.alignmentMode = textAlignment
             titleLayer.string = source.text
+            titles.append(titleLayer)
             addSublayer(titleLayer)
+        }
+        updatePositions()
+    }
+    
+    func updatePositions() {
+        guard let dataSource = dataSource,
+            bounds != .zero
+            else {
+                return
+        }
+        titles.indices.forEach { i in
+            let title = titles[i]
+            title.opacity = Float(values[i].fadePhase)
+            
+            let normY = (values[i].value - dataSource.viewport.yLo) / dataSource.viewport.height
+            title.position.y = (1 - normY) * bounds.height - textHeight / 2
         }
     }
     

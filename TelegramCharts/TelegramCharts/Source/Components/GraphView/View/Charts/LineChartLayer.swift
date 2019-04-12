@@ -44,7 +44,7 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
             return
         }
         
-        let path = UIBezierPath()
+        let path = CGMutablePath()
         for i in dataSource.lo ... dataSource.hi {
             let x = bounds.width * (dataSource.xIndices[i - dataSource.lo] - dataSource.viewport.xLo) / dataSource.viewport.width
             let y = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].value) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
@@ -56,7 +56,7 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
                 path.addLine(to: point)
             }
         }
-        shapeLayer.path = path.cgPath
+        shapeLayer.path = path
     }
 }
 

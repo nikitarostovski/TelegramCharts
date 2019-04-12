@@ -46,22 +46,16 @@ class YAxisDataSource {
         self.values = []
     }
     
-    func updatePoints(chartSources: [ChartDataSource]) {
-        guard chartSources.count > 0, let graph = graph else { return }
+    func updateValues(sources: [ChartDataSource]) {
+        guard sources.count > 0, let graph = graph else { return }
         lastValues = values
         lastValues.forEach {
             $0.fadeLastPhase = $0.fadePhase
             $0.fadeTargetPhase = 0
         }
         values = []
-        if textMode == .percent {
-            self.targetViewport.yLo = 0
-            self.targetViewport.yHi = 100
-        } else {
-            if graph.yScaled {
-                color = chartSources.first!.chart.color
-            }
-            calculateViewport(viewport: &targetViewport, sources: chartSources)
+        if graph.yScaled {
+            color = sources.first!.chart.color
         }
         for pos in gridPositions {
             let val = targetViewport.yLo + targetViewport.height * pos
@@ -70,39 +64,27 @@ class YAxisDataSource {
         }
     }
     
-    private func calculateViewport(viewport: inout Viewport, sources: [ChartDataSource]) {
+    func updateViewport(sources: [ChartDataSource]) {
+        if textMode == .percent {
+            targetViewport.yLo = 0
+            targetViewport.yHi = 100
+        } else {
+            calculateViewport(target: &targetViewport, sources: sources)
+        }
+    }
+    
+    private func calculateViewport(target: inout Viewport, sources: [ChartDataSource]) {
+        guard sources.count > 0 else { return }
         var newViewport: Viewport? = nil
         sources.forEach { source in
             guard newViewport != nil else {
-                newViewport = source.viewport
+                newViewport = source.targetViewport
                 return
             }
             newViewport!.yLo = min(newViewport!.yLo, source.targetViewport.yLo)
             newViewport!.yHi = max(newViewport!.yHi, source.targetViewport.yHi)
         }
-        var valueMin: CGFloat? = nil
-        var valueMax: CGFloat? = nil
-        sources.forEach { source in
-            if let sourceMax = source.yValues.max(by: { $0.value > $1.value }) {
-                if valueMax == nil {
-                    valueMax = CGFloat(sourceMax.value)
-                    return
-                }
-                valueMax! = max(valueMax!, CGFloat(sourceMax.value))
-            }
-            if let sourceMin = source.yValues.min(by: { $0.value > $1.value }) {
-                if valueMin == nil {
-                    valueMin = CGFloat(sourceMin.value)
-                    return
-                }
-                valueMin! = min(valueMin!, CGFloat(sourceMin.value))
-            }
-        }
-        if valueMin != nil {
-            viewport.yLo = valueMin!
-        }
-        if valueMax != nil {
-            viewport.yHi = valueMax!
-        }
+        target.yLo = newViewport!.yLo
+        target.yHi = newViewport!.yHi
     }
 }

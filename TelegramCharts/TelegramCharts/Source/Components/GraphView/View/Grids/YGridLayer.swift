@@ -11,6 +11,8 @@ import UIKit
 class YGridLayer: CALayer {
     
     private var lines: [CAShapeLayer]
+    private var gradients: [CAGradientLayer]
+    private var values: [YValueData]
     private weak var dataSource: YAxisDataSource?
     
     private var lineColor: UIColor?
@@ -20,6 +22,8 @@ class YGridLayer: CALayer {
     required init(source: YAxisDataSource) {
         self.dataSource = source
         self.lines = []
+        self.gradients = []
+        self.values = []
         super.init()
         startReceivingThemeUpdates()
     }
@@ -34,30 +38,69 @@ class YGridLayer: CALayer {
     
     // MARK: - Public
     
-    func update() {
+    func resetValues() {
         guard let dataSource = dataSource,
+            let lineColor = lineColor,
             bounds != .zero
-            else {
-                return
+        else {
+            return
         }
-        sublayers?.forEach { $0.removeFromSuperlayer() }
-        for source in dataSource.values {
+        lines.forEach { $0.removeFromSuperlayer() }
+        lines = []
+        gradients = []
+        values = dataSource.values + dataSource.lastValues
+        for source in values {
+            let lineFrame = CGRect(x: 0, y: 0, width: bounds.width, height: 1)
             let lineLayer = CAShapeLayer()
+            lineLayer.frame = lineFrame
             lineLayer.opacity = Float(source.fadePhase)
-            lineLayer.strokeColor = lineColor?.cgColor
             lineLayer.lineWidth = 1
             lineLayer.lineCap = .round
             lineLayer.lineJoin = .round
-
-            let path = UIBezierPath()
+            lines.append(lineLayer)
+            
+            let path = CGMutablePath()
             path.move(to: CGPoint(x: 0, y: 0))
             path.addLine(to: CGPoint(x: bounds.width, y: 0))
-            lineLayer.path = path.cgPath
+            lineLayer.path = path
             
-            lineLayer.frame = CGRect(x: 0, y: 0, width: bounds.width, height: 1)
-            let normY = dataSource.viewport.yLo + source.value / dataSource.viewport.height
-            lineLayer.position.y = (1 - normY) * bounds.height
+            if dataSource.alignment != .fill {
+                var colors = [lineColor.cgColor, lineColor.cgColor, UIColor.clear.cgColor]
+                if dataSource.alignment == .right {
+                    colors = colors.reversed()
+                }
+                let gradientLayer = CAGradientLayer()
+                gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+                gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+                gradientLayer.locations = [0.0, 0.5, 1.0]
+                gradientLayer.colors = colors
+                gradientLayer.frame = lineFrame
+                gradients.append(gradientLayer)
+                
+                lineLayer.addSublayer(gradientLayer)
+            } else {
+                lineLayer.strokeColor = lineColor.cgColor
+            }
             addSublayer(lineLayer)
+        }
+        updatePositions()
+    }
+    
+    func updatePositions() {
+        guard let dataSource = dataSource,
+            bounds != .zero
+        else {
+            return
+        }
+        lines.indices.forEach { i in
+            let line = lines[i]
+            line.opacity = Float(values[i].fadePhase)
+            
+            let normY = (values[i].value - dataSource.viewport.yLo) / dataSource.viewport.height
+            line.position.y = (1 - normY) * bounds.height
+            
+//            let normY = dataSource.viewport.yLo + values[i].value / dataSource.viewport.height
+//            line.position.y = (1 - normY) * bounds.height
         }
     }
 }
@@ -66,8 +109,15 @@ extension YGridLayer: Stylable {
     
     func themeDidUpdate(theme: Theme) {
         lineColor = theme.gridLineColor
-        lines.forEach {
-            $0.strokeColor = lineColor!.cgColor
+        guard let dataSource = dataSource else { return }
+        if dataSource.alignment != .fill {
+            var colors = [lineColor!.cgColor, lineColor!.cgColor, UIColor.clear.cgColor]
+            if dataSource.alignment == .right {
+                colors = colors.reversed()
+            }
+            gradients.forEach { $0.colors = colors }
+        } else {
+            lines.forEach { $0.strokeColor = lineColor!.cgColor }
         }
     }
 }
