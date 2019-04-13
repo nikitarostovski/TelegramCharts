@@ -25,6 +25,7 @@ class YTextLayer: CALayer {
         self.titles = []
         self.values = []
         super.init()
+        masksToBounds = false
         startReceivingThemeUpdates()
     }
     
@@ -48,7 +49,7 @@ class YTextLayer: CALayer {
         titles = []
         values = dataSource.values + dataSource.lastValues
         for source in values {
-            let titleFrame = CGRect(x: 0, y: 0, width: bounds.width, height: textHeight)
+            let titleFrame = CGRect(x: 2, y: 0, width: bounds.width - 4, height: textHeight)
             let titleLayer = CATextLayer()
             titleLayer.frame = titleFrame
             titleLayer.opacity = Float(source.fadePhase)

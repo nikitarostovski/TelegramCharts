@@ -23,6 +23,7 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
         shapeLayer.fillColor = source.chart.color.cgColor
         
         super.init()
+        masksToBounds = false
         addSublayer(shapeLayer)
     }
     
@@ -41,17 +42,27 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
             return
         }
         let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo)
-//        let columnWidth = bounds.width * (dataSource.xIndices.last! - dataSource.xIndices.first!) / dataSource.viewport.width
+        var lastXRight: CGFloat? = nil
+        
         let path = CGMutablePath()
         for i in dataSource.lo ... dataSource.hi {
             let x = bounds.width * (dataSource.xIndices[i - dataSource.lo] - dataSource.viewport.xLo) / dataSource.viewport.width
             let yLo = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
             let yHi = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset + dataSource.yValues[i - dataSource.lo].value) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
             
-            let pointBottomLeft = CGPoint(x: x - columnWidth / 2, y: yLo)
-            let pointBottomRight = CGPoint(x: x + columnWidth / 2, y: yLo)
-            let pointTopLeft = CGPoint(x: x - columnWidth / 2, y: yHi)
-            let pointTopRight = CGPoint(x: x + columnWidth / 2, y: yHi)
+            var xLeft: CGFloat
+            if let lastXRight = lastXRight {
+                xLeft = lastXRight
+            } else {
+                xLeft = x - columnWidth / 2
+            }
+            let xRight: CGFloat = x + columnWidth / 2
+            lastXRight = xRight
+            
+            let pointBottomLeft = CGPoint(x: xLeft, y: yLo)
+            let pointBottomRight = CGPoint(x: xRight, y: yLo)
+            let pointTopLeft = CGPoint(x: xLeft, y: yHi)
+            let pointTopRight = CGPoint(x: xRight, y: yHi)
             
             path.move(to: pointTopLeft)
             path.addLine(to: pointTopRight)

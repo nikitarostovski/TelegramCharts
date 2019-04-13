@@ -18,6 +18,8 @@ class GraphDataSource {
     private var yAnimator = Animator()
     private var animationLock = false
     
+    private var insets: UIEdgeInsets = .zero
+    
     private (set) var range: ClosedRange<CGFloat>
     
     private (set) weak var graph: Graph?
@@ -58,6 +60,11 @@ class GraphDataSource {
         }
     }
     
+    func setEdgeInsets(insets: UIEdgeInsets) {
+        self.insets = insets
+        recalc(animated: false)
+    }
+    
     func setNormalizedTextWidth(textWidth: CGFloat) {
         xAxisDataSource.textWidth = textWidth
     }
@@ -66,7 +73,7 @@ class GraphDataSource {
         guard let graph = graph else { return }
         chartDataSources.forEach {
             $0.updateViewportX(range: range)
-            $0.updatePointsX()
+            $0.updatePointsX(insetLeft: insets.left, insetRight: insets.right)
         }
         if graph.stacked {
             var offsets: [Int]?
@@ -134,11 +141,11 @@ class GraphDataSource {
     }
     
     private func applyChanges(animated: Bool) {
+        chartDataSources.forEach { source in
+            source.viewport.xLo = source.targetViewport.xLo
+            source.viewport.xHi = source.targetViewport.xHi
+        }
         if animated {
-            chartDataSources.forEach { source in
-                source.viewport.xLo = source.targetViewport.xLo
-                source.viewport.xHi = source.targetViewport.xHi
-            }
             if !animationLock {
                 animationLock = true
                 calcQueue.asyncAfter(deadline: .now() + animationDuration) { [weak self] in

@@ -13,8 +13,9 @@ import UIKit
 
 class GraphView: UIView {
     
-    private var insetTop: CGFloat = 0
-    private var insetBottom: CGFloat = 0
+    static let textWidth: CGFloat = 52
+    
+    var insets: UIEdgeInsets = .zero
     private var chartBounds: CGRect = .zero
 
     private weak var dataSource: GraphDataSource?
@@ -24,24 +25,25 @@ class GraphView: UIView {
     private var charts: [ChartLayerProtocolType]
     private var yGrids: [YGridLayer]
     private var yTitles: [YTextLayer]
+    private var xGrid: XGridLayer?
     private var xTitles: XTextLayer?
     
-    init(dataSource: GraphDataSource, lineWidth: CGFloat, isMap: Bool) {
+    init(dataSource: GraphDataSource, lineWidth: CGFloat, insets: UIEdgeInsets, isMap: Bool) {
         self.isMap = isMap
         self.lineWidth = lineWidth
         self.dataSource = dataSource
         self.charts = [ChartLayerProtocolType]()
         self.yGrids = []
         self.yTitles = []
+        self.insets = insets
         
         if !isMap {
-            insetTop = 32
-            insetBottom = 24
             for ySource in dataSource.yAxisDataSources {
                 self.yTitles.append(YTextLayer(source: ySource))
                 self.yGrids.append(YGridLayer(source: ySource))
             }
-            self.xTitles = XTextLayer(source: dataSource.xAxisDataSource)
+            self.xTitles = XTextLayer(source: dataSource.xAxisDataSource, textWidth: GraphView.textWidth)
+            self.xGrid = XGridLayer()
         }
         
         super.init(frame: .zero)
@@ -62,6 +64,9 @@ class GraphView: UIView {
         if let xTitles = xTitles {
             self.layer.addSublayer(xTitles)
         }
+        if let xGrid = xGrid {
+            self.layer.addSublayer(xGrid)
+        }
         backgroundColor = .clear
         layer.masksToBounds = true
     }
@@ -72,14 +77,16 @@ class GraphView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        chartBounds = CGRect(x: 0, y: insetTop, width: bounds.width, height: bounds.height - insetTop - insetBottom)
+        chartBounds = bounds.inset(by: insets)
         charts.forEach { $0.frame = chartBounds }
         yGrids.forEach { $0.frame = chartBounds }
         yTitles.forEach { $0.frame = chartBounds }
         
-        let xTitlesBounds = CGRect(x: 0, y: bounds.height - insetBottom, width: bounds.width, height: insetBottom)
+        let xTitlesBounds = CGRect(x: insets.left, y: bounds.height - insets.bottom, width: bounds.width - insets.left - insets.right, height: insets.bottom)
         xTitles?.frame = xTitlesBounds
         xTitles?.updatePositions()
+        xGrid?.frame = xTitlesBounds
+        xGrid?.redraw()
         
         redraw()
     }

@@ -12,6 +12,7 @@
 		10AB1301225B819F0094EEFC /* Simplifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12FA225B819F0094EEFC /* Simplifier.swift */; };
 		1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1102AD5C223C148D000F64A9 /* Date+Formatter.swift */; };
 		110F0E5F2261E93000013F75 /* XValueData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110F0E5E2261E93000013F75 /* XValueData.swift */; };
+		110F0E612262023B00013F75 /* XGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110F0E602262023A00013F75 /* XGridLayer.swift */; };
 		1123B45E224163F600107BE5 /* String+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123B45D224163F600107BE5 /* String+Format.swift */; };
 		113C82E0223E996100723D10 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 113C82DC223E996000723D10 /* ItemCell.xib */; };
 		113C82E1223E996100723D10 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82DD223E996000723D10 /* ItemCell.swift */; };
@@ -87,6 +88,7 @@
 		10AB12FA225B819F0094EEFC /* Simplifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Simplifier.swift; sourceTree = "<group>"; };
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
 		110F0E5E2261E93000013F75 /* XValueData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XValueData.swift; sourceTree = "<group>"; };
+		110F0E602262023A00013F75 /* XGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XGridLayer.swift; sourceTree = "<group>"; };
 		1123B45D224163F600107BE5 /* String+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Format.swift"; sourceTree = "<group>"; };
 		113C82DC223E996000723D10 /* ItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
 		113C82DD223E996000723D10 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
@@ -534,6 +536,7 @@
 		11BD759A225FBC2C0029E9D2 /* Grids */ = {
 			isa = PBXGroup;
 			children = (
+				110F0E602262023A00013F75 /* XGridLayer.swift */,
 				11BD759C225FBC2C0029E9D2 /* XTextLayer.swift */,
 				11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */,
 				F4F977172260789700D60123 /* YTextLayer.swift */,
@@ -756,6 +759,7 @@
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
 				11BD75A5225FBC2C0029E9D2 /* XTextLayer.swift in Sources */,
+				110F0E612262023B00013F75 /* XGridLayer.swift in Sources */,
 				1123B45E224163F600107BE5 /* String+Format.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

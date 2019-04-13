@@ -26,6 +26,7 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
         shapeLayer.fillColor = UIColor.clear.cgColor
         
         super.init()
+        masksToBounds = false
         addSublayer(shapeLayer)
     }
     

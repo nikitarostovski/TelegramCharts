@@ -25,6 +25,7 @@ class YGridLayer: CALayer {
         self.gradients = []
         self.values = []
         super.init()
+        masksToBounds = false
         startReceivingThemeUpdates()
     }
     
@@ -45,6 +46,9 @@ class YGridLayer: CALayer {
         else {
             return
         }
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        
         lines.forEach { $0.removeFromSuperlayer() }
         lines = []
         gradients = []
@@ -88,7 +92,7 @@ class YGridLayer: CALayer {
             }
             addSublayer(lineLayer)
         }
-//        updatePositions()
+        CATransaction.commit()
     }
     
     func updatePositions() {

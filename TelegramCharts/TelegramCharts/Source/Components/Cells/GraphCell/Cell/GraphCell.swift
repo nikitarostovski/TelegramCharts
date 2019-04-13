@@ -10,6 +10,8 @@ import UIKit
 
 class GraphCell: BaseCell {
     
+    private let mainInsets = UIEdgeInsets(top: 32, left: 16, bottom: 24, right: 16)
+    
     override class var cellHeight: CGFloat {
         return 320
     }
@@ -26,6 +28,13 @@ class GraphCell: BaseCell {
         guard let model = model as? GraphCellModel else { return }
         createViews()
 
+        var insets = mainGraphView.insets
+        insets.left /= UIScreen.main.bounds.width
+        insets.right /= UIScreen.main.bounds.width
+        insets.top = 0
+        insets.bottom = 0
+        model.dataProvider.setEdgeInsets(insets: insets)
+        
         model.dataProvider.redrawHandler = { [weak self] in
             self?.mainGraphView.redraw()
             self?.mapGraphView.redraw()
@@ -41,7 +50,7 @@ class GraphCell: BaseCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard let model = model as? GraphCellModel else { return }
-        let normTextWidth = CGFloat(60) / bounds.width
+        let normTextWidth = GraphView.textWidth / bounds.width
         model.dataProvider.setNormalizedTextWidth(textWidth: normTextWidth)
         mainGraphView.redraw()
         mapGraphView.redraw()
@@ -58,11 +67,11 @@ class GraphCell: BaseCell {
         if rangeSlider != nil {
             rangeSlider.removeFromSuperview()
         }
-        mainGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 2.0, isMap: false)
+        mainGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 2.0, insets: mainInsets, isMap: false)
         mainGraphView.translatesAutoresizingMaskIntoConstraints = false
         mainContainer.addSubview(mainGraphView)
         
-        mapGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 1.0, isMap: true)
+        mapGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 1.0, insets: .zero, isMap: true)
         mapGraphView.translatesAutoresizingMaskIntoConstraints = false
         mapGraphView.layer.masksToBounds = true
         mapGraphView.layer.cornerRadius = 8

@@ -23,6 +23,7 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
         shapeLayer.fillColor = source.chart.color.cgColor
         
         super.init()
+        masksToBounds = false
         addSublayer(shapeLayer)
     }
     
@@ -41,6 +42,7 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
                 return
         }
         let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo)
+        var lastXRight: CGFloat? = nil
         
         let path = CGMutablePath()
         var yLoLast: CGFloat? = nil
@@ -51,10 +53,20 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
             let yHi = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset + dataSource.yValues[i - dataSource.lo].value) / CGFloat(dataSource.yValues[i - dataSource.lo].sumValue) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
             
             if let yLoLast = yLoLast, let yHiLast = yHiLast {
-                let pointBottomLeft = CGPoint(x: x - columnWidth, y: yLoLast)
-                let pointBottomRight = CGPoint(x: x, y: yLo)
-                let pointTopLeft = CGPoint(x: x - columnWidth, y: yHiLast)
-                let pointTopRight = CGPoint(x: x, y: yHi)
+                
+                var xLeft: CGFloat
+                if let lastXRight = lastXRight {
+                    xLeft = lastXRight
+                } else {
+                    xLeft = x - columnWidth
+                }
+                let xRight: CGFloat = x + columnWidth
+                lastXRight = xRight
+                
+                let pointBottomLeft = CGPoint(x: xLeft, y: yLoLast)
+                let pointBottomRight = CGPoint(x: xRight, y: yLo)
+                let pointTopLeft = CGPoint(x: xLeft, y: yHiLast)
+                let pointTopRight = CGPoint(x: xRight, y: yHi)
                 
                 path.move(to: pointTopLeft)
                 path.addLine(to: pointTopRight)
@@ -64,7 +76,7 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
             yLoLast = yLo
             yHiLast = yHi
         }
-        shapeLayer.path = path//.cgPath
+        shapeLayer.path = path
     }
 }
 

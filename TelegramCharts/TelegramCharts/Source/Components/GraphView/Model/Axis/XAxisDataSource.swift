@@ -38,7 +38,6 @@ class XAxisDataSource {
     func updateViewportX(range: ClosedRange<CGFloat>) {
         viewport.xLo = range.lowerBound
         viewport.xHi = range.upperBound
-        
         let lastIndex = values.count - 1
         
         lo = Int(viewport.xLo * CGFloat(lastIndex) - 0.5)

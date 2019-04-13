@@ -49,12 +49,12 @@ class ChartDataSource {
         targetViewport.xHi = range.upperBound
     }
     
-    func updatePointsX() {
+    func updatePointsX(insetLeft: CGFloat, insetRight: CGFloat) {
         yValues = [ChartValueDataSource]()
         let lastIndex = chart.values.count - 1
         
-        lo = Int(targetViewport.xLo * CGFloat(lastIndex) - 0.5)
-        hi = Int(targetViewport.xHi * CGFloat(lastIndex) + 0.5)
+        lo = Int((targetViewport.xLo - insetLeft) * CGFloat(lastIndex) - 0.5)
+        hi = Int((targetViewport.xHi + insetRight) * CGFloat(lastIndex) + 0.5)
         lo = max(lo, 0)
         hi = min(hi, lastIndex)
         

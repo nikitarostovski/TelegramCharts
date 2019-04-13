@@ -10,10 +10,12 @@ import UIKit
 
 class XTextLayer: CALayer {
     
-    private let cacheLimit: Int = 12
+    private let insetX: CGFloat = 0
+    
+    private let cacheLimit: Int = 16
     
     private let textHeight: CGFloat = 16
-    private let textWidth: CGFloat = 50
+    private var textWidth: CGFloat
     private var textColor: UIColor = .white
     
     private var cachedTitles: [XValueLayer]
@@ -22,11 +24,13 @@ class XTextLayer: CALayer {
     
     // MARK: - Lifecycle
     
-    required init(source: XAxisDataSource) {
+    required init(source: XAxisDataSource, textWidth: CGFloat) {
         self.dataSource = source
         self.cachedTitles = []
         self.titles = []
+        self.textWidth = textWidth
         super.init()
+        masksToBounds = false
         startReceivingThemeUpdates()
     }
     
@@ -42,12 +46,14 @@ class XTextLayer: CALayer {
     
     func updatePositions() {
         guard bounds != .zero, let dataSource = dataSource else { return }
-        resetValues()
         CATransaction.begin()
         CATransaction.setDisableActions(true)
+        
+        resetValues()
         titles.forEach { title in
-            title.position.x = bounds.width * (title.data.x - dataSource.viewport.xLo) / dataSource.viewport.width
-            title.isHidden = title.data.isHidden
+            guard let titleData = title.data else { return }
+            title.position.x = insetX + (bounds.width - 2 * insetX) * (titleData.x - dataSource.viewport.xLo) / dataSource.viewport.width
+            title.isHidden = titleData.isHidden
         }
         CATransaction.commit()
     }
@@ -62,13 +68,14 @@ class XTextLayer: CALayer {
         }
         var titlesToRemove = [XValueLayer]()
         titles.forEach { title in
-            if title.data.isHidden {
+            if title.data?.isHidden ?? true {
                 title.removeFromSuperlayer()
                 titlesToRemove.append(title)
             }
         }
         titlesToRemove.forEach { title in
             if cachedTitles.count <= cacheLimit {
+                title.data = nil
                 cachedTitles.append(title)
             }
             titles.removeAll(where: { title === $0 })
@@ -86,16 +93,20 @@ class XTextLayer: CALayer {
     }
     
     private func dequeueTitle(data: XValueData) -> XValueLayer {
+        var titleLayer: XValueLayer
         if let cachedTitle = cachedTitles.first {
+            titleLayer = cachedTitle
+            titleLayer.data = data
             cachedTitles.removeFirst()
-            cachedTitle.data = data
-            return cachedTitle
+        } else {
+            titleLayer = XValueLayer(data: data)
         }
         let x = data.x
         let y = (bounds.height - textHeight) / 2
-        let titleFrame = CGRect(x: x * bounds.width, y: y, width: textWidth, height: textHeight)
-        let titleLayer = XValueLayer(data: data)
+        let titleFrame = CGRect(x: insetX + x * (bounds.width - 2 * insetX), y: y, width: textWidth, height: textHeight)
+        
         titleLayer.frame = titleFrame
+        
         titleLayer.contentsScale = UIScreen.main.scale
         titleLayer.fontSize = 12
         titleLayer.foregroundColor = textColor.cgColor
@@ -114,9 +125,9 @@ extension XTextLayer: Stylable {
 
 class XValueLayer: CATextLayer {
     
-    var data: XValueData {
+    var data: XValueData? {
         didSet {
-            self.string = data.text
+            self.string = data?.text
         }
     }
     
@@ -128,5 +139,12 @@ class XValueLayer: CATextLayer {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override init(layer: Any) {
+        if let layer = layer as? XValueLayer {
+            self.data = layer.data
+        }
+        super.init(layer: layer)
     }
 }
