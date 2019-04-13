@@ -10,6 +10,7 @@ import UIKit
 
 class GraphCell: BaseCell {
     
+    private let textWidth: CGFloat = 44
     private let mainInsets = UIEdgeInsets(top: 32, left: 16, bottom: 24, right: 16)
     
     override class var cellHeight: CGFloat {
@@ -50,7 +51,7 @@ class GraphCell: BaseCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard let model = model as? GraphCellModel else { return }
-        let normTextWidth = GraphView.textWidth / bounds.width
+        let normTextWidth = textWidth / (bounds.width - mainInsets.left - mainInsets.right)
         model.dataProvider.setNormalizedTextWidth(textWidth: normTextWidth)
         mainGraphView.redraw()
         mapGraphView.redraw()
@@ -67,17 +68,17 @@ class GraphCell: BaseCell {
         if rangeSlider != nil {
             rangeSlider.removeFromSuperview()
         }
-        mainGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 2.0, insets: mainInsets, isMap: false)
+        mainGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 2.0, insets: mainInsets, isMap: false, textWidth: textWidth)
         mainGraphView.translatesAutoresizingMaskIntoConstraints = false
         mainContainer.addSubview(mainGraphView)
         
-        mapGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 1.0, insets: .zero, isMap: true)
+        mapGraphView = GraphView(dataSource: model.dataProvider, lineWidth: 1.0, insets: .zero, isMap: true, textWidth: textWidth)
         mapGraphView.translatesAutoresizingMaskIntoConstraints = false
         mapGraphView.layer.masksToBounds = true
         mapGraphView.layer.cornerRadius = 8
         mapContainer.addSubview(mapGraphView)
 
-        rangeSlider = RangeSlider(frame: .zero, insetX: 16)
+        rangeSlider = RangeSlider(frame: .zero, insetX: mainInsets.left)
         rangeSlider.translatesAutoresizingMaskIntoConstraints = false
         rangeSlider.delegate = self.model as? RangeSliderDelegate
         rangeSlider.tintAreaInsets = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
@@ -92,14 +93,14 @@ class GraphCell: BaseCell {
         mapContainer.addConstraints([
             NSLayoutConstraint(item: mapGraphView, attribute: .top, relatedBy: .equal, toItem: mapContainer, attribute: .top, multiplier: 1, constant: 1),
             NSLayoutConstraint(item: mapGraphView, attribute: .bottom, relatedBy: .equal, toItem: mapContainer, attribute: .bottom, multiplier: 1, constant: -1),
-            NSLayoutConstraint(item: mapGraphView, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: mapGraphView, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: 0)
+            NSLayoutConstraint(item: mapGraphView, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: mainInsets.left),
+            NSLayoutConstraint(item: mapGraphView, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
         ])
         mapContainer.addConstraints([
             NSLayoutConstraint(item: rangeSlider, attribute: .top, relatedBy: .equal, toItem: mapContainer, attribute: .top, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: rangeSlider, attribute: .bottom, relatedBy: .equal, toItem: mapContainer, attribute: .bottom, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: rangeSlider, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: rangeSlider, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: 0)
+            NSLayoutConstraint(item: rangeSlider, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: mainInsets.left),
+            NSLayoutConstraint(item: rangeSlider, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
         ])
     }
 }

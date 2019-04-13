@@ -50,9 +50,11 @@ class YTextLayer: CALayer {
         values = dataSource.values + dataSource.lastValues
         for source in values {
             let titleFrame = CGRect(x: 2, y: 0, width: bounds.width - 4, height: textHeight)
+            let normY = (source.value - dataSource.viewport.yLo) / dataSource.viewport.height
             let titleLayer = CATextLayer()
             titleLayer.frame = titleFrame
-            titleLayer.opacity = Float(source.fadePhase)
+            titleLayer.position.y = (1 - normY) * bounds.height - textHeight / 2
+            titleLayer.opacity = Float(source.opacity)
             titleLayer.contentsScale = UIScreen.main.scale
             titleLayer.fontSize = 12
             titleLayer.foregroundColor = textColor?.cgColor
@@ -74,7 +76,7 @@ class YTextLayer: CALayer {
         CATransaction.setDisableActions(true)
         titles.indices.forEach { i in
             let title = titles[i]
-            title.opacity = Float(values[i].fadePhase)
+            title.opacity = Float(values[i].opacity)
             
             let normY = (values[i].value - dataSource.viewport.yLo) / dataSource.viewport.height
             title.position.y = (1 - normY) * bounds.height - textHeight / 2

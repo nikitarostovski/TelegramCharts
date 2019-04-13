@@ -11,21 +11,19 @@ import UIKit
 class BarChartDataSource: ChartDataSource {
     
     override func updatePointsY(offsets: [Int]?) {
-        for i in lo ... hi {
+        for i in yValues.indices {
             var lowValue = 0
             if let offsets = offsets {
-                lowValue = offsets[i - lo]
+                lowValue = offsets[i]
             }
-            let valueSource = yValues[i - lo]
-            valueSource.offset = lowValue
-            valueSource.value = chart.values[i]
+            yValues[i].offset = lowValue
         }
     }
     
     override func updateViewportY() {
-        var maxValue: Int = yValues[0].offset + yValues[0].value
-        for i in lo ... hi {
-            maxValue = max(maxValue, yValues[i - lo].offset + yValues[i - lo].value)
+        var maxValue: Int = yValues[loVis].offset + yValues[loVis].value
+        for i in loVis ... hiVis {
+            maxValue = max(maxValue, yValues[i].offset + yValues[i].value)
         }
         targetViewport.yLo = 0
         targetViewport.yHi = CGFloat(maxValue)

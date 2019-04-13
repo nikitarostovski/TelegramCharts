@@ -48,16 +48,18 @@ class YGridLayer: CALayer {
         }
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        
         lines.forEach { $0.removeFromSuperlayer() }
+        gradients.forEach { $0.removeFromSuperlayer() }
         lines = []
         gradients = []
         values = dataSource.values + dataSource.lastValues
         for source in values {
             let lineFrame = CGRect(x: 0, y: 0, width: bounds.width, height: 1)
+            let normY = (source.value - dataSource.viewport.yLo) / dataSource.viewport.height
             let lineLayer = CAShapeLayer()
             lineLayer.frame = lineFrame
-            lineLayer.opacity = Float(source.fadePhase)
+            lineLayer.position.y = (1 - normY) * bounds.height
+            lineLayer.opacity = Float(source.opacity)
             lineLayer.lineWidth = 1
             lineLayer.lineCap = .round
             lineLayer.lineJoin = .round
@@ -105,7 +107,7 @@ class YGridLayer: CALayer {
         CATransaction.setDisableActions(true)
         lines.indices.forEach { i in
             let line = lines[i]
-            line.opacity = Float(values[i].fadePhase)
+            line.opacity = Float(values[i].opacity)
             
             let normY = (values[i].value - dataSource.viewport.yLo) / dataSource.viewport.height
             line.position.y = (1 - normY) * bounds.height

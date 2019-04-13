@@ -50,8 +50,8 @@ class YAxisDataSource {
         guard sources.count > 0, let graph = graph else { return }
         lastValues = values
         lastValues.forEach {
-            $0.fadeLastPhase = $0.fadePhase
-            $0.fadeTargetPhase = 0
+            $0.lastOpacity = $0.opacity
+            $0.targetOpacity = 0
         }
         values = []
         if graph.yScaled {

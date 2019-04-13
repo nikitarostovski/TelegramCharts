@@ -37,18 +37,20 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
         guard let dataSource = dataSource,
             dataSource.viewport.width > 0,
             dataSource.viewport.height > 0,
+            dataSource.xIndices.count > 1,
             bounds != .zero
         else {
             return
         }
-        let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo)
+        let distance = dataSource.xIndices[1] - dataSource.xIndices[0]
+        let columnWidth = bounds.width * distance
         var lastXRight: CGFloat? = nil
         
         let path = CGMutablePath()
-        for i in dataSource.lo ... dataSource.hi {
-            let x = bounds.width * (dataSource.xIndices[i - dataSource.lo] - dataSource.viewport.xLo) / dataSource.viewport.width
-            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
-            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].offset + dataSource.yValues[i - dataSource.lo].value) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
+        for i in dataSource.loVis ... dataSource.hiVis {
+            let x = bounds.width * (dataSource.xIndices[i] - dataSource.viewport.xLo) / dataSource.viewport.width
+            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i].offset) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
+            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i].offset + dataSource.yValues[i].value) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
             
             var xLeft: CGFloat
             if let lastXRight = lastXRight {

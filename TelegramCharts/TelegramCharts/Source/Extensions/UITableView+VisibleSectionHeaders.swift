@@ -13,7 +13,7 @@ public extension UITableView {
     var indexesOfVisibleSections: [Int] {
         var visibleSectionIndexes = [Int]()
         
-        for i in 0..<numberOfSections {
+        for i in 0 ..< numberOfSections {
             var headerRect: CGRect?
             if (self.style == .plain) {
                 headerRect = rect(forSection: i)

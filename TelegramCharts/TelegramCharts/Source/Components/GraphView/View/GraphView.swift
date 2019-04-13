@@ -8,19 +8,17 @@
 
 import UIKit
 
-//typealias XGridLayerProtocolType = (XGridLayerProtocol & CALayer)
-//typealias YGridLayerProtocolType = (YGridLayerProtocol & CALayer)
-
 class GraphView: UIView {
-    
-    static let textWidth: CGFloat = 52
     
     var insets: UIEdgeInsets = .zero
     private var chartBounds: CGRect = .zero
-
+    private var textWidth: CGFloat
+    
     private weak var dataSource: GraphDataSource?
     private var lineWidth: CGFloat
     private var isMap: Bool
+    
+    private var xTintView: TintView?
     
     private var charts: [ChartLayerProtocolType]
     private var yGrids: [YGridLayer]
@@ -28,7 +26,8 @@ class GraphView: UIView {
     private var xGrid: XGridLayer?
     private var xTitles: XTextLayer?
     
-    init(dataSource: GraphDataSource, lineWidth: CGFloat, insets: UIEdgeInsets, isMap: Bool) {
+    init(dataSource: GraphDataSource, lineWidth: CGFloat, insets: UIEdgeInsets, isMap: Bool, textWidth: CGFloat) {
+        self.textWidth = textWidth
         self.isMap = isMap
         self.lineWidth = lineWidth
         self.dataSource = dataSource
@@ -42,8 +41,10 @@ class GraphView: UIView {
                 self.yTitles.append(YTextLayer(source: ySource))
                 self.yGrids.append(YGridLayer(source: ySource))
             }
-            self.xTitles = XTextLayer(source: dataSource.xAxisDataSource, textWidth: GraphView.textWidth)
+            self.xTitles = XTextLayer(source: dataSource.xAxisDataSource, textWidth: textWidth)
             self.xGrid = XGridLayer()
+            self.xTintView = TintView()
+            self.xTintView?.backgroundColor = UIColor.clear
         }
         
         super.init(frame: .zero)
@@ -67,6 +68,9 @@ class GraphView: UIView {
         if let xGrid = xGrid {
             self.layer.addSublayer(xGrid)
         }
+        if let xTintView = xTintView {
+            addSubview(xTintView)
+        }
         backgroundColor = .clear
         layer.masksToBounds = true
     }
@@ -87,7 +91,7 @@ class GraphView: UIView {
         xTitles?.updatePositions()
         xGrid?.frame = xTitlesBounds
         xGrid?.redraw()
-        
+        xTintView?.frame = CGRect(x: 0, y: xTitlesBounds.minY, width: bounds.width, height: xTitlesBounds.height)
         redraw()
     }
     

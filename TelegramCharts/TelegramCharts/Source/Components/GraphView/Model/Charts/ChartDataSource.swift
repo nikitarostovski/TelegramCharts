@@ -21,6 +21,8 @@ class ChartValueDataSource {
 }
 
 class ChartDataSource {
+    var mapViewport: Viewport
+    
     var viewport: Viewport
     var lastViewport: Viewport
     var targetViewport: Viewport
@@ -29,6 +31,10 @@ class ChartDataSource {
     
     var lo: Int
     var hi: Int
+    
+    var loVis: Int
+    var hiVis: Int
+    
     var xIndices: [CGFloat]
     var yValues: [ChartValueDataSource]
     
@@ -38,10 +44,17 @@ class ChartDataSource {
         self.viewport = viewport
         self.lastViewport = viewport
         self.targetViewport = viewport
-        self.xIndices = []
-        self.yValues = []
+        self.xIndices = chart.values.indices.map { CGFloat($0) / CGFloat(chart.values.count - 1) }
+        self.yValues = chart.values.map { ChartValueDataSource($0) }
         self.lo = 0
-        self.hi = 0
+        self.hi = self.xIndices.count - 1
+        self.loVis = lo
+        self.hiVis = hi
+        
+        self.mapViewport = Viewport()
+        mapViewport.xLo = 0
+        mapViewport.xHi = 1
+//        mapViewport.yLo
     }
     
     func updateViewportX(range: ClosedRange<CGFloat>) {
@@ -50,20 +63,17 @@ class ChartDataSource {
     }
     
     func updatePointsX(insetLeft: CGFloat, insetRight: CGFloat) {
-        yValues = [ChartValueDataSource]()
         let lastIndex = chart.values.count - 1
         
-        lo = Int((targetViewport.xLo - insetLeft) * CGFloat(lastIndex) - 0.5)
-        hi = Int((targetViewport.xHi + insetRight) * CGFloat(lastIndex) + 0.5)
+        lo = Int(targetViewport.xLo * CGFloat(lastIndex) - 1)
+        hi = Int(targetViewport.xHi * CGFloat(lastIndex) + 1)
         lo = max(lo, 0)
         hi = min(hi, lastIndex)
         
-        xIndices = []
-        for i in lo ... hi {
-            let xNorm = CGFloat(i) / CGFloat(lastIndex)
-            xIndices.append(xNorm)
-            yValues.append(ChartValueDataSource(chart.values[i]))
-        }
+        loVis = Int((targetViewport.xLo - insetLeft) * CGFloat(lastIndex) - 1)
+        hiVis = Int((targetViewport.xHi + insetRight) * CGFloat(lastIndex) + 1)
+        loVis = max(loVis, 0)
+        hiVis = min(hiVis, lastIndex)
     }
     
     func updatePointsY(offsets: [Int]?) { }

@@ -46,12 +46,12 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
         }
         
         let path = CGMutablePath()
-        for i in dataSource.lo ... dataSource.hi {
-            let x = bounds.width * (dataSource.xIndices[i - dataSource.lo] - dataSource.viewport.xLo) / dataSource.viewport.width
-            let y = bounds.height - ((CGFloat(dataSource.yValues[i - dataSource.lo].value) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
+        for i in dataSource.loVis ... dataSource.hiVis {
+            let x = bounds.width * (dataSource.xIndices[i] - dataSource.viewport.xLo) / dataSource.viewport.width
+            let y = bounds.height - ((CGFloat(dataSource.yValues[i].value) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
             
             let point = CGPoint(x: x, y: y)
-            if i == dataSource.lo {
+            if i == dataSource.loVis {
                 path.move(to: point)
             } else {
                 path.addLine(to: point)

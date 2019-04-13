@@ -13,6 +13,7 @@
 		1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1102AD5C223C148D000F64A9 /* Date+Formatter.swift */; };
 		110F0E5F2261E93000013F75 /* XValueData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110F0E5E2261E93000013F75 /* XValueData.swift */; };
 		110F0E612262023B00013F75 /* XGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110F0E602262023A00013F75 /* XGridLayer.swift */; };
+		110F0E6322623F4800013F75 /* TintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110F0E6222623F4800013F75 /* TintView.swift */; };
 		1123B45E224163F600107BE5 /* String+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123B45D224163F600107BE5 /* String+Format.swift */; };
 		113C82E0223E996100723D10 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 113C82DC223E996000723D10 /* ItemCell.xib */; };
 		113C82E1223E996100723D10 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82DD223E996000723D10 /* ItemCell.swift */; };
@@ -89,6 +90,7 @@
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
 		110F0E5E2261E93000013F75 /* XValueData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XValueData.swift; sourceTree = "<group>"; };
 		110F0E602262023A00013F75 /* XGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XGridLayer.swift; sourceTree = "<group>"; };
+		110F0E6222623F4800013F75 /* TintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TintView.swift; sourceTree = "<group>"; };
 		1123B45D224163F600107BE5 /* String+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Format.swift"; sourceTree = "<group>"; };
 		113C82DC223E996000723D10 /* ItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
 		113C82DD223E996000723D10 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				1154411322397C0C00795743 /* RangeSlider */,
 				1154411622397C0C00795743 /* GraphView */,
 				F4F977192260A79D00D60123 /* FilterButton */,
+				110F0E6222623F4800013F75 /* TintView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -728,6 +731,7 @@
 				1154413122397C0D00795743 /* BaseCell.swift in Sources */,
 				113C82E1223E996100723D10 /* ItemCell.swift in Sources */,
 				1154414422397C9100795743 /* Animator.swift in Sources */,
+				110F0E6322623F4800013F75 /* TintView.swift in Sources */,
 				11CA76142261D7420072A5AE /* XAxisDataSource.swift in Sources */,
 				1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */,
 				1154413822397C0D00795743 /* CheckCellModel.swift in Sources */,

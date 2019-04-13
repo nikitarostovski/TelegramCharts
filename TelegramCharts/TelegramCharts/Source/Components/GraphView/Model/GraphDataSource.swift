@@ -34,7 +34,7 @@ class GraphDataSource {
     var redrawHandler: (() -> Void)? {
         didSet {
             self.calcItem?.cancel()
-            self.calcItem = DispatchWorkItem { [weak self] in self?.recalc(animated: false) }
+            self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc(animated: false) } }
             calcQueue.sync(execute: self.calcItem!)
         }
     }
@@ -111,10 +111,10 @@ class GraphDataSource {
             var sums = [Int]()
             chartDataSources.forEach { source in
                 if sums.count == 0 {
-                    sums = Array(source.lo ... source.hi).map { _ in 0 }
+                    sums = Array(0 ..< source.yValues.count).map { _ in 0 }
                 }
-                for i in source.lo ... source.hi {
-                    sums[i - source.lo] += source.chart.values[i]
+                for i in source.yValues.indices {
+                    sums[i] += source.chart.values[i]
                 }
             }
             chartDataSources.forEach { source in
@@ -122,6 +122,11 @@ class GraphDataSource {
             }
         }
         xAxisDataSource.updateViewportX(range: range)
+        updateYAxis()
+        applyChanges(animated: animated)
+    }
+    
+    private func updateYAxis() {
         yAxisDataSources.indices.forEach { i in
             var sources: [ChartDataSource]
             if yAxisDataSources.count == 1 {
@@ -137,7 +142,6 @@ class GraphDataSource {
         if !animationLock {
             resetGrid()
         }
-        applyChanges(animated: animated)
     }
     
     private func applyChanges(animated: Bool) {
@@ -150,6 +154,7 @@ class GraphDataSource {
                 animationLock = true
                 calcQueue.asyncAfter(deadline: .now() + animationDuration) { [weak self] in
                     self?.animationLock = false
+//                    self?.updateYAxis()
                 }
             }
             viewportAnimator.animate(duration: animationDuration, easing: .easeOutCubic, update: { [weak self] (phase) in
@@ -161,8 +166,8 @@ class GraphDataSource {
                 self.yAxisDataSources.forEach { source in
                     source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
                     source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
-                    source.values.forEach { $0.fadePhase = $0.fadeLastPhase + ($0.fadeTargetPhase - $0.fadeLastPhase) * phase }
-                    source.lastValues.forEach { $0.fadePhase = $0.fadeLastPhase + ($0.fadeTargetPhase - $0.fadeLastPhase) * phase }
+                    source.values.forEach { $0.opacity = $0.lastOpacity + ($0.targetOpacity - $0.lastOpacity) * phase }
+                    source.lastValues.forEach { $0.opacity = $0.lastOpacity + ($0.targetOpacity - $0.lastOpacity) * phase }
                 }
                 self.redraw()
             }, finish: { [weak self] in
@@ -172,6 +177,8 @@ class GraphDataSource {
                 }
                 self.yAxisDataSources.forEach { source in
                     source.lastViewport = source.viewport
+                    source.values.forEach { $0.lastOpacity = $0.opacity }
+                    source.lastValues.forEach { $0.lastOpacity = $0.opacity }
                 }
             })
         } else {
@@ -183,8 +190,8 @@ class GraphDataSource {
             yAxisDataSources.forEach { source in
                 source.lastViewport = source.viewport
                 source.viewport = source.targetViewport
-                source.values.forEach { $0.fadePhase = $0.fadeTargetPhase }
-                source.lastValues.forEach { $0.fadePhase = $0.fadeTargetPhase }
+                source.values.forEach { $0.opacity = $0.targetOpacity }
+                source.lastValues.forEach { $0.opacity = $0.targetOpacity }
             }
             redraw()
         }
@@ -216,14 +223,14 @@ class GraphDataSource {
     func changeLowerBound(newLow: CGFloat) {
         self.range = newLow ... range.upperBound
         self.calcItem?.cancel()
-        self.calcItem = DispatchWorkItem { [weak self] in self?.recalc() }
+        self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
         calcQueue.sync(execute: self.calcItem!)
     }
     
     func changeUpperBound(newUp: CGFloat) {
         self.range = range.lowerBound ... newUp
         self.calcItem?.cancel()
-        self.calcItem = DispatchWorkItem { [weak self] in self?.recalc() }
+        self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
         calcQueue.sync(execute: self.calcItem!)
     }
     
@@ -231,7 +238,7 @@ class GraphDataSource {
         let diff = range.upperBound - range.lowerBound
         range = newLow ... newLow + diff
         self.calcItem?.cancel()
-        self.calcItem = DispatchWorkItem { [weak self] in self?.recalc() }
+        self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
         calcQueue.sync(execute: self.calcItem!)
     }
 }
