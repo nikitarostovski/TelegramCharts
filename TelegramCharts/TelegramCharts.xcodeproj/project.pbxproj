@@ -11,6 +11,7 @@
 		10AB1300225B819F0094EEFC /* GraphDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12F9225B819F0094EEFC /* GraphDataSource.swift */; };
 		10AB1301225B819F0094EEFC /* Simplifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB12FA225B819F0094EEFC /* Simplifier.swift */; };
 		1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1102AD5C223C148D000F64A9 /* Date+Formatter.swift */; };
+		110F0E5F2261E93000013F75 /* XValueData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110F0E5E2261E93000013F75 /* XValueData.swift */; };
 		1123B45E224163F600107BE5 /* String+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123B45D224163F600107BE5 /* String+Format.swift */; };
 		113C82E0223E996100723D10 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 113C82DC223E996000723D10 /* ItemCell.xib */; };
 		113C82E1223E996100723D10 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82DD223E996000723D10 /* ItemCell.swift */; };
@@ -58,7 +59,7 @@
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
 		11BD75A4225FBC2C0029E9D2 /* YGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */; };
-		11BD75A5225FBC2C0029E9D2 /* XGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759C225FBC2C0029E9D2 /* XGridLayer.swift */; };
+		11BD75A5225FBC2C0029E9D2 /* XTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759C225FBC2C0029E9D2 /* XTextLayer.swift */; };
 		11BD75A6225FBC2C0029E9D2 /* SelectionLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759E225FBC2C0029E9D2 /* SelectionLayer.swift */; };
 		11BD75A7225FBC2C0029E9D2 /* AreaChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */; };
 		11BD75A8225FBC2C0029E9D2 /* ChartLayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */; };
@@ -71,6 +72,7 @@
 		11BD75BA225FBF530029E9D2 /* AreaChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75B2225FBF530029E9D2 /* AreaChartDataSource.swift */; };
 		11BD75BB225FBF530029E9D2 /* YAxisDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75B5225FBF530029E9D2 /* YAxisDataSource.swift */; };
 		11BD75BF225FBFA80029E9D2 /* YValueData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75BE225FBFA80029E9D2 /* YValueData.swift */; };
+		11CA76142261D7420072A5AE /* XAxisDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CA76132261D7420072A5AE /* XAxisDataSource.swift */; };
 		F4F977182260789700D60123 /* YTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F977172260789700D60123 /* YTextLayer.swift */; };
 		F4F9771B2260A7AA00D60123 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F9771A2260A7AA00D60123 /* FilterButton.swift */; };
 		F4F9771D2260BA1E00D60123 /* FilterButtonContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F9771C2260BA1E00D60123 /* FilterButtonContainer.swift */; };
@@ -84,6 +86,7 @@
 		10AB12F9225B819F0094EEFC /* GraphDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphDataSource.swift; sourceTree = "<group>"; };
 		10AB12FA225B819F0094EEFC /* Simplifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Simplifier.swift; sourceTree = "<group>"; };
 		1102AD5C223C148D000F64A9 /* Date+Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatter.swift"; sourceTree = "<group>"; };
+		110F0E5E2261E93000013F75 /* XValueData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XValueData.swift; sourceTree = "<group>"; };
 		1123B45D224163F600107BE5 /* String+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Format.swift"; sourceTree = "<group>"; };
 		113C82DC223E996000723D10 /* ItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
 		113C82DD223E996000723D10 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
@@ -133,7 +136,7 @@
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
 		11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YGridLayer.swift; sourceTree = "<group>"; };
-		11BD759C225FBC2C0029E9D2 /* XGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XGridLayer.swift; sourceTree = "<group>"; };
+		11BD759C225FBC2C0029E9D2 /* XTextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XTextLayer.swift; sourceTree = "<group>"; };
 		11BD759E225FBC2C0029E9D2 /* SelectionLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionLayer.swift; sourceTree = "<group>"; };
 		11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartLayer.swift; sourceTree = "<group>"; };
 		11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartLayerProtocol.swift; sourceTree = "<group>"; };
@@ -146,6 +149,7 @@
 		11BD75B2225FBF530029E9D2 /* AreaChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartDataSource.swift; sourceTree = "<group>"; };
 		11BD75B5225FBF530029E9D2 /* YAxisDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YAxisDataSource.swift; sourceTree = "<group>"; };
 		11BD75BE225FBFA80029E9D2 /* YValueData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YValueData.swift; sourceTree = "<group>"; };
+		11CA76132261D7420072A5AE /* XAxisDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XAxisDataSource.swift; sourceTree = "<group>"; };
 		F4F977172260789700D60123 /* YTextLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTextLayer.swift; sourceTree = "<group>"; };
 		F4F9771A2260A7AA00D60123 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
 		F4F9771C2260BA1E00D60123 /* FilterButtonContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButtonContainer.swift; sourceTree = "<group>"; };
@@ -180,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				10AB12F9225B819F0094EEFC /* GraphDataSource.swift */,
+				11BD75AE225FBF530029E9D2 /* Viewport.swift */,
 				10AB12FA225B819F0094EEFC /* Simplifier.swift */,
 				11BD75AD225FBF530029E9D2 /* Charts */,
 				11BD75B4225FBF530029E9D2 /* Axis */,
@@ -529,9 +534,9 @@
 		11BD759A225FBC2C0029E9D2 /* Grids */ = {
 			isa = PBXGroup;
 			children = (
+				11BD759C225FBC2C0029E9D2 /* XTextLayer.swift */,
 				11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */,
 				F4F977172260789700D60123 /* YTextLayer.swift */,
-				11BD759C225FBC2C0029E9D2 /* XGridLayer.swift */,
 			);
 			path = Grids;
 			sourceTree = "<group>";
@@ -558,7 +563,6 @@
 		11BD75AD225FBF530029E9D2 /* Charts */ = {
 			isa = PBXGroup;
 			children = (
-				11BD75AE225FBF530029E9D2 /* Viewport.swift */,
 				11BD75AF225FBF530029E9D2 /* ChartDataSource.swift */,
 				11BD75B0225FBF530029E9D2 /* LineChartDataSource.swift */,
 				11BD75B1225FBF530029E9D2 /* BarChartDataSource.swift */,
@@ -570,6 +574,8 @@
 		11BD75B4225FBF530029E9D2 /* Axis */ = {
 			isa = PBXGroup;
 			children = (
+				11CA76132261D7420072A5AE /* XAxisDataSource.swift */,
+				110F0E5E2261E93000013F75 /* XValueData.swift */,
 				11BD75B5225FBF530029E9D2 /* YAxisDataSource.swift */,
 				11BD75BE225FBFA80029E9D2 /* YValueData.swift */,
 			);
@@ -712,12 +718,14 @@
 				1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */,
 				11BD75B6225FBF530029E9D2 /* Viewport.swift in Sources */,
 				1154413E22397C0D00795743 /* UITableView+Structure.swift in Sources */,
+				110F0E5F2261E93000013F75 /* XValueData.swift in Sources */,
 				1154413422397C0D00795743 /* GraphCell.swift in Sources */,
 				1154413722397C0D00795743 /* CheckCell.swift in Sources */,
 				11BD75B7225FBF530029E9D2 /* ChartDataSource.swift in Sources */,
 				1154413122397C0D00795743 /* BaseCell.swift in Sources */,
 				113C82E1223E996100723D10 /* ItemCell.swift in Sources */,
 				1154414422397C9100795743 /* Animator.swift in Sources */,
+				11CA76142261D7420072A5AE /* XAxisDataSource.swift in Sources */,
 				1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */,
 				1154413822397C0D00795743 /* CheckCellModel.swift in Sources */,
 				11BD75A4225FBC2C0029E9D2 /* YGridLayer.swift in Sources */,
@@ -747,7 +755,7 @@
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
 				1154412A22397C0D00795743 /* ButtonCellModel.swift in Sources */,
-				11BD75A5225FBC2C0029E9D2 /* XGridLayer.swift in Sources */,
+				11BD75A5225FBC2C0029E9D2 /* XTextLayer.swift in Sources */,
 				1123B45E224163F600107BE5 /* String+Format.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

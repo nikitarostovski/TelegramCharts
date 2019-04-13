@@ -40,6 +40,9 @@ class GraphCell: BaseCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        guard let model = model as? GraphCellModel else { return }
+        let normTextWidth = CGFloat(60) / bounds.width
+        model.dataProvider.setNormalizedTextWidth(textWidth: normTextWidth)
         mainGraphView.redraw()
         mapGraphView.redraw()
     }

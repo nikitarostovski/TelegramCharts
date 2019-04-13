@@ -60,7 +60,7 @@ class ChartDataSource {
         
         xIndices = []
         for i in lo ... hi {
-            let xNorm = CGFloat(i) / CGFloat(chart.values.count - 1)
+            let xNorm = CGFloat(i) / CGFloat(lastIndex)
             xIndices.append(xNorm)
             yValues.append(ChartValueDataSource(chart.values[i]))
         }

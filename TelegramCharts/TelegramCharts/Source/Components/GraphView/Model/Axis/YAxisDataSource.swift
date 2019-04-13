@@ -46,7 +46,7 @@ class YAxisDataSource {
         self.values = []
     }
     
-    func updateValues(sources: [ChartDataSource]) {
+    func resetValues(sources: [ChartDataSource]) {
         guard sources.count > 0, let graph = graph else { return }
         lastValues = values
         lastValues.forEach {

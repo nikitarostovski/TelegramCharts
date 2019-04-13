@@ -40,7 +40,6 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
         else {
             return
         }
-        print("chart: ", dataSource.viewport.yLo, " ... ", dataSource.viewport.yHi)
         let columnWidth = bounds.width / CGFloat(dataSource.hi - dataSource.lo)
 //        let columnWidth = bounds.width * (dataSource.xIndices.last! - dataSource.xIndices.first!) / dataSource.viewport.width
         let path = CGMutablePath()

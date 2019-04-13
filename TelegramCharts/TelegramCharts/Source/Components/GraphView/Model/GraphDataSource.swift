@@ -23,6 +23,7 @@ class GraphDataSource {
     private (set) weak var graph: Graph?
     private (set) var chartDataSources: [ChartDataSource]
     private (set) var yAxisDataSources: [YAxisDataSource]
+    private (set) var xAxisDataSource: XAxisDataSource
     
     var dates: [Date]
     var selectionIndex: Int?
@@ -41,6 +42,8 @@ class GraphDataSource {
         self.dates = graph.dates
         self.range = range
         
+        self.xAxisDataSource = XAxisDataSource(dates: graph.dates, viewport: Viewport())
+        
         let yLeftDataSource = YAxisDataSource(graph: graph)
         self.yAxisDataSources = [yLeftDataSource]
         if graph.yScaled && graph.charts.count == 2 {
@@ -53,6 +56,10 @@ class GraphDataSource {
         graph.charts.forEach {
             chartDataSources.append(sourceForChart($0))
         }
+    }
+    
+    func setNormalizedTextWidth(textWidth: CGFloat) {
+        xAxisDataSource.textWidth = textWidth
     }
 
     private func recalc(animated: Bool = true) {
@@ -107,7 +114,7 @@ class GraphDataSource {
                 source.setSumValues(sums)
             }
         }
-        
+        xAxisDataSource.updateViewportX(range: range)
         yAxisDataSources.indices.forEach { i in
             var sources: [ChartDataSource]
             if yAxisDataSources.count == 1 {
@@ -117,7 +124,7 @@ class GraphDataSource {
             }
             yAxisDataSources[i].updateViewport(sources: sources)
             if !animationLock {
-                yAxisDataSources[i].updateValues(sources: sources)
+                yAxisDataSources[i].resetValues(sources: sources)
             }
         }
         if !animationLock {
@@ -134,8 +141,8 @@ class GraphDataSource {
             }
             if !animationLock {
                 animationLock = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration) {
-                    self.animationLock = false
+                calcQueue.asyncAfter(deadline: .now() + animationDuration) { [weak self] in
+                    self?.animationLock = false
                 }
             }
             viewportAnimator.animate(duration: animationDuration, easing: .easeOutCubic, update: { [weak self] (phase) in
@@ -147,7 +154,6 @@ class GraphDataSource {
                 self.yAxisDataSources.forEach { source in
                     source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
                     source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
-                    
                     source.values.forEach { $0.fadePhase = $0.fadeLastPhase + ($0.fadeTargetPhase - $0.fadeLastPhase) * phase }
                     source.lastValues.forEach { $0.fadePhase = $0.fadeLastPhase + ($0.fadeTargetPhase - $0.fadeLastPhase) * phase }
                 }

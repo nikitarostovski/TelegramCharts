@@ -24,7 +24,7 @@ class GraphView: UIView {
     private var charts: [ChartLayerProtocolType]
     private var yGrids: [YGridLayer]
     private var yTitles: [YTextLayer]
-//    private var xGrid: XGridLayerProtocolType
+    private var xTitles: XTextLayer?
     
     init(dataSource: GraphDataSource, lineWidth: CGFloat, isMap: Bool) {
         self.isMap = isMap
@@ -36,12 +36,12 @@ class GraphView: UIView {
         
         if !isMap {
             insetTop = 32
-            insetBottom = 16
+            insetBottom = 24
             for ySource in dataSource.yAxisDataSources {
                 self.yTitles.append(YTextLayer(source: ySource))
                 self.yGrids.append(YGridLayer(source: ySource))
             }
-            //        self.xGrid = XGridLayer()
+            self.xTitles = XTextLayer(source: dataSource.xAxisDataSource)
         }
         
         super.init(frame: .zero)
@@ -52,7 +52,6 @@ class GraphView: UIView {
             charts.append(chartLayer)
         }
         yGrids.forEach { layer.addSublayer($0) }
-//        self.layer.addSublayer(xGrid)
         dataSource.chartDataSources.forEach {
             guard $0.chart.type == .line else { return }
             let chartLayer = layerForChart($0)
@@ -60,6 +59,9 @@ class GraphView: UIView {
             charts.append(chartLayer)
         }
         yTitles.forEach { layer.addSublayer($0) }
+        if let xTitles = xTitles {
+            self.layer.addSublayer(xTitles)
+        }
         backgroundColor = .clear
         layer.masksToBounds = true
     }
@@ -74,12 +76,12 @@ class GraphView: UIView {
         charts.forEach { $0.frame = chartBounds }
         yGrids.forEach { $0.frame = chartBounds }
         yTitles.forEach { $0.frame = chartBounds }
+        
+        let xTitlesBounds = CGRect(x: 0, y: bounds.height - insetBottom, width: bounds.width, height: insetBottom)
+        xTitles?.frame = xTitlesBounds
+        xTitles?.updatePositions()
+        
         redraw()
-        /*selection.frame = chartBounds
-        yGrid.frame = chartBounds
-        yGrid.resize()
-        xGrid.frame = CGRect(x: 0, y: bounds.height - insetBottom, width: bounds.width, height: insetBottom)
-        xGrid.resize()*/
     }
     
     func redraw() {
@@ -87,6 +89,7 @@ class GraphView: UIView {
         charts.forEach { $0.update() }
         yGrids.forEach { $0.updatePositions() }
         yTitles.forEach { $0.updatePositions() }
+        xTitles?.updatePositions()
     }
     
     func resetGridValues() {

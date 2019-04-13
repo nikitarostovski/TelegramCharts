@@ -65,14 +65,19 @@ class YGridLayer: CALayer {
             lineLayer.path = path
             
             if dataSource.alignment != .fill {
-                var colors = [lineColor.cgColor, lineColor.cgColor, UIColor.clear.cgColor]
-                if dataSource.alignment == .right {
-                    colors = colors.reversed()
+                var colors: [CGColor]!
+                var locations: [NSNumber]!
+                if dataSource.alignment == .left {
+                    colors = [lineColor.cgColor, lineColor.cgColor, UIColor.clear.cgColor]
+                    locations = [0.0, 0.33, 1.0]
+                } else {
+                    colors = [UIColor.clear.cgColor, lineColor.cgColor, lineColor.cgColor]
+                    locations = [0.0, 0.67, 1.0]
                 }
                 let gradientLayer = CAGradientLayer()
                 gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
                 gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-                gradientLayer.locations = [0.0, 0.5, 1.0]
+                gradientLayer.locations = locations
                 gradientLayer.colors = colors
                 gradientLayer.frame = lineFrame
                 gradients.append(gradientLayer)
@@ -83,7 +88,7 @@ class YGridLayer: CALayer {
             }
             addSublayer(lineLayer)
         }
-        updatePositions()
+//        updatePositions()
     }
     
     func updatePositions() {
@@ -92,16 +97,16 @@ class YGridLayer: CALayer {
         else {
             return
         }
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         lines.indices.forEach { i in
             let line = lines[i]
             line.opacity = Float(values[i].fadePhase)
             
             let normY = (values[i].value - dataSource.viewport.yLo) / dataSource.viewport.height
             line.position.y = (1 - normY) * bounds.height
-            
-//            let normY = dataSource.viewport.yLo + values[i].value / dataSource.viewport.height
-//            line.position.y = (1 - normY) * bounds.height
         }
+        CATransaction.commit()
     }
 }
 

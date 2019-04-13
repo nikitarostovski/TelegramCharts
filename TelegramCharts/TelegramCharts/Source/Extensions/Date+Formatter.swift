@@ -11,6 +11,7 @@ import UIKit
 enum DateFormat: String {
     case year = "YYYY"
     case monthDay = "MMM d"
+    case dayMonth = "d MMM"
     case weekdayDayMonthYear = "EEE, d MMM yyyy"
 }
 

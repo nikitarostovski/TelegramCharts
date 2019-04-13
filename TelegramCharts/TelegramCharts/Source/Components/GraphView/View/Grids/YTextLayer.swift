@@ -60,7 +60,7 @@ class YTextLayer: CALayer {
             titles.append(titleLayer)
             addSublayer(titleLayer)
         }
-        updatePositions()
+//        updatePositions()
     }
     
     func updatePositions() {
@@ -69,6 +69,8 @@ class YTextLayer: CALayer {
             else {
                 return
         }
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         titles.indices.forEach { i in
             let title = titles[i]
             title.opacity = Float(values[i].fadePhase)
@@ -76,6 +78,7 @@ class YTextLayer: CALayer {
             let normY = (values[i].value - dataSource.viewport.yLo) / dataSource.viewport.height
             title.position.y = (1 - normY) * bounds.height - textHeight / 2
         }
+        CATransaction.commit()
     }
     
     // MARK: - Private
