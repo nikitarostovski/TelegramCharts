@@ -10,13 +10,15 @@ import UIKit
 
 class AreaChartLayer: CALayer, ChartLayerProtocol {
 
+    private var isMap: Bool
     private var shapeLayer: CAShapeLayer
     private weak var dataSource: AreaChartDataSource?
 
     // MARK: - Lifecycle
 
-    required init(source: ChartDataSource, lineWidth: CGFloat) {
+    required init(source: ChartDataSource, lineWidth: CGFloat, isMap: Bool) {
         guard let areaSource = source as? AreaChartDataSource else { fatalError() }
+        self.isMap = isMap
         self.dataSource = areaSource
         self.shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = UIColor.clear.cgColor
@@ -35,12 +37,27 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
     
     func update() {
         guard let dataSource = dataSource,
-            dataSource.viewport.width > 0,
-            dataSource.viewport.height > 0,
             dataSource.xIndices.count > 1,
             bounds != .zero
             else {
                 return
+        }
+        let startIndex: Int
+        let finishIndex: Int
+        let viewport: Viewport
+        if isMap {
+            viewport = dataSource.mapViewport
+            startIndex = 0
+            finishIndex = dataSource.yValues.count - 1
+        } else {
+            viewport = dataSource.viewport
+            startIndex = dataSource.loVis
+            finishIndex = dataSource.hiVis
+        }
+        guard viewport.width > 0,
+            viewport.height > 0
+        else {
+            return
         }
         let distance = dataSource.xIndices[1] - dataSource.xIndices[0]
         let columnWidth = bounds.width * distance
@@ -49,20 +66,19 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
         let path = CGMutablePath()
         var yLoLast: CGFloat? = nil
         var yHiLast: CGFloat? = nil
-        for i in dataSource.loVis ... dataSource.hiVis {
-            let x = bounds.width * (dataSource.xIndices[i] - dataSource.viewport.xLo) / dataSource.viewport.width
-            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i].offset) / CGFloat(dataSource.yValues[i].sumValue) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
-            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i].offset + dataSource.yValues[i].value) / CGFloat(dataSource.yValues[i].sumValue) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
+        for i in startIndex ... finishIndex {
+            let x = bounds.width * (dataSource.xIndices[i] - viewport.xLo) / viewport.width
+            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i].offset) / CGFloat(dataSource.yValues[i].sumValue) - viewport.yLo) / viewport.height) * bounds.height
+            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i].offset + dataSource.yValues[i].value) / CGFloat(dataSource.yValues[i].sumValue) - viewport.yLo) / viewport.height) * bounds.height
             
             if let yLoLast = yLoLast, let yHiLast = yHiLast {
-                
                 var xLeft: CGFloat
                 if let lastXRight = lastXRight {
                     xLeft = lastXRight
                 } else {
                     xLeft = x - columnWidth
                 }
-                let xRight: CGFloat = x + columnWidth
+                let xRight: CGFloat = x
                 lastXRight = xRight
                 
                 let pointBottomLeft = CGPoint(x: xLeft, y: yLoLast)

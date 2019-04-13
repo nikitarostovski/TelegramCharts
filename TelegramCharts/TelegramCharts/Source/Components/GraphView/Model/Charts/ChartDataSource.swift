@@ -22,6 +22,8 @@ class ChartValueDataSource {
 
 class ChartDataSource {
     var mapViewport: Viewport
+    var mapLastViewport: Viewport
+    var mapTargetViewport: Viewport
     
     var viewport: Viewport
     var lastViewport: Viewport
@@ -52,9 +54,14 @@ class ChartDataSource {
         self.hiVis = hi
         
         self.mapViewport = Viewport()
+        self.mapLastViewport = Viewport()
+        self.mapTargetViewport = Viewport()
         mapViewport.xLo = 0
         mapViewport.xHi = 1
-//        mapViewport.yLo
+        mapLastViewport.xLo = 0
+        mapLastViewport.xHi = 1
+        mapTargetViewport.xLo = 0
+        mapTargetViewport.xHi = 1
     }
     
     func updateViewportX(range: ClosedRange<CGFloat>) {

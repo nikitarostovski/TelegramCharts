@@ -13,9 +13,8 @@ class GraphDataSource {
     private let calcQueue = DispatchQueue.global(qos: .userInitiated)
     private var calcItem: DispatchWorkItem?
 
-    private let animationDuration: TimeInterval = 0.25
+    private let animationDuration: TimeInterval = 0.15
     private var viewportAnimator = Animator()
-    private var yAnimator = Animator()
     private var animationLock = false
     
     private var insets: UIEdgeInsets = .zero
@@ -162,6 +161,8 @@ class GraphDataSource {
                 self.chartDataSources.forEach { source in
                     source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
                     source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
+                    source.mapViewport.yLo = source.mapLastViewport.yLo + (source.mapTargetViewport.yLo - source.mapLastViewport.yLo) * phase
+                    source.mapViewport.yHi = source.mapLastViewport.yHi + (source.mapTargetViewport.yHi - source.mapLastViewport.yHi) * phase
                 }
                 self.yAxisDataSources.forEach { source in
                     source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
@@ -172,8 +173,11 @@ class GraphDataSource {
                 self.redraw()
             }, finish: { [weak self] in
                 guard let self = self else { return }
+            }, cancel: { [weak self] in
+                guard let self = self else { return }
                 self.chartDataSources.forEach { source in
                     source.lastViewport = source.viewport
+                    source.mapLastViewport = source.mapViewport
                 }
                 self.yAxisDataSources.forEach { source in
                     source.lastViewport = source.viewport
@@ -186,6 +190,8 @@ class GraphDataSource {
             chartDataSources.forEach { source in
                 source.lastViewport = source.viewport
                 source.viewport = source.targetViewport
+                source.mapLastViewport = source.mapViewport
+                source.mapViewport = source.mapTargetViewport
             }
             yAxisDataSources.forEach { source in
                 source.lastViewport = source.viewport

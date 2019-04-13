@@ -112,11 +112,11 @@ class GraphView: UIView {
     private func layerForChart(_ source: ChartDataSource) -> ChartLayerProtocolType {
         switch source.chart.type {
         case .line:
-            return LineChartLayer(source: source, lineWidth: lineWidth)
+            return LineChartLayer(source: source, lineWidth: lineWidth, isMap: isMap)
         case .bar:
-            return BarChartLayer(source: source, lineWidth: lineWidth)
+            return BarChartLayer(source: source, lineWidth: lineWidth, isMap: isMap)
         case .area:
-            return AreaChartLayer(source: source, lineWidth: lineWidth)
+            return AreaChartLayer(source: source, lineWidth: lineWidth, isMap: isMap)
         }
     }
     

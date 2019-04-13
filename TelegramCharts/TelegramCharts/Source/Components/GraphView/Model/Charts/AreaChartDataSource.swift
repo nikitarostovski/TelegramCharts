@@ -27,6 +27,15 @@ class AreaChartDataSource: ChartDataSource {
         }
         targetViewport.yLo = 0
         targetViewport.yHi = CGFloat(maxValue)
+        
+        if yValues.count > 0 {
+            var maxMapValue: Int = yValues.first!.offset + yValues.first!.value
+            for i in yValues.indices {
+                maxMapValue = max(maxMapValue, yValues[i].offset + yValues[i].value)
+            }
+            mapTargetViewport.yLo = 0
+            mapTargetViewport.yHi = CGFloat(maxMapValue)
+        }
     }
     
     override func getOffsets() -> [Int] {
@@ -37,6 +46,8 @@ class AreaChartDataSource: ChartDataSource {
         yValues.indices.forEach {
             yValues[$0].sumValue = sums[$0]
         }
+        mapTargetViewport.yLo = 0
+        mapTargetViewport.yHi = 1
         targetViewport.yLo = 0
         targetViewport.yHi = 1
     }

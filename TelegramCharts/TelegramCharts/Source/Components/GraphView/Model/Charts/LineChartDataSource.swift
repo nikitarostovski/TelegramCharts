@@ -19,5 +19,16 @@ class LineChartDataSource: ChartDataSource {
         }
         targetViewport.yLo = CGFloat(minValue)
         targetViewport.yHi = CGFloat(maxValue)
+        
+        if yValues.count > 0 {
+            var minMapValue: Int = yValues.first!.value
+            var maxMapValue: Int = yValues.last!.value
+            for i in yValues.indices {
+                minMapValue = min(minMapValue, yValues[i].value)
+                maxMapValue = max(maxMapValue, yValues[i].value)
+            }
+            mapTargetViewport.yLo = CGFloat(minMapValue)
+            mapTargetViewport.yHi = CGFloat(maxMapValue)
+        }
     }
 }

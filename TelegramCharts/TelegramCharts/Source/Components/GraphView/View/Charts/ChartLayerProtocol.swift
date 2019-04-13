@@ -12,6 +12,6 @@ typealias ChartLayerProtocolType = (ChartLayerProtocol & CALayer)
 
 protocol ChartLayerProtocol where Self: CALayer {
     
-    init(source: ChartDataSource, lineWidth: CGFloat)
+    init(source: ChartDataSource, lineWidth: CGFloat, isMap: Bool)
     func update()
 }

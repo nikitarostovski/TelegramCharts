@@ -10,13 +10,15 @@ import UIKit
 
 class LineChartLayer: CALayer, ChartLayerProtocol {
 
+    private var isMap: Bool
     private var shapeLayer: CAShapeLayer
     private weak var dataSource: LineChartDataSource?
 
     // MARK: - Lifecycle
 
-    required init(source: ChartDataSource, lineWidth: CGFloat) {
+    required init(source: ChartDataSource, lineWidth: CGFloat, isMap: Bool) {
         guard let lineSource = source as? LineChartDataSource else { fatalError() }
+        self.isMap = isMap
         self.dataSource = lineSource
         self.shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = source.chart.color.cgColor
@@ -38,20 +40,35 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
     
     func update() {
         guard let dataSource = dataSource,
-            dataSource.viewport.width > 0,
-            dataSource.viewport.height > 0,
             bounds != .zero
+        else {
+            return
+        }
+        let startIndex: Int
+        let finishIndex: Int
+        let viewport: Viewport
+        if isMap {
+            viewport = dataSource.mapViewport
+            startIndex = 0
+            finishIndex = dataSource.yValues.count - 1
+        } else {
+            viewport = dataSource.viewport
+            startIndex = dataSource.loVis
+            finishIndex = dataSource.hiVis
+        }
+        guard viewport.width > 0,
+            viewport.height > 0
         else {
             return
         }
         
         let path = CGMutablePath()
-        for i in dataSource.loVis ... dataSource.hiVis {
-            let x = bounds.width * (dataSource.xIndices[i] - dataSource.viewport.xLo) / dataSource.viewport.width
-            let y = bounds.height - ((CGFloat(dataSource.yValues[i].value) - dataSource.viewport.yLo) / dataSource.viewport.height) * bounds.height
+        for i in startIndex ... finishIndex {
+            let x = bounds.width * (dataSource.xIndices[i] - viewport.xLo) / viewport.width
+            let y = bounds.height - ((CGFloat(dataSource.yValues[i].value) - viewport.yLo) / viewport.height) * bounds.height
             
             let point = CGPoint(x: x, y: y)
-            if i == dataSource.loVis {
+            if i == startIndex {
                 path.move(to: point)
             } else {
                 path.addLine(to: point)

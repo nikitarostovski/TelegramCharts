@@ -10,11 +10,15 @@ import UIKit
 
 typealias AnimationUpdateHandler = ((CGFloat) -> Void)
 typealias AnimationFinishHandler = (() -> Void)
+typealias AnimationCancelHandler = (() -> Void)
 
 class Animator {
+    
+    private var running = false
 
     var updateHandler: AnimationUpdateHandler?
     var finishHandler: AnimationFinishHandler?
+    var cancelHandler: AnimationCancelHandler?
 
     var phase: CGFloat = 1
     
@@ -27,9 +31,14 @@ class Animator {
     func animate(duration: TimeInterval,
                  easing: AnimationEasingType? = nil,
                  update: AnimationUpdateHandler?,
-                 finish: AnimationFinishHandler? = nil) {
+                 finish: AnimationFinishHandler? = nil,
+                 cancel: AnimationCancelHandler? = nil) {
 
-        finishAnimation()
+        if running {
+            cancelAnimation()
+        }
+        running = true
+        cancelHandler = cancel
         updateHandler = update
         finishHandler = finish
         easingFunction = easingFunction(type: easing ?? .linear)
@@ -45,7 +54,18 @@ class Animator {
         displayLink.remove(from: .main, forMode: .common)
         self.displayLink = nil
 
+        running = false
         finishHandler?()
+    }
+    
+    func cancelAnimation() {
+        guard let displayLink = displayLink else { return }
+        
+        displayLink.remove(from: .main, forMode: .common)
+        self.displayLink = nil
+        
+        running = false
+        cancelHandler?()
     }
     
     @objc private func displayLinkFire() {
