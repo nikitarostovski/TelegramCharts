@@ -8,9 +8,10 @@
 
 import UIKit
 
-class MainViewController: UITableViewController {
+class MainViewController: UIViewController {
 
     @IBOutlet weak var themeBarButton: UIBarButtonItem!
+    @IBOutlet weak var tableView: UITableView!
     
     var graphs: [Graph]! {
         didSet {
@@ -24,10 +25,10 @@ class MainViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.graphs = GraphProvider.getGraphs()
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 54, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 320
+        tableView.estimatedRowHeight = 60
         tableView.tableFooterView = UIView()
         tableView.canCancelContentTouches = false
     }
@@ -44,6 +45,11 @@ class MainViewController: UITableViewController {
         stopReceivingThemeUpdates()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.tableView.reloadData()
+    }
+    
     // MARK: - Structure
     
     private var structure = TableViewStructure()
@@ -51,12 +57,6 @@ class MainViewController: UITableViewController {
     private func makeGraphCellModel(index: Int) -> GraphCellModel {
         let model = GraphCellModel(graphIndex: index, graph: graphs[index], currentRange: 0.75 ... 1.0)
         model.topSeparatorStyle.isHidden = false
-        return model
-    }
-    
-    private func makeFilterCellModel(index: Int) -> FilterCellModel {
-        let model = FilterCellModel(graphIndex: index, graph: graphs[index])
-//        let model = GraphCellModel(graphIndex: index, graph: graphs[index], currentRange: 0.75 ... 1.0)
         model.bottomSeparatorStyle.isHidden = false
         return model
     }
@@ -72,8 +72,7 @@ class MainViewController: UITableViewController {
         for i in graphs.indices {
             let header = makeHeaderModel(text: graphs[i].name)
             let graphModel = makeGraphCellModel(index: i)
-            let filterModel = makeFilterCellModel(index: i)
-            let section = TableViewSection(headerModel: header, cellModels: [graphModel, filterModel])
+            let section = TableViewSection(headerModel: header, cellModels: [graphModel])
             structure.addSection(section: section)
         }
     }
@@ -99,46 +98,46 @@ class MainViewController: UITableViewController {
 
 // MARK: - UITableView DataSource
 
-extension MainViewController {
+extension MainViewController: UITableViewDataSource {
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return tableView.numberOfSections(in: structure)
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableView.numberOfRows(in: structure, section: section)
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return tableView.dequeueReusableCell(with: structure, indexPath: indexPath)
     }
 }
 
 // MARK: - UITableView Delegate
 
-extension MainViewController {
+extension MainViewController: UITableViewDelegate {
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return .leastNormalMagnitude
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return nil
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return tableView.heightForHeaderInSection(structure: structure, section: section)
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView.heightForRow(structure: structure, indexPath: indexPath)
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.viewForHeader(structure: structure, section: section)
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

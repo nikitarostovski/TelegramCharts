@@ -10,6 +10,7 @@ import UIKit
 
 class FilterButtonContainer: UIView {
     
+    private let bottomInset: CGFloat = 16
     private let buttonSpacing: CGFloat = 8
     private let buttonHeight: CGFloat = 44
     
@@ -17,22 +18,23 @@ class FilterButtonContainer: UIView {
         didSet {
             oldValue.forEach { $0.removeFromSuperview() }
             buttons.forEach { addSubview($0) }
+            invalidateIntrinsicContentSize()
         }
     }
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-        self.frame.size.height = newHeight(forWidth: frame.width)
         layoutButtons()
+        super.layoutSubviews()
     }
     
     override var intrinsicContentSize: CGSize {
         var s = super.intrinsicContentSize
-        s.height = newHeight(forWidth: s.width)
+        s.height = newHeight(forWidth: bounds.width)
         return s
     }
     
-    private func newHeight(forWidth width: CGFloat) -> CGFloat {
+    func newHeight(forWidth width: CGFloat) -> CGFloat {
+        guard width != 0, buttons.count > 0 else { return 0 }
         var totalWidth: CGFloat = 0
         buttons.forEach { button in
             button.sizeToFit()
@@ -40,7 +42,7 @@ class FilterButtonContainer: UIView {
         }
         totalWidth -= buttonSpacing
         let rowCount = Int(totalWidth / width) + 1
-        return CGFloat(rowCount) * (buttonHeight + buttonSpacing) - buttonSpacing
+        return CGFloat(rowCount) * (buttonHeight + buttonSpacing) - buttonSpacing + bottomInset
     }
     
     private func layoutButtons() {
@@ -48,12 +50,11 @@ class FilterButtonContainer: UIView {
         var curX: CGFloat = 0
         buttons.forEach { button in
             button.sizeToFit()
-            if button.frame.width + buttonSpacing > bounds.width + buttonSpacing {
+            if curX + button.frame.width + buttonSpacing > bounds.width + buttonSpacing {
                 curX = 0
                 curRow += 1
             }
-            print(curRow)
-            button.frame = CGRect(x: curX, y: CGFloat(curRow) * buttonHeight, width: button.frame.width, height: buttonHeight)
+            button.frame = CGRect(x: curX, y: CGFloat(curRow) * (buttonHeight + buttonSpacing), width: button.frame.width, height: buttonHeight)
             curX += button.frame.width + buttonSpacing
         }
     }

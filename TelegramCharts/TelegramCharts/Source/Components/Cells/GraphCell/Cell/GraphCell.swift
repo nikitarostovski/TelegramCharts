@@ -14,7 +14,7 @@ class GraphCell: BaseCell {
     private let mainInsets = UIEdgeInsets(top: 32, left: 16, bottom: 24, right: 16)
     
     override class var cellHeight: CGFloat {
-        return 360
+        return UITableView.automaticDimension
     }
     
     @IBOutlet weak var delimiterLabel: UILabel!
@@ -22,6 +22,7 @@ class GraphCell: BaseCell {
     @IBOutlet weak var endDateLabel: UILabel!
     @IBOutlet weak var mainContainer: UIView!
     @IBOutlet weak var mapContainer: UIView!
+    @IBOutlet weak var filterContainer: FilterButtonContainer!
     
     var mainGraphView: GraphView!
     var mapGraphView: GraphView!
@@ -116,6 +117,19 @@ class GraphCell: BaseCell {
             NSLayoutConstraint(item: rangeSlider, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: mainInsets.left),
             NSLayoutConstraint(item: rangeSlider, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
         ])
+        
+        var buttons = [UIButton]()
+        if model.dataProvider.chartDataSources.count > 1 {
+            for chartSource in model.dataProvider.chartDataSources {
+                let b = UIButton(type: .system)
+                b.setTitle(chartSource.chart.name, for: .normal)
+                b.backgroundColor = chartSource.chart.color
+                b.tintColor = .white
+                buttons.append(b)
+            }
+        }
+        filterContainer.buttons = buttons
+        invalidateIntrinsicContentSize()
     }
     
     override func themeDidUpdate(theme: Theme) {

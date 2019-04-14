@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -20,7 +21,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="w6o-U4-wbH" kind="relationship" relationship="rootViewController" id="VXw-nm-4rQ"/>
+                        <segue destination="9ow-wO-E9h" kind="relationship" relationship="rootViewController" id="YFG-27-XQe"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9WV-VY-jmW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -28,34 +29,47 @@
             <point key="canvasLocation" x="-214" y="134"/>
         </scene>
         <!--Statistics-->
-        <scene sceneID="bJO-qx-fRW">
+        <scene sceneID="n7f-Dd-CSP">
             <objects>
-                <tableViewController id="w6o-U4-wbH" customClass="MainViewController" customModule="TelegramCharts" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Ywk-Kw-mAI">
+                <viewController id="9ow-wO-E9h" customClass="MainViewController" customModule="TelegramCharts" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9bY-fo-eUA">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <sections/>
-                        <connections>
-                            <outlet property="dataSource" destination="w6o-U4-wbH" id="Us7-f2-y0c"/>
-                            <outlet property="delegate" destination="w6o-U4-wbH" id="VvG-h2-BoG"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Statistics" id="y4A-nd-ZLN">
-                        <barButtonItem key="backBarButtonItem" title=" " id="pYA-Yc-mzA"/>
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="5cD-cA-G90">
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="ucs-iB-40m">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="9ow-wO-E9h" id="nGl-yT-qU6"/>
+                                    <outlet property="delegate" destination="9ow-wO-E9h" id="kNH-Ul-pwd"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ucs-iB-40m" firstAttribute="leading" secondItem="9bY-fo-eUA" secondAttribute="leading" id="2lX-Bc-fQe"/>
+                            <constraint firstItem="ucs-iB-40m" firstAttribute="top" secondItem="9bY-fo-eUA" secondAttribute="top" id="Nrr-cq-rSF"/>
+                            <constraint firstAttribute="trailing" secondItem="ucs-iB-40m" secondAttribute="trailing" id="UXl-QL-8br"/>
+                            <constraint firstAttribute="bottom" secondItem="ucs-iB-40m" secondAttribute="bottom" id="muQ-4x-vBj"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="d3q-ZV-Z27"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Statistics" id="rOZ-gY-P7N">
+                        <barButtonItem key="backBarButtonItem" title=" " id="K8v-PD-Jxt"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="3pM-fW-RaK">
                             <connections>
-                                <action selector="themeTap:" destination="w6o-U4-wbH" id="6lv-BD-98m"/>
+                                <action selector="themeTap:" destination="9ow-wO-E9h" id="XC5-xY-OF4"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="themeBarButton" destination="5cD-cA-G90" id="ElA-FD-wGr"/>
+                        <outlet property="tableView" destination="ucs-iB-40m" id="NeA-Eu-0eI"/>
+                        <outlet property="themeBarButton" destination="3pM-fW-RaK" id="NsV-F8-E1b"/>
                     </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4i9-aw-z4z" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nxg-Rb-lyJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="636" y="134"/>
+            <point key="canvasLocation" x="570" y="134"/>
         </scene>
     </scenes>
 </document>
