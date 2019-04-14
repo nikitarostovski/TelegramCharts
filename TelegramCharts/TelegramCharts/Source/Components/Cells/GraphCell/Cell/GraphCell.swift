@@ -14,7 +14,7 @@ class GraphCell: BaseCell {
     private let mainInsets = UIEdgeInsets(top: 32, left: 16, bottom: 24, right: 16)
     
     override class var cellHeight: CGFloat {
-        return 320
+        return 360
     }
     
     @IBOutlet weak var delimiterLabel: UILabel!

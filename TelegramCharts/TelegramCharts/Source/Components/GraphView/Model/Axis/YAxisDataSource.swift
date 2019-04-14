@@ -35,13 +35,15 @@ class YAxisDataSource {
     var viewport: Viewport
     var targetViewport: Viewport
     
+    var viewportChanged: Bool = true
+    
     init(graph: Graph) {
         self.graph = graph
         self.viewport = Viewport()
         self.lastViewport = Viewport()
         self.targetViewport = Viewport()
         self.textMode = graph.percentage ? .percent : .value
-        self.gridPositions = [0, 0.25, 0.5, 0.75, 1]
+        self.gridPositions = [0, 0.2, 0.4, 0.6, 0.8, 1]
         self.lastValues = []
         self.values = []
     }

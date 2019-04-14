@@ -19,11 +19,11 @@ class GraphProvider {
     ]
     
     static private let titles = [
-        "STATISTICS 1",
-        "STATISTICS 2",
-        "STATISTICS 3",
-        "STATISTICS 4",
-        "STATISTICS 5"
+        "FOLLOWERS",
+        "INTERACTIONS",
+        "FRUITS",
+        "VIEWS",
+        "FRUITS"
     ]
     
     static func getGraphs() -> [Graph] {

@@ -81,10 +81,10 @@ class AreaChartView: UIView, ChartViewProtocol {
                 }
                 let xRight: CGFloat = x
                 
-                let pointBottomLeft = CGPoint(x: xLeft, y: yLoLast)
-                let pointBottomRight = CGPoint(x: xRight, y: yLo)
-                let pointTopLeft = CGPoint(x: xLeft, y: yHiLast)
-                let pointTopRight = CGPoint(x: xRight, y: yHi)
+                let pointBottomLeft = CGPoint(x: xLeft, y: yLoLast + 0.25)
+                let pointBottomRight = CGPoint(x: xRight, y: yLo + 0.25)
+                let pointTopLeft = CGPoint(x: xLeft, y: yHiLast - 0.25)
+                let pointTopRight = CGPoint(x: xRight, y: yHi - 0.25)
                 
                 path.move(to: pointTopLeft)
                 path.addLine(to: pointTopRight)

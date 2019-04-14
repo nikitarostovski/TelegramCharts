@@ -14,7 +14,8 @@ class GraphConverter {
         var dates = [Date]()
         var charts = [Chart]()
         
-        for (name, values) in model.columns {
+        let sorted = model.columns.sorted(by: { $0.key < $1.key })
+        for (name, values) in sorted {
             guard let type = model.types[name] else { continue }
             
             if type == "x" {

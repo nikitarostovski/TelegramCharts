@@ -132,9 +132,9 @@ enum Theme: Int {
     var axisTextColor: UIColor {
         switch self {
         case .day:
-            return UIColor(hexString: "8E8E93")
+            return UIColor(hexString: "252529").withAlphaComponent(0.5)
         case .night:
-            return UIColor(hexString: "8596AB")
+            return UIColor(hexString: "BACCE1").withAlphaComponent(0.6)
         }
     }
     
