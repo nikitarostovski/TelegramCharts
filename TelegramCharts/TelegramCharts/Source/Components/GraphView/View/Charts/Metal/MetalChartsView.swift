@@ -10,6 +10,8 @@ import MetalKit
 
 class MetalChartsView: MTKView, ChartViewProtocol, RenderDataSource {
     
+    private (set) var barWidth: CGFloat = 0
+    
     private var isMap: Bool
     private var lineWidth: CGFloat
     private var providers: [MetalDataProvider]

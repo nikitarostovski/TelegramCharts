@@ -10,6 +10,8 @@ import UIKit
 
 class BarChartView: UIView, ChartViewProtocol {
 
+    private (set) var barWidth: CGFloat
+    
     private var isMap: Bool
     private var shapeLayer: CAShapeLayer
     private var selectionLayer: CAShapeLayer
@@ -19,6 +21,7 @@ class BarChartView: UIView, ChartViewProtocol {
 
     required init(source: ChartDataSource, lineWidth: CGFloat, isMap: Bool) {
         guard let barSource = source as? BarChartDataSource else { fatalError() }
+        self.barWidth = 0
         self.isMap = isMap
         self.dataSource = barSource
         self.shapeLayer = CAShapeLayer()
@@ -68,7 +71,7 @@ class BarChartView: UIView, ChartViewProtocol {
         }
         
         let distance = dataSource.xIndices[1] - dataSource.xIndices[0]
-        let columnWidth = bounds.width * distance
+        barWidth = bounds.width * distance / viewport.width
         var lastXRight: CGFloat? = nil
         
         let selectionPath = CGMutablePath()
@@ -83,9 +86,9 @@ class BarChartView: UIView, ChartViewProtocol {
             if let lastXRight = lastXRight {
                 xLeft = lastXRight
             } else {
-                xLeft = x - columnWidth / 2
+                xLeft = x
             }
-            let xRight: CGFloat = x + columnWidth / 2
+            let xRight: CGFloat = x + barWidth
             lastXRight = xRight
             
             let pointBottomLeft = CGPoint(x: xLeft, y: yLo)

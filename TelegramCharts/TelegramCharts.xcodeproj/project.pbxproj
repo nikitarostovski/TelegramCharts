@@ -87,9 +87,6 @@
 		F4F977182260789700D60123 /* YTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F977172260789700D60123 /* YTextLayer.swift */; };
 		F4F9771B2260A7AA00D60123 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F9771A2260A7AA00D60123 /* FilterButton.swift */; };
 		F4F9771D2260BA1E00D60123 /* FilterButtonContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F9771C2260BA1E00D60123 /* FilterButtonContainer.swift */; };
-		F4F977242260CE2900D60123 /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F977202260CE2900D60123 /* FilterCell.swift */; };
-		F4F977252260CE2900D60123 /* FilterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4F977212260CE2900D60123 /* FilterCell.xib */; };
-		F4F977262260CE2900D60123 /* FilterCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F977232260CE2900D60123 /* FilterCellModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -175,9 +172,6 @@
 		F4F977172260789700D60123 /* YTextLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTextLayer.swift; sourceTree = "<group>"; };
 		F4F9771A2260A7AA00D60123 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
 		F4F9771C2260BA1E00D60123 /* FilterButtonContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButtonContainer.swift; sourceTree = "<group>"; };
-		F4F977202260CE2900D60123 /* FilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
-		F4F977212260CE2900D60123 /* FilterCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterCell.xib; sourceTree = "<group>"; };
-		F4F977232260CE2900D60123 /* FilterCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCellModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,7 +296,6 @@
 			children = (
 				1154410222397C0C00795743 /* BaseCell */,
 				115440F022397C0C00795743 /* ButtonCell */,
-				F4F9771E2260CE2900D60123 /* FilterCell */,
 				115440FC22397C0C00795743 /* HeaderView */,
 				1154410722397C0C00795743 /* GraphCell */,
 				1154410D22397C0C00795743 /* CheckCell */,
@@ -640,32 +633,6 @@
 			path = FilterButton;
 			sourceTree = "<group>";
 		};
-		F4F9771E2260CE2900D60123 /* FilterCell */ = {
-			isa = PBXGroup;
-			children = (
-				F4F9771F2260CE2900D60123 /* Cell */,
-				F4F977222260CE2900D60123 /* Model */,
-			);
-			path = FilterCell;
-			sourceTree = "<group>";
-		};
-		F4F9771F2260CE2900D60123 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				F4F977202260CE2900D60123 /* FilterCell.swift */,
-				F4F977212260CE2900D60123 /* FilterCell.xib */,
-			);
-			path = Cell;
-			sourceTree = "<group>";
-		};
-		F4F977222260CE2900D60123 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				F4F977232260CE2900D60123 /* FilterCellModel.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -698,6 +665,7 @@
 				TargetAttributes = {
 					11649F0D223502800081ABA1 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -736,7 +704,6 @@
 				1154413322397C0D00795743 /* GraphCell.xib in Resources */,
 				11649FE522353E180081ABA1 /* Localizable.strings in Resources */,
 				11649F31223502E00081ABA1 /* LaunchScreen.storyboard in Resources */,
-				F4F977252260CE2900D60123 /* FilterCell.xib in Resources */,
 				1159FC01225D024E005E5251 /* overview1.json in Resources */,
 				1154413022397C0D00795743 /* TableViewHeaderView.xib in Resources */,
 			);
@@ -760,7 +727,6 @@
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
 				11402A5A2263449900DF446B /* MetalBarDataProvider.swift in Sources */,
-				F4F977262260CE2900D60123 /* FilterCellModel.swift in Sources */,
 				1154413522397C0D00795743 /* GraphCellModel.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
 				11402A5E2263489D00DF446B /* MetalAreaDataProvider.swift in Sources */,
@@ -789,7 +755,6 @@
 				1154414222397C0D00795743 /* Theme.swift in Sources */,
 				1154413C22397C0D00795743 /* RootNavigationController.swift in Sources */,
 				F4F9771D2260BA1E00D60123 /* FilterButtonContainer.swift in Sources */,
-				F4F977242260CE2900D60123 /* FilterCell.swift in Sources */,
 				11402A6222634AF100DF446B /* MetalDataProviderProtocol.swift in Sources */,
 				1185E20322630BF2007A26B5 /* ChartViewProtocol.swift in Sources */,
 				1154412922397C0D00795743 /* ButtonCell.swift in Sources */,
@@ -984,7 +949,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.rost.TelegramCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1008,7 +973,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.rost.TelegramCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

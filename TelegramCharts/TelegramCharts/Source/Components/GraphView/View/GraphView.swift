@@ -113,9 +113,9 @@ class GraphView: UIView {
                 var x = chartBounds.minX + (chart.xIndices[index] - chart.viewport.xLo) / chart.viewport.width * chartBounds.width
                 selectionView.update(index: index, dataSource: dataSource, animated: !selectionView.isHidden)
                 if x > bounds.width / 2 {
-                    x -= selectionView.frame.width / 2 + 8
+                    x -= selectionView.frame.width / 2 + 8 + charts.barWidth / 2
                 } else {
-                    x += selectionView.frame.width / 2 + 8
+                    x += selectionView.frame.width / 2 + 8 + charts.barWidth / 2
                 }
                 if selectionView.isHidden {
                     selectionView.center.x = x
@@ -125,12 +125,23 @@ class GraphView: UIView {
                     }
                 }
                 selectionView.isHidden = false
+                UIView.animate(withDuration: 0.05, animations: {
+                    self.selectionView?.alpha = 1
+                })
                 selectionView.frame.origin.y = chartBounds.origin.y + 8
             } else {
-                selectionView.isHidden = true
+                UIView.animate(withDuration: 0.05, animations: {
+                    self.selectionView?.alpha = 0
+                }) { (_) in
+                    self.selectionView?.isHidden = true
+                }
             }
         } else {
-            selectionView?.isHidden = true
+            UIView.animate(withDuration: 0.05, animations: {
+                self.selectionView?.alpha = 0
+            }) { (_) in
+                self.selectionView?.isHidden = true
+            }
         }
     }
     

@@ -10,6 +10,12 @@ import UIKit
 
 class ChartsView: UIView, ChartViewProtocol {
     
+    var barWidth: CGFloat {
+        get {
+            return charts.first?.barWidth ?? 0
+        }
+    }
+    
     private var isMap: Bool
     private var lineWidth: CGFloat
     private var selectionView: UIView
@@ -58,11 +64,17 @@ class ChartsView: UIView, ChartViewProtocol {
                 let x = (chart.xIndices[index] - chart.viewport.xLo) / chart.viewport.width * bounds.width
                 selectionView.center.x = x
                 self.selectionView.isHidden = false
-//                UIView.animate(withDuration: 0.05) {
-////                    self.selectionView.alpha = 1
-//                }
+                self.selectionView.alpha = 0
+                UIView.animate(withDuration: 0.05) {
+                    self.selectionView.alpha = 1
+                }
             } else {
-                selectionView.isHidden = true
+                self.selectionView.alpha = 1
+                UIView.animate(withDuration: 0.05, animations: {
+                    self.selectionView.alpha = 0
+                }) { (_) in
+                    self.selectionView.isHidden = true
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ import UIKit
 
 class GraphCell: BaseCell {
     
-    private let textWidth: CGFloat = 44
+    private let textWidth: CGFloat = 48
     private let mainInsets = UIEdgeInsets(top: 32, left: 16, bottom: 24, right: 16)
     
     override class var cellHeight: CGFloat {
@@ -100,22 +100,22 @@ class GraphCell: BaseCell {
         mapContainer.addSubview(rangeSlider)
         
         mainContainer.addConstraints([
-            NSLayoutConstraint(item: mainGraphView, attribute: .top, relatedBy: .equal, toItem: mainContainer, attribute: .top, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: mainGraphView, attribute: .bottom, relatedBy: .equal, toItem: mainContainer, attribute: .bottom, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: mainGraphView, attribute: .leading, relatedBy: .equal, toItem: mainContainer, attribute: .leading, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: mainGraphView, attribute: .trailing, relatedBy: .equal, toItem: mainContainer, attribute: .trailing, multiplier: 1, constant: 0)
+            NSLayoutConstraint(item: mainGraphView!, attribute: .top, relatedBy: .equal, toItem: mainContainer, attribute: .top, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: mainGraphView!, attribute: .bottom, relatedBy: .equal, toItem: mainContainer, attribute: .bottom, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: mainGraphView!, attribute: .leading, relatedBy: .equal, toItem: mainContainer, attribute: .leading, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: mainGraphView!, attribute: .trailing, relatedBy: .equal, toItem: mainContainer, attribute: .trailing, multiplier: 1, constant: 0)
         ])
         mapContainer.addConstraints([
-            NSLayoutConstraint(item: mapGraphView, attribute: .top, relatedBy: .equal, toItem: mapContainer, attribute: .top, multiplier: 1, constant: 1),
-            NSLayoutConstraint(item: mapGraphView, attribute: .bottom, relatedBy: .equal, toItem: mapContainer, attribute: .bottom, multiplier: 1, constant: -1),
-            NSLayoutConstraint(item: mapGraphView, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: mainInsets.left),
-            NSLayoutConstraint(item: mapGraphView, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
+            NSLayoutConstraint(item: mapGraphView!, attribute: .top, relatedBy: .equal, toItem: mapContainer, attribute: .top, multiplier: 1, constant: 1),
+            NSLayoutConstraint(item: mapGraphView!, attribute: .bottom, relatedBy: .equal, toItem: mapContainer, attribute: .bottom, multiplier: 1, constant: -1),
+            NSLayoutConstraint(item: mapGraphView!, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: mainInsets.left),
+            NSLayoutConstraint(item: mapGraphView!, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
         ])
         mapContainer.addConstraints([
-            NSLayoutConstraint(item: rangeSlider, attribute: .top, relatedBy: .equal, toItem: mapContainer, attribute: .top, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: rangeSlider, attribute: .bottom, relatedBy: .equal, toItem: mapContainer, attribute: .bottom, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: rangeSlider, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: mainInsets.left),
-            NSLayoutConstraint(item: rangeSlider, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
+            NSLayoutConstraint(item: rangeSlider!, attribute: .top, relatedBy: .equal, toItem: mapContainer, attribute: .top, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: rangeSlider!, attribute: .bottom, relatedBy: .equal, toItem: mapContainer, attribute: .bottom, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: rangeSlider!, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: mainInsets.left),
+            NSLayoutConstraint(item: rangeSlider!, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
         ])
         
         var buttons = [UIButton]()

@@ -10,6 +10,8 @@ import UIKit
 
 class LineChartView: UIView, ChartViewProtocol {
 
+    private (set) var barWidth: CGFloat = 0
+    
     private var isMap: Bool
     private var shapeLayer: CAShapeLayer
     private var selectionLayer: CAShapeLayer
