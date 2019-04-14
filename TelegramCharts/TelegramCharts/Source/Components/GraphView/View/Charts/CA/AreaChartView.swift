@@ -1,5 +1,5 @@
 //
-//  LineChartLayer.swift
+//  AreaChartView.swift
 //  TelegramCharts
 //
 //  Created by Rost on 07/04/2019.
@@ -8,41 +8,40 @@
 
 import UIKit
 
-class LineChartLayer: CALayer, ChartLayerProtocol {
+class AreaChartView: UIView, ChartViewProtocol {
 
     private var isMap: Bool
     private var shapeLayer: CAShapeLayer
-    private weak var dataSource: LineChartDataSource?
+    private weak var dataSource: AreaChartDataSource?
 
     // MARK: - Lifecycle
 
     required init(source: ChartDataSource, lineWidth: CGFloat, isMap: Bool) {
-        guard let lineSource = source as? LineChartDataSource else { fatalError() }
+        guard let areaSource = source as? AreaChartDataSource else { fatalError() }
         self.isMap = isMap
-        self.dataSource = lineSource
+        self.dataSource = areaSource
         self.shapeLayer = CAShapeLayer()
-        shapeLayer.strokeColor = source.chart.color.cgColor
-        shapeLayer.lineWidth = lineWidth
-        shapeLayer.lineCap = .round
-        shapeLayer.lineJoin = .round
-        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.strokeColor = UIColor.clear.cgColor
+        shapeLayer.fillColor = source.chart.color.cgColor
         
-        super.init()
-        masksToBounds = false
-        addSublayer(shapeLayer)
+        super.init(frame: .zero)
+        backgroundColor = .clear
+        layer.masksToBounds = false
+        layer.addSublayer(shapeLayer)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - ChartLayerProtocol
+    // MARK: - ChartViewProtocol
     
     func update() {
         guard let dataSource = dataSource,
+            dataSource.xIndices.count > 1,
             bounds != .zero
-        else {
-            return
+            else {
+                return
         }
         let startIndex: Int
         let finishIndex: Int
@@ -61,18 +60,40 @@ class LineChartLayer: CALayer, ChartLayerProtocol {
         else {
             return
         }
+        let distance = dataSource.xIndices[1] - dataSource.xIndices[0]
+        let columnWidth = bounds.width * distance
+        var lastXRight: CGFloat? = nil
         
         let path = CGMutablePath()
+        var yLoLast: CGFloat? = nil
+        var yHiLast: CGFloat? = nil
         for i in startIndex ... finishIndex {
             let x = bounds.width * (dataSource.xIndices[i] - viewport.xLo) / viewport.width
-            let y = bounds.height - ((CGFloat(dataSource.yValues[i].value) - viewport.yLo) / viewport.height) * bounds.height
+            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i].offset) / CGFloat(dataSource.yValues[i].sumValue) - viewport.yLo) / viewport.height) * bounds.height
+            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i].offset + dataSource.yValues[i].value) / CGFloat(dataSource.yValues[i].sumValue) - viewport.yLo) / viewport.height) * bounds.height
             
-            let point = CGPoint(x: x, y: y)
-            if i == startIndex {
-                path.move(to: point)
-            } else {
-                path.addLine(to: point)
+            if let yLoLast = yLoLast, let yHiLast = yHiLast {
+                var xLeft: CGFloat
+                if let lastXRight = lastXRight {
+                    xLeft = lastXRight
+                } else {
+                    xLeft = x - columnWidth
+                }
+                let xRight: CGFloat = x
+                
+                let pointBottomLeft = CGPoint(x: xLeft, y: yLoLast)
+                let pointBottomRight = CGPoint(x: xRight, y: yLo)
+                let pointTopLeft = CGPoint(x: xLeft, y: yHiLast)
+                let pointTopRight = CGPoint(x: xRight, y: yHi)
+                
+                path.move(to: pointTopLeft)
+                path.addLine(to: pointTopRight)
+                path.addLine(to: pointBottomRight)
+                path.addLine(to: pointBottomLeft)
             }
+            lastXRight = x
+            yLoLast = yLo
+            yHiLast = yHi
         }
         shapeLayer.path = path
     }

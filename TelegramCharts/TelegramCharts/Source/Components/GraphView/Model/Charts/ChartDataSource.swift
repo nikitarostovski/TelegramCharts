@@ -31,6 +31,8 @@ class ChartDataSource {
     var visible: Bool
     var chart: Chart
     
+    var selectedIndex: Int?
+    
     var lo: Int
     var hi: Int
     

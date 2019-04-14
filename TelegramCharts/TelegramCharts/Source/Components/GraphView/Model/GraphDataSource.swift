@@ -27,8 +27,8 @@ class GraphDataSource {
     private (set) var xAxisDataSource: XAxisDataSource
     
     var dates: [Date]
-    var selectionIndex: Int?
     
+    var selectionUpdateHandler: (() -> Void)?
     var resetGridValuesHandler: (() -> Void)?
     var redrawHandler: (() -> Void)? {
         didSet {
@@ -152,7 +152,8 @@ class GraphDataSource {
             if !animationLock {
                 animationLock = true
                 calcQueue.asyncAfter(deadline: .now() + animationDuration) { [weak self] in
-                    self?.animationLock = false
+                    guard let self = self else { return }
+                    self.animationLock = false
 //                    self?.updateYAxis()
                 }
             }
@@ -171,8 +172,8 @@ class GraphDataSource {
                     source.lastValues.forEach { $0.opacity = $0.lastOpacity + ($0.targetOpacity - $0.lastOpacity) * phase }
                 }
                 self.redraw()
-            }, finish: { [weak self] in
-                guard let self = self else { return }
+//            }, finish: { [weak self] in
+//                guard let self = self else { return }
             }, cancel: { [weak self] in
                 guard let self = self else { return }
                 self.chartDataSources.forEach { source in
@@ -228,6 +229,7 @@ class GraphDataSource {
     
     func changeLowerBound(newLow: CGFloat) {
         self.range = newLow ... range.upperBound
+        deselect()
         self.calcItem?.cancel()
         self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
         calcQueue.sync(execute: self.calcItem!)
@@ -235,6 +237,7 @@ class GraphDataSource {
     
     func changeUpperBound(newUp: CGFloat) {
         self.range = range.lowerBound ... newUp
+        deselect()
         self.calcItem?.cancel()
         self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
         calcQueue.sync(execute: self.calcItem!)
@@ -243,8 +246,25 @@ class GraphDataSource {
     func changePoisition(newLow: CGFloat) {
         let diff = range.upperBound - range.lowerBound
         range = newLow ... newLow + diff
+        deselect()
         self.calcItem?.cancel()
         self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
         calcQueue.sync(execute: self.calcItem!)
+    }
+    
+    func trySelect(x: CGFloat) {
+        chartDataSources.forEach {
+            let newSelection = Int(($0.viewport.xLo + x * $0.viewport.width) * CGFloat($0.xIndices.count))
+            guard newSelection >= 0, newSelection < $0.xIndices.count else { return }
+            $0.selectedIndex = newSelection
+        }
+        selectionUpdateHandler?()
+    }
+    
+    func deselect() {
+        chartDataSources.forEach {
+            $0.selectedIndex = nil
+        }
+        selectionUpdateHandler?()
     }
 }

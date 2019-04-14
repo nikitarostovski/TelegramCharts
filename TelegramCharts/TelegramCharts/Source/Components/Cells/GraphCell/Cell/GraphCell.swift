@@ -17,6 +17,9 @@ class GraphCell: BaseCell {
         return 320
     }
     
+    @IBOutlet weak var delimiterLabel: UILabel!
+    @IBOutlet weak var startDateLabel: UILabel!
+    @IBOutlet weak var endDateLabel: UILabel!
     @IBOutlet weak var mainContainer: UIView!
     @IBOutlet weak var mapContainer: UIView!
     
@@ -37,13 +40,24 @@ class GraphCell: BaseCell {
         model.dataProvider.setEdgeInsets(insets: insets)
         
         model.dataProvider.redrawHandler = { [weak self] in
+            if let first = model.dataProvider.chartDataSources.first {
+                let startDate = model.dataProvider.dates[first.lo]
+                let endDate = model.dataProvider.dates[first.hi]
+                self?.startDateLabel.text = startDate.string(format: .dayMonthYear)
+                self?.endDateLabel.text = endDate.string(format: .dayMonthYear)
+            } else {
+                self?.startDateLabel.text = ""
+                self?.endDateLabel.text = ""
+            }
             self?.mainGraphView.redraw()
             self?.mapGraphView.redraw()
         }
         model.dataProvider.resetGridValuesHandler = { [weak self] in
             self?.mainGraphView.resetGridValues()
         }
-        
+        model.dataProvider.selectionUpdateHandler = { [weak self] in
+            self?.mainGraphView.redraw()
+        }
         rangeSlider.lowerValue = model.dataProvider.range.lowerBound
         rangeSlider.upperValue = model.dataProvider.range.upperBound
     }
@@ -102,5 +116,12 @@ class GraphCell: BaseCell {
             NSLayoutConstraint(item: rangeSlider, attribute: .leading, relatedBy: .equal, toItem: mapContainer, attribute: .leading, multiplier: 1, constant: mainInsets.left),
             NSLayoutConstraint(item: rangeSlider, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
         ])
+    }
+    
+    override func themeDidUpdate(theme: Theme) {
+        startDateLabel.textColor = theme.cellTextColor
+        endDateLabel.textColor = theme.cellTextColor
+        delimiterLabel.textColor = theme.cellTextColor
+        super.themeDidUpdate(theme: theme)
     }
 }

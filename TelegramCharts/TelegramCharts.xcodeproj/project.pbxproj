@@ -20,6 +20,13 @@
 		113C82E2223E996100723D10 /* ItemCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82DF223E996000723D10 /* ItemCellModel.swift */; };
 		113C82E6223EB1AC00723D10 /* GraphProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82E4223EB1AC00723D10 /* GraphProvider.swift */; };
 		113C82E7223EB1AC00723D10 /* GraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C82E5223EB1AC00723D10 /* GraphModel.swift */; };
+		11402A56226340C900DF446B /* MetalChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11402A55226340C900DF446B /* MetalChartsView.swift */; };
+		11402A58226340DD00DF446B /* ChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11402A57226340DD00DF446B /* ChartsView.swift */; };
+		11402A5A2263449900DF446B /* MetalBarDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11402A592263449900DF446B /* MetalBarDataProvider.swift */; };
+		11402A5E2263489D00DF446B /* MetalAreaDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11402A5D2263489D00DF446B /* MetalAreaDataProvider.swift */; };
+		11402A6022634AD100DF446B /* MetalLineDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11402A5F22634AD100DF446B /* MetalLineDataProvider.swift */; };
+		11402A6222634AF100DF446B /* MetalDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11402A6122634AF100DF446B /* MetalDataProviderProtocol.swift */; };
+		11402A6422635EE700DF446B /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11402A6322635EE700DF446B /* SelectionView.swift */; };
 		1154412422397C0D00795743 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440E922397C0C00795743 /* AppDelegate.swift */; };
 		1154412522397C0D00795743 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440EB22397C0C00795743 /* String+Localized.swift */; };
 		1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115440EC22397C0C00795743 /* UITableView+VisibleSectionHeaders.swift */; };
@@ -60,13 +67,15 @@
 		11649F32223502E00081ABA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11649F27223502E00081ABA1 /* Main.storyboard */; };
 		11649FE522353E180081ABA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11649FE722353E180081ABA1 /* Localizable.strings */; };
 		11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */; };
+		1185E20322630BF2007A26B5 /* ChartViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1185E20222630BF2007A26B5 /* ChartViewProtocol.swift */; };
+		1185E21922630E6D007A26B5 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1185E21322630E6D007A26B5 /* LineChartView.swift */; };
+		1185E21A22630E6D007A26B5 /* AreaChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1185E21422630E6D007A26B5 /* AreaChartView.swift */; };
+		1185E21B22630E6D007A26B5 /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1185E21522630E6D007A26B5 /* BarChartView.swift */; };
+		1185E21F22630EFA007A26B5 /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1185E21E22630EFA007A26B5 /* MetalRenderer.swift */; };
+		1185E22122630F1C007A26B5 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 1185E22022630F1C007A26B5 /* Shaders.metal */; };
 		11BD75A4225FBC2C0029E9D2 /* YGridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */; };
 		11BD75A5225FBC2C0029E9D2 /* XTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759C225FBC2C0029E9D2 /* XTextLayer.swift */; };
 		11BD75A6225FBC2C0029E9D2 /* SelectionLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD759E225FBC2C0029E9D2 /* SelectionLayer.swift */; };
-		11BD75A7225FBC2C0029E9D2 /* AreaChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */; };
-		11BD75A8225FBC2C0029E9D2 /* ChartLayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */; };
-		11BD75A9225FBC2C0029E9D2 /* BarChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A2225FBC2C0029E9D2 /* BarChartLayer.swift */; };
-		11BD75AA225FBC2C0029E9D2 /* LineChartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75A3225FBC2C0029E9D2 /* LineChartLayer.swift */; };
 		11BD75B6225FBF530029E9D2 /* Viewport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75AE225FBF530029E9D2 /* Viewport.swift */; };
 		11BD75B7225FBF530029E9D2 /* ChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75AF225FBF530029E9D2 /* ChartDataSource.swift */; };
 		11BD75B8225FBF530029E9D2 /* LineChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BD75B0225FBF530029E9D2 /* LineChartDataSource.swift */; };
@@ -97,6 +106,13 @@
 		113C82DF223E996000723D10 /* ItemCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellModel.swift; sourceTree = "<group>"; };
 		113C82E4223EB1AC00723D10 /* GraphProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphProvider.swift; sourceTree = "<group>"; };
 		113C82E5223EB1AC00723D10 /* GraphModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphModel.swift; sourceTree = "<group>"; };
+		11402A55226340C900DF446B /* MetalChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalChartsView.swift; sourceTree = "<group>"; };
+		11402A57226340DD00DF446B /* ChartsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartsView.swift; sourceTree = "<group>"; };
+		11402A592263449900DF446B /* MetalBarDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalBarDataProvider.swift; sourceTree = "<group>"; };
+		11402A5D2263489D00DF446B /* MetalAreaDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalAreaDataProvider.swift; sourceTree = "<group>"; };
+		11402A5F22634AD100DF446B /* MetalLineDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalLineDataProvider.swift; sourceTree = "<group>"; };
+		11402A6122634AF100DF446B /* MetalDataProviderProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalDataProviderProtocol.swift; sourceTree = "<group>"; };
+		11402A6322635EE700DF446B /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		115440E922397C0C00795743 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		115440EB22397C0C00795743 /* String+Localized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		115440EC22397C0C00795743 /* UITableView+VisibleSectionHeaders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+VisibleSectionHeaders.swift"; sourceTree = "<group>"; };
@@ -139,13 +155,15 @@
 		11649F29223502E00081ABA1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11649FE622353E180081ABA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11851000223CFCD80034FA27 /* NSAttributedString+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Size.swift"; sourceTree = "<group>"; };
+		1185E20222630BF2007A26B5 /* ChartViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewProtocol.swift; sourceTree = "<group>"; };
+		1185E21322630E6D007A26B5 /* LineChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
+		1185E21422630E6D007A26B5 /* AreaChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartView.swift; sourceTree = "<group>"; };
+		1185E21522630E6D007A26B5 /* BarChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
+		1185E21E22630EFA007A26B5 /* MetalRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
+		1185E22022630F1C007A26B5 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		11BD759B225FBC2C0029E9D2 /* YGridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YGridLayer.swift; sourceTree = "<group>"; };
 		11BD759C225FBC2C0029E9D2 /* XTextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XTextLayer.swift; sourceTree = "<group>"; };
 		11BD759E225FBC2C0029E9D2 /* SelectionLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionLayer.swift; sourceTree = "<group>"; };
-		11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaChartLayer.swift; sourceTree = "<group>"; };
-		11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartLayerProtocol.swift; sourceTree = "<group>"; };
-		11BD75A2225FBC2C0029E9D2 /* BarChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarChartLayer.swift; sourceTree = "<group>"; };
-		11BD75A3225FBC2C0029E9D2 /* LineChartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartLayer.swift; sourceTree = "<group>"; };
 		11BD75AE225FBF530029E9D2 /* Viewport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Viewport.swift; sourceTree = "<group>"; };
 		11BD75AF225FBF530029E9D2 /* ChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartDataSource.swift; sourceTree = "<group>"; };
 		11BD75B0225FBF530029E9D2 /* LineChartDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartDataSource.swift; sourceTree = "<group>"; };
@@ -536,6 +554,31 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
+		1185E21222630E6D007A26B5 /* CA */ = {
+			isa = PBXGroup;
+			children = (
+				11402A57226340DD00DF446B /* ChartsView.swift */,
+				1185E21322630E6D007A26B5 /* LineChartView.swift */,
+				1185E21522630E6D007A26B5 /* BarChartView.swift */,
+				1185E21422630E6D007A26B5 /* AreaChartView.swift */,
+			);
+			path = CA;
+			sourceTree = "<group>";
+		};
+		1185E21722630E6D007A26B5 /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				11402A55226340C900DF446B /* MetalChartsView.swift */,
+				1185E21E22630EFA007A26B5 /* MetalRenderer.swift */,
+				1185E22022630F1C007A26B5 /* Shaders.metal */,
+				11402A6122634AF100DF446B /* MetalDataProviderProtocol.swift */,
+				11402A5F22634AD100DF446B /* MetalLineDataProvider.swift */,
+				11402A592263449900DF446B /* MetalBarDataProvider.swift */,
+				11402A5D2263489D00DF446B /* MetalAreaDataProvider.swift */,
+			);
+			path = Metal;
+			sourceTree = "<group>";
+		};
 		11BD759A225FBC2C0029E9D2 /* Grids */ = {
 			isa = PBXGroup;
 			children = (
@@ -550,6 +593,7 @@
 		11BD759D225FBC2C0029E9D2 /* Selection */ = {
 			isa = PBXGroup;
 			children = (
+				11402A6322635EE700DF446B /* SelectionView.swift */,
 				11BD759E225FBC2C0029E9D2 /* SelectionLayer.swift */,
 			);
 			path = Selection;
@@ -558,10 +602,9 @@
 		11BD759F225FBC2C0029E9D2 /* Charts */ = {
 			isa = PBXGroup;
 			children = (
-				11BD75A1225FBC2C0029E9D2 /* ChartLayerProtocol.swift */,
-				11BD75A3225FBC2C0029E9D2 /* LineChartLayer.swift */,
-				11BD75A2225FBC2C0029E9D2 /* BarChartLayer.swift */,
-				11BD75A0225FBC2C0029E9D2 /* AreaChartLayer.swift */,
+				1185E20222630BF2007A26B5 /* ChartViewProtocol.swift */,
+				1185E21222630E6D007A26B5 /* CA */,
+				1185E21722630E6D007A26B5 /* Metal */,
 			);
 			path = Charts;
 			sourceTree = "<group>";
@@ -712,14 +755,19 @@
 				11851001223CFCD80034FA27 /* NSAttributedString+Size.swift in Sources */,
 				1154414022397C0D00795743 /* Colors.swift in Sources */,
 				113C82E6223EB1AC00723D10 /* GraphProvider.swift in Sources */,
+				11402A56226340C900DF446B /* MetalChartsView.swift in Sources */,
 				10AB1300225B819F0094EEFC /* GraphDataSource.swift in Sources */,
 				1154412522397C0D00795743 /* String+Localized.swift in Sources */,
 				1154412F22397C0D00795743 /* TableViewHeaderView.swift in Sources */,
+				11402A5A2263449900DF446B /* MetalBarDataProvider.swift in Sources */,
 				F4F977262260CE2900D60123 /* FilterCellModel.swift in Sources */,
 				1154413522397C0D00795743 /* GraphCellModel.swift in Sources */,
 				1154413A22397C0D00795743 /* RangeSlider.swift in Sources */,
+				11402A5E2263489D00DF446B /* MetalAreaDataProvider.swift in Sources */,
+				1185E21A22630E6D007A26B5 /* AreaChartView.swift in Sources */,
 				F4F9771B2260A7AA00D60123 /* FilterButton.swift in Sources */,
 				1154414122397C0D00795743 /* ThemeManager.swift in Sources */,
+				1185E21922630E6D007A26B5 /* LineChartView.swift in Sources */,
 				1154412722397C0D00795743 /* NSObject+Theme.swift in Sources */,
 				1102AD5D223C148D000F64A9 /* Date+Formatter.swift in Sources */,
 				11BD75B6225FBF530029E9D2 /* Viewport.swift in Sources */,
@@ -731,33 +779,37 @@
 				1154413122397C0D00795743 /* BaseCell.swift in Sources */,
 				113C82E1223E996100723D10 /* ItemCell.swift in Sources */,
 				1154414422397C9100795743 /* Animator.swift in Sources */,
+				1185E21B22630E6D007A26B5 /* BarChartView.swift in Sources */,
 				110F0E6322623F4800013F75 /* TintView.swift in Sources */,
 				11CA76142261D7420072A5AE /* XAxisDataSource.swift in Sources */,
 				1154412E22397C0D00795743 /* TableViewHeaderViewModel.swift in Sources */,
+				1185E21F22630EFA007A26B5 /* MetalRenderer.swift in Sources */,
 				1154413822397C0D00795743 /* CheckCellModel.swift in Sources */,
 				11BD75A4225FBC2C0029E9D2 /* YGridLayer.swift in Sources */,
 				1154414222397C0D00795743 /* Theme.swift in Sources */,
 				1154413C22397C0D00795743 /* RootNavigationController.swift in Sources */,
 				F4F9771D2260BA1E00D60123 /* FilterButtonContainer.swift in Sources */,
 				F4F977242260CE2900D60123 /* FilterCell.swift in Sources */,
+				11402A6222634AF100DF446B /* MetalDataProviderProtocol.swift in Sources */,
+				1185E20322630BF2007A26B5 /* ChartViewProtocol.swift in Sources */,
 				1154412922397C0D00795743 /* ButtonCell.swift in Sources */,
-				11BD75A8225FBC2C0029E9D2 /* ChartLayerProtocol.swift in Sources */,
-				11BD75A7225FBC2C0029E9D2 /* AreaChartLayer.swift in Sources */,
 				113C82E2223E996100723D10 /* ItemCellModel.swift in Sources */,
 				1154413F22397C0D00795743 /* TableViewStructure.swift in Sources */,
 				10AB1301225B819F0094EEFC /* Simplifier.swift in Sources */,
+				1185E22122630F1C007A26B5 /* Shaders.metal in Sources */,
+				11402A58226340DD00DF446B /* ChartsView.swift in Sources */,
 				F4F977182260789700D60123 /* YTextLayer.swift in Sources */,
-				11BD75A9225FBC2C0029E9D2 /* BarChartLayer.swift in Sources */,
 				1154413922397C0D00795743 /* SliderThumbView.swift in Sources */,
+				11402A6422635EE700DF446B /* SelectionView.swift in Sources */,
 				10AB12FB225B819F0094EEFC /* GraphView.swift in Sources */,
 				11BD75BB225FBF530029E9D2 /* YAxisDataSource.swift in Sources */,
 				11BD75B9225FBF530029E9D2 /* BarChartDataSource.swift in Sources */,
+				11402A6022634AD100DF446B /* MetalLineDataProvider.swift in Sources */,
 				11BD75A6225FBC2C0029E9D2 /* SelectionLayer.swift in Sources */,
 				11BD75BA225FBF530029E9D2 /* AreaChartDataSource.swift in Sources */,
 				11BD75BF225FBFA80029E9D2 /* YValueData.swift in Sources */,
 				11BD75B8225FBF530029E9D2 /* LineChartDataSource.swift in Sources */,
 				115900C9225D04FB005E5251 /* GraphConverter.swift in Sources */,
-				11BD75AA225FBC2C0029E9D2 /* LineChartLayer.swift in Sources */,
 				1154412622397C0D00795743 /* UITableView+VisibleSectionHeaders.swift in Sources */,
 				1154412422397C0D00795743 /* AppDelegate.swift in Sources */,
 				1154413222397C0D00795743 /* BaseCellModel.swift in Sources */,
@@ -928,6 +980,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MTL_OPTIMIZATION_LEVEL = 0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rost.TelegramCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -951,6 +1004,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MTL_OPTIMIZATION_LEVEL = s;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rost.TelegramCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -27,15 +27,51 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bzt-Ap-ywR">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="320.5"/>
+                        <rect key="frame" x="0.0" y="4" width="320" height="324.5"/>
                         <color key="backgroundColor" red="0.0" green="0.90937500000000004" blue="0.64082031250000004" alpha="0.0" colorSpace="calibratedRGB"/>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uvM-l4-YQw">
+                        <rect key="frame" x="154" y="0.0" width="12" height="34"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="34" id="RGa-7b-WNq"/>
+                            <constraint firstAttribute="width" constant="12" id="Ust-Rh-weV"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r45-8s-Zob">
+                        <rect key="frame" x="0.0" y="0.0" width="154" height="34"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="34" id="7vJ-oP-bri"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dFY-Xf-vR3">
+                        <rect key="frame" x="166" y="0.0" width="154" height="34"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="34" id="aUD-mr-g2Q"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="trailing" secondItem="dFY-Xf-vR3" secondAttribute="trailing" id="1i7-X2-PhP"/>
                     <constraint firstAttribute="trailing" secondItem="aqc-3L-P0j" secondAttribute="trailing" id="2Zc-W4-cmJ"/>
+                    <constraint firstItem="aqc-3L-P0j" firstAttribute="top" secondItem="bzt-Ap-ywR" secondAttribute="bottom" id="5bU-hP-9gc"/>
                     <constraint firstItem="aqc-3L-P0j" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="6D9-ve-hf2"/>
-                    <constraint firstItem="bzt-Ap-ywR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="TL3-mt-Yw1"/>
-                    <constraint firstItem="aqc-3L-P0j" firstAttribute="top" secondItem="bzt-Ap-ywR" secondAttribute="bottom" constant="8" id="aGj-kW-dQr"/>
+                    <constraint firstItem="r45-8s-Zob" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="A1a-hY-V85"/>
+                    <constraint firstItem="r45-8s-Zob" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="HMd-dT-S0i"/>
+                    <constraint firstItem="uvM-l4-YQw" firstAttribute="leading" secondItem="r45-8s-Zob" secondAttribute="trailing" id="HlP-7m-mNd"/>
+                    <constraint firstItem="dFY-Xf-vR3" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="SAQ-UK-PPH"/>
+                    <constraint firstItem="bzt-Ap-ywR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="ZEc-tD-7qp"/>
+                    <constraint firstItem="dFY-Xf-vR3" firstAttribute="leading" secondItem="uvM-l4-YQw" secondAttribute="trailing" id="cHX-Cw-uJL"/>
+                    <constraint firstItem="uvM-l4-YQw" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="fBQ-QF-Pm4"/>
+                    <constraint firstItem="uvM-l4-YQw" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="fKh-FW-XcN"/>
                     <constraint firstAttribute="bottom" secondItem="aqc-3L-P0j" secondAttribute="bottom" id="g4P-fS-UIY"/>
                     <constraint firstAttribute="trailing" secondItem="bzt-Ap-ywR" secondAttribute="trailing" id="l6V-lY-pxq"/>
                     <constraint firstItem="bzt-Ap-ywR" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="sth-09-tqn"/>
@@ -43,8 +79,11 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="delimiterLabel" destination="uvM-l4-YQw" id="EEx-nz-rk9"/>
+                <outlet property="endDateLabel" destination="dFY-Xf-vR3" id="kz0-9X-fKJ"/>
                 <outlet property="mainContainer" destination="bzt-Ap-ywR" id="PcK-Ut-Yfb"/>
                 <outlet property="mapContainer" destination="aqc-3L-P0j" id="VVF-QY-Ize"/>
+                <outlet property="startDateLabel" destination="r45-8s-Zob" id="g0A-aV-ERt"/>
             </connections>
             <point key="canvasLocation" x="132.80000000000001" y="228.93553223388307"/>
         </tableViewCell>

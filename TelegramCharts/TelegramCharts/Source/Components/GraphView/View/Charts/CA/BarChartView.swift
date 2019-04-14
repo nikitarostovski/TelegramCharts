@@ -1,5 +1,5 @@
 //
-//  AreaChartLayer.swift
+//  BarChartView.swift
 //  TelegramCharts
 //
 //  Created by Rost on 07/04/2019.
@@ -8,32 +8,39 @@
 
 import UIKit
 
-class AreaChartLayer: CALayer, ChartLayerProtocol {
+class BarChartView: UIView, ChartViewProtocol {
 
     private var isMap: Bool
     private var shapeLayer: CAShapeLayer
-    private weak var dataSource: AreaChartDataSource?
+    private var selectionLayer: CAShapeLayer
+    private weak var dataSource: BarChartDataSource?
 
     // MARK: - Lifecycle
 
     required init(source: ChartDataSource, lineWidth: CGFloat, isMap: Bool) {
-        guard let areaSource = source as? AreaChartDataSource else { fatalError() }
+        guard let barSource = source as? BarChartDataSource else { fatalError() }
         self.isMap = isMap
-        self.dataSource = areaSource
+        self.dataSource = barSource
         self.shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = UIColor.clear.cgColor
         shapeLayer.fillColor = source.chart.color.cgColor
         
-        super.init()
-        masksToBounds = false
-        addSublayer(shapeLayer)
+        self.selectionLayer = CAShapeLayer()
+        selectionLayer.strokeColor = UIColor.clear.cgColor
+        selectionLayer.fillColor = source.chart.color.cgColor
+        
+        super.init(frame: .zero)
+        backgroundColor = .clear
+        layer.masksToBounds = false
+        layer.addSublayer(shapeLayer)
+        layer.addSublayer(selectionLayer)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - ChartLayerProtocol
+    // MARK: - ChartViewProtocol
     
     func update() {
         guard let dataSource = dataSource,
@@ -59,40 +66,53 @@ class AreaChartLayer: CALayer, ChartLayerProtocol {
         else {
             return
         }
+        
         let distance = dataSource.xIndices[1] - dataSource.xIndices[0]
         let columnWidth = bounds.width * distance
         var lastXRight: CGFloat? = nil
         
+        let selectionPath = CGMutablePath()
+        var selectionVisible = false
         let path = CGMutablePath()
-        var yLoLast: CGFloat? = nil
-        var yHiLast: CGFloat? = nil
         for i in startIndex ... finishIndex {
             let x = bounds.width * (dataSource.xIndices[i] - viewport.xLo) / viewport.width
-            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i].offset) / CGFloat(dataSource.yValues[i].sumValue) - viewport.yLo) / viewport.height) * bounds.height
-            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i].offset + dataSource.yValues[i].value) / CGFloat(dataSource.yValues[i].sumValue) - viewport.yLo) / viewport.height) * bounds.height
+            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i].offset) - viewport.yLo) / viewport.height) * bounds.height
+            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i].offset + dataSource.yValues[i].value) - viewport.yLo) / viewport.height) * bounds.height
             
-            if let yLoLast = yLoLast, let yHiLast = yHiLast {
-                var xLeft: CGFloat
-                if let lastXRight = lastXRight {
-                    xLeft = lastXRight
-                } else {
-                    xLeft = x - columnWidth
-                }
-                let xRight: CGFloat = x
-                lastXRight = xRight
-                
-                let pointBottomLeft = CGPoint(x: xLeft, y: yLoLast)
-                let pointBottomRight = CGPoint(x: xRight, y: yLo)
-                let pointTopLeft = CGPoint(x: xLeft, y: yHiLast)
-                let pointTopRight = CGPoint(x: xRight, y: yHi)
-                
-                path.move(to: pointTopLeft)
-                path.addLine(to: pointTopRight)
-                path.addLine(to: pointBottomRight)
-                path.addLine(to: pointBottomLeft)
+            var xLeft: CGFloat
+            if let lastXRight = lastXRight {
+                xLeft = lastXRight
+            } else {
+                xLeft = x - columnWidth / 2
             }
-            yLoLast = yLo
-            yHiLast = yHi
+            let xRight: CGFloat = x + columnWidth / 2
+            lastXRight = xRight
+            
+            let pointBottomLeft = CGPoint(x: xLeft, y: yLo)
+            let pointBottomRight = CGPoint(x: xRight, y: yLo)
+            let pointTopLeft = CGPoint(x: xLeft, y: yHi)
+            let pointTopRight = CGPoint(x: xRight, y: yHi)
+            
+            path.move(to: pointTopLeft)
+            path.addLine(to: pointTopRight)
+            path.addLine(to: pointBottomRight)
+            path.addLine(to: pointBottomLeft)
+            
+            if i == dataSource.selectedIndex && !isMap {
+                selectionVisible = true
+                selectionPath.move(to: pointTopLeft)
+                selectionPath.addLine(to: pointTopRight)
+                selectionPath.addLine(to: pointBottomRight)
+                selectionPath.addLine(to: pointBottomLeft)
+                selectionLayer.path = selectionPath
+            }
+        }
+        if selectionVisible {
+            selectionLayer.isHidden = false
+            shapeLayer.opacity = 0.5
+        } else {
+            selectionLayer.isHidden = true
+            shapeLayer.opacity = 1
         }
         shapeLayer.path = path
     }

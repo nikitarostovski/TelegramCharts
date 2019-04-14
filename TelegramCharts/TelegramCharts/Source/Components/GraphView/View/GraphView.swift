@@ -10,6 +10,8 @@ import UIKit
 
 class GraphView: UIView {
     
+    private static let metalEnabled = false
+    
     var insets: UIEdgeInsets = .zero
     private var chartBounds: CGRect = .zero
     private var textWidth: CGFloat
@@ -20,7 +22,9 @@ class GraphView: UIView {
     
     private var xTintView: TintView?
     
-    private var charts: [ChartLayerProtocolType]
+    private var selectionView: SelectionView?
+    
+    private var charts: ChartViewProtocol
     private var yGrids: [YGridLayer]
     private var yTitles: [YTextLayer]
     private var xGrid: XGridLayer?
@@ -31,7 +35,11 @@ class GraphView: UIView {
         self.isMap = isMap
         self.lineWidth = lineWidth
         self.dataSource = dataSource
-        self.charts = [ChartLayerProtocolType]()
+        if GraphView.metalEnabled {
+            self.charts = MetalChartsView(dataSource: dataSource, isMap: isMap, lineWidth: lineWidth)
+        } else {
+            self.charts = ChartsView(dataSource: dataSource, isMap: isMap, lineWidth: lineWidth)
+        }
         self.yGrids = []
         self.yTitles = []
         self.insets = insets
@@ -45,31 +53,29 @@ class GraphView: UIView {
             self.xGrid = XGridLayer()
             self.xTintView = TintView()
             self.xTintView?.backgroundColor = UIColor.clear
+            self.selectionView = SelectionView()
         }
         
         super.init(frame: .zero)
-        dataSource.chartDataSources.forEach {
-            guard $0.chart.type != .line else { return }
-            let chartLayer = layerForChart($0)
-            layer.addSublayer(chartLayer)
-            charts.append(chartLayer)
+        if dataSource.chartDataSources.first?.chart.type != .line {
+            addSubview(charts as! UIView)
         }
         yGrids.forEach { layer.addSublayer($0) }
-        dataSource.chartDataSources.forEach {
-            guard $0.chart.type == .line else { return }
-            let chartLayer = layerForChart($0)
-            layer.addSublayer(chartLayer)
-            charts.append(chartLayer)
+        if dataSource.chartDataSources.first?.chart.type == .line {
+            addSubview(charts as! UIView)
         }
         yTitles.forEach { layer.addSublayer($0) }
         if let xTitles = xTitles {
-            self.layer.addSublayer(xTitles)
+            layer.addSublayer(xTitles)
         }
         if let xGrid = xGrid {
-            self.layer.addSublayer(xGrid)
+            layer.addSublayer(xGrid)
         }
         if let xTintView = xTintView {
             addSubview(xTintView)
+        }
+        if let selectionView = selectionView {
+            addSubview(selectionView)
         }
         backgroundColor = .clear
         layer.masksToBounds = true
@@ -82,7 +88,7 @@ class GraphView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         chartBounds = bounds.inset(by: insets)
-        charts.forEach { $0.frame = chartBounds }
+        (charts as! UIView).frame = chartBounds
         yGrids.forEach { $0.frame = chartBounds }
         yTitles.forEach { $0.frame = chartBounds }
         
@@ -97,27 +103,41 @@ class GraphView: UIView {
     
     func redraw() {
         guard bounds != .zero else { return }
-        charts.forEach { $0.update() }
+        charts.update()
         yGrids.forEach { $0.updatePositions() }
         yTitles.forEach { $0.updatePositions() }
         xTitles?.updatePositions()
+        
+        if let selectionView = selectionView, let dataSource = dataSource, let chart = dataSource.chartDataSources.first {
+            if let index = chart.selectedIndex {
+                var x = chartBounds.minX + (chart.xIndices[index] - chart.viewport.xLo) / chart.viewport.width * chartBounds.width
+                selectionView.update(index: index, dataSource: dataSource, animated: !selectionView.isHidden)
+                if x > bounds.width / 2 {
+                    x -= selectionView.frame.width / 2 + 8
+                } else {
+                    x += selectionView.frame.width / 2 + 8
+                }
+                if selectionView.isHidden {
+                    selectionView.center.x = x
+                } else {
+                    UIView.animate(withDuration: 0.05) {
+                        selectionView.center.x = x
+                    }
+                }
+                selectionView.isHidden = false
+                selectionView.frame.origin.y = chartBounds.origin.y + 8
+            } else {
+                selectionView.isHidden = true
+            }
+        } else {
+            selectionView?.isHidden = true
+        }
     }
     
     func resetGridValues() {
         guard bounds != .zero else { return }
         yGrids.forEach { $0.resetValues() }
         yTitles.forEach { $0.resetValues() }
-    }
-    
-    private func layerForChart(_ source: ChartDataSource) -> ChartLayerProtocolType {
-        switch source.chart.type {
-        case .line:
-            return LineChartLayer(source: source, lineWidth: lineWidth, isMap: isMap)
-        case .bar:
-            return BarChartLayer(source: source, lineWidth: lineWidth, isMap: isMap)
-        case .area:
-            return AreaChartLayer(source: source, lineWidth: lineWidth, isMap: isMap)
-        }
     }
     
     func updateChartAlpha() {
@@ -128,16 +148,15 @@ class GraphView: UIView {
     
     // MARK: Touches, Selection
     
-    /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         let pos = touches.first!.location(in: self)
-        guard chartBounds.contains(pos) else {
-            hideSelection()
+        guard chartBounds.contains(pos), !(selectionView?.frame.contains(pos) == true && selectionView?.isHidden == false) else {
+            dataSource?.deselect()
             return
         }
-        
         let x = (pos.x - chartBounds.origin.x) / chartBounds.size.width
-        showSelection(x: x)
+        dataSource?.trySelect(x: x)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -147,42 +166,6 @@ class GraphView: UIView {
             return
         }
         let x = (pos.x - chartBounds.origin.x) / chartBounds.size.width
-        moveSelection(x: x)
+        dataSource?.trySelect(x: x)
     }
-    
-    private func showSelection(x: CGFloat) {
-        dataSource.trySelect(x: x)
-        guard let index = dataSource.selectionIndex, let data = dataSource.plateData else {
-            hideSelection()
-            return
-        }
-        selection.setData(data: data)
-        selection.show(x: x)
-        yGrid.showSelection(x: x)
-        for chart in charts {
-//            line.select(index: index)
-        }
-    }
-    
-    private func moveSelection(x: CGFloat) {
-        dataSource.trySelect(x: x)
-        guard let index = dataSource.selectionIndex, let data = dataSource.plateData else {
-            hideSelection()
-            return
-        }
-        selection.setData(data: data)
-        selection.move(toX: x)
-        yGrid.moveSelection(x: x)
-        for chart in charts {
-            chart.moveSelection(index: index)
-        }
-    }
-    
-    private func hideSelection() {
-        selection.hide()
-        yGrid.hideSelection()
-        for chart in charts {
-            chart.hideSelection()
-        }
-    }*/
 }

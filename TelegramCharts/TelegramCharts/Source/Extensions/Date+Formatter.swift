@@ -12,6 +12,7 @@ enum DateFormat: String {
     case month = "MMM"
     case day = "d"
     case year = "YYYY"
+    case dayMonthYear = "d MMM yyyy"
     case monthDay = "MMM d"
     case dayMonth = "d MMM"
     case weekdayDayMonthYear = "EEE, d MMM yyyy"

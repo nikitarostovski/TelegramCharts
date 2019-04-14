@@ -1,5 +1,5 @@
 //
-//  BarChartLayer.swift
+//  LineChartView.swift
 //  TelegramCharts
 //
 //  Created by Rost on 07/04/2019.
@@ -8,39 +8,48 @@
 
 import UIKit
 
-class BarChartLayer: CALayer, ChartLayerProtocol {
+class LineChartView: UIView, ChartViewProtocol {
 
     private var isMap: Bool
     private var shapeLayer: CAShapeLayer
-    private weak var dataSource: BarChartDataSource?
+    private var selectionLayer: CAShapeLayer
+    private weak var dataSource: LineChartDataSource?
 
     // MARK: - Lifecycle
 
     required init(source: ChartDataSource, lineWidth: CGFloat, isMap: Bool) {
-        guard let barSource = source as? BarChartDataSource else { fatalError() }
+        guard let lineSource = source as? LineChartDataSource else { fatalError() }
         self.isMap = isMap
-        self.dataSource = barSource
+        self.dataSource = lineSource
         self.shapeLayer = CAShapeLayer()
-        shapeLayer.strokeColor = UIColor.clear.cgColor
-        shapeLayer.fillColor = source.chart.color.cgColor
+        shapeLayer.strokeColor = source.chart.color.cgColor
+        shapeLayer.lineWidth = lineWidth
+        shapeLayer.lineCap = .round
+        shapeLayer.lineJoin = .round
+        shapeLayer.fillColor = UIColor.clear.cgColor
         
-        super.init()
-        masksToBounds = false
-        addSublayer(shapeLayer)
+        self.selectionLayer = CAShapeLayer()
+        selectionLayer.strokeColor = source.chart.color.cgColor
+        selectionLayer.lineWidth = lineWidth
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        
+        super.init(frame: .zero)
+        backgroundColor = .clear
+        layer.masksToBounds = false
+        layer.addSublayer(shapeLayer)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - ChartLayerProtocol
+    // MARK: - ChartViewProtocol
     
     func update() {
         guard let dataSource = dataSource,
-            dataSource.xIndices.count > 1,
             bounds != .zero
-            else {
-                return
+        else {
+            return
         }
         let startIndex: Int
         let finishIndex: Int
@@ -60,35 +69,17 @@ class BarChartLayer: CALayer, ChartLayerProtocol {
             return
         }
         
-        let distance = dataSource.xIndices[1] - dataSource.xIndices[0]
-        let columnWidth = bounds.width * distance
-        var lastXRight: CGFloat? = nil
-        
         let path = CGMutablePath()
         for i in startIndex ... finishIndex {
             let x = bounds.width * (dataSource.xIndices[i] - viewport.xLo) / viewport.width
-            let yLo = bounds.height - ((CGFloat(dataSource.yValues[i].offset) - viewport.yLo) / viewport.height) * bounds.height
-            let yHi = bounds.height - ((CGFloat(dataSource.yValues[i].offset + dataSource.yValues[i].value) - viewport.yLo) / viewport.height) * bounds.height
+            let y = bounds.height - ((CGFloat(dataSource.yValues[i].value) - viewport.yLo) / viewport.height) * bounds.height
             
-            var xLeft: CGFloat
-            if let lastXRight = lastXRight {
-                xLeft = lastXRight
+            let point = CGPoint(x: x, y: y)
+            if i == startIndex {
+                path.move(to: point)
             } else {
-                xLeft = x - columnWidth / 2
+                path.addLine(to: point)
             }
-            let xRight: CGFloat = x + columnWidth / 2
-            lastXRight = xRight
-            
-            let pointBottomLeft = CGPoint(x: xLeft, y: yLo)
-            let pointBottomRight = CGPoint(x: xRight, y: yLo)
-            let pointTopLeft = CGPoint(x: xLeft, y: yHi)
-            let pointTopRight = CGPoint(x: xRight, y: yHi)
-            
-            path.move(to: pointTopLeft)
-            path.addLine(to: pointTopRight)
-            path.addLine(to: pointBottomRight)
-            path.addLine(to: pointBottomLeft)
-            
         }
         shapeLayer.path = path
     }

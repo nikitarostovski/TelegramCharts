@@ -8,22 +8,24 @@
 
 import UIKit
 
-/*protocol SelectionLayerProtocol where Self: CALayer {
-    
-    func setData(data: ChartSelectionData)
-    func show(x: CGFloat)
-    func move(toX x: CGFloat)
-    func hide()
+struct ChartSelectionData {
+    var date: Date?
+    var format: DateFormat?
+    var values: [Int]
+    var percents: [String]?
+    var colors: [UIColor]
+    var titles: [String]
 }
 
-class SelectionLayer: CALayer, SelectionLayerProtocol {
+class SelectionLayer: CALayer {
     
     private var data: ChartSelectionData?
     
-    private var plateLayer: CAShapeLayer
+    private (set) var plateLayer: CAShapeLayer
     private var titleLayer: CATextLayer?
     private var valuesLayers: [CATextLayer]
     private var titlesLayers: [CATextLayer]
+    private var percentLayers: [CATextLayer]
     
     private var plateColor: UIColor = .white
     private var titleColor: UIColor = .black
@@ -40,6 +42,7 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
         
         valuesLayers = [CATextLayer]()
         titlesLayers = [CATextLayer]()
+        percentLayers = [CATextLayer]()
         
         super.init()
         addSublayer(plateLayer)
@@ -55,39 +58,23 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
         stopReceivingThemeUpdates()
     }
     
-    func setData(data: ChartSelectionData) {
+    func setData(data: ChartSelectionData, animated: Bool = true) {
         self.data = data
-        update()
+        update(animated: animated)
     }
     
-    func show(x: CGFloat) {
-        isHidden = false
-        let x = x * bounds.size.width - plateLayer.frame.size.width / 2
-        plateLayer.frame.origin = CGPoint(x: x, y: topInset)
-    }
-    
-    func move(toX x: CGFloat) {
-        let x = x * bounds.size.width - plateLayer.frame.size.width / 2
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        plateLayer.frame.origin = CGPoint(x: x, y: topInset)
-        CATransaction.commit()
-    }
-    
-    func hide() {
-        isHidden = true
-    }
-    
-    private func update() {
-        let spacing: CGFloat = 4
+    private func update(animated: Bool) {
+        let spacing: CGFloat = 8
         plateLayer.backgroundColor = plateColor.cgColor
 
         titleLayer?.removeFromSuperlayer()
         titleLayer = nil
         valuesLayers.forEach { $0.removeFromSuperlayer() }
         titlesLayers.forEach { $0.removeFromSuperlayer() }
+        percentLayers.forEach { $0.removeFromSuperlayer() }
         valuesLayers = []
         titlesLayers = []
+        percentLayers = []
         
         guard let data = data else { return }
         var totalWidth: CGFloat = insets.left
@@ -106,6 +93,21 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
             totalHeight += layer.frame.size.height + lineSpacing
             titleLayer = layer
             plateLayer.addSublayer(layer)
+        }
+        
+        var percentColumnWidth: CGFloat = 0
+        if let percents = data.percents {
+            for i in percents.indices {
+                let title = percents[i]
+                
+                let layer = makeTextLayer(color: titleColor, alignment: .right, font: titleFont)
+                layer.string = title
+                layer.frame.size = layer.preferredFrameSize()
+                self.percentLayers.append(layer)
+                plateLayer.addSublayer(layer)
+                percentColumnWidth = max(percentColumnWidth, layer.frame.size.width)
+            }
+            percentColumnWidth += spacing
         }
         
         for i in data.values.indices {
@@ -133,11 +135,18 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
             rightColumnWidth = max(rightColumnWidth, layer.frame.size.width)
         }
         
-        totalWidth = max(totalWidth, leftColumnWidth + rightColumnWidth) + insets.right
+        totalWidth = max(totalWidth, leftColumnWidth + rightColumnWidth + percentColumnWidth + spacing + insets.left) + insets.right
+        
+        var percentColumnHeight: CGFloat = 0
+        for l in percentLayers {
+            l.frame.origin = CGPoint(x: insets.left, y: percentColumnHeight + totalHeight)
+            l.frame.size.width = percentColumnWidth - spacing
+            percentColumnHeight += l.frame.size.height + lineSpacing
+        }
         
         var leftColumnHeight: CGFloat = 0
         for l in titlesLayers {
-            l.frame.origin = CGPoint(x: insets.left, y: leftColumnHeight + totalHeight)
+            l.frame.origin = CGPoint(x: insets.left + percentColumnWidth, y: leftColumnHeight + totalHeight)
             leftColumnHeight += l.frame.size.height + lineSpacing
         }
         
@@ -147,8 +156,23 @@ class SelectionLayer: CALayer, SelectionLayerProtocol {
             l.frame.size.width = rightColumnWidth
             rightColumnHeight += l.frame.size.height + lineSpacing
         }
-        totalHeight = totalHeight + max(leftColumnHeight, rightColumnHeight) + insets.bottom - lineSpacing
-        plateLayer.frame.size = CGSize(width: totalWidth, height: totalHeight)
+        totalHeight = totalHeight + max(leftColumnHeight, rightColumnHeight, percentColumnHeight) + insets.bottom - lineSpacing
+        let newSize = CGSize(width: totalWidth, height: totalHeight)
+        var anim: CABasicAnimation? = nil
+        if animated {
+            anim = CABasicAnimation()
+            anim?.duration = 0.1
+            anim?.fromValue = plateLayer.frame.size
+            anim?.toValue = newSize
+            plateLayer.frame.size = newSize
+            plateLayer.add(anim!, forKey: "frame.size")
+        } else {
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            plateLayer.frame.size = newSize
+            CATransaction.commit()
+        }
+        
     }
     
     private func makeTitleLayer() -> CATextLayer {
@@ -195,4 +219,3 @@ extension SelectionLayer: Stylable {
         }
     }
 }
-*/
