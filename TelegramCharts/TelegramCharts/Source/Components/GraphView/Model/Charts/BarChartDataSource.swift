@@ -10,6 +10,11 @@ import UIKit
 
 class BarChartDataSource: ChartDataSource {
     
+    override init(chart: Chart, viewport: Viewport, visible: Bool) {
+        super.init(chart: chart, viewport: viewport, visible: visible)
+        self.xIndices = chart.values.indices.map { CGFloat($0) / CGFloat(chart.values.count) }
+    }
+    
     override func updatePointsY(offsets: [Int]?) {
         for i in yValues.indices {
             var lowValue = 0
