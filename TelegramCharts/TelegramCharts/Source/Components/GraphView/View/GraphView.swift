@@ -94,7 +94,6 @@ class GraphView: UIView {
         
         let xTitlesBounds = CGRect(x: insets.left, y: bounds.height - insets.bottom, width: bounds.width - insets.left - insets.right, height: insets.bottom)
         xTitles?.frame = xTitlesBounds
-        xTitles?.updatePositions()
         xGrid?.frame = xTitlesBounds
         xGrid?.redraw()
         xTintView?.frame = CGRect(x: 0, y: xTitlesBounds.minY, width: bounds.width, height: xTitlesBounds.height)
@@ -149,12 +148,6 @@ class GraphView: UIView {
         guard bounds != .zero else { return }
         yGrids.forEach { $0.resetValues() }
         yTitles.forEach { $0.resetValues() }
-    }
-    
-    func updateChartAlpha() {
-        /*for chartIndex in charts.indices {
-            charts[chartIndex].updateAlpha(alpha: dataSource.charts[chartIndex].visible ? 1 : 0)
-        }*/
     }
     
     // MARK: Touches, Selection

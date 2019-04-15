@@ -11,11 +11,25 @@ import UIKit
 class GraphDataSource {
     
     private let calcQueue = DispatchQueue.global(qos: .userInitiated)
-    private var calcItem: DispatchWorkItem?
+    private lazy var calcItem: DispatchWorkItem = DispatchWorkItem { [weak self] in
+        self?.calcQueue.sync {
+            self?.recalcCharts()
+            self?.applyChartChanges(animated: false)
+        }
+    }
+    private lazy var animatedCalcItem: DispatchWorkItem = DispatchWorkItem { [weak self] in
+        self?.calcQueue.sync {
+            self?.recalcCharts()
+            self?.applyChartChanges(animated: true)
+        }
+    }
 
-    private let animationDuration: TimeInterval = 0.15
+    private let yResetInterval: TimeInterval = 0.25
+    private let animationDuration: TimeInterval = 0.25
     private var viewportAnimator = Animator()
-    private var animationLock = false
+    
+    private var lastRecalcYDate: Date?
+    private var needRecalcY = true
     
     private var insets: UIEdgeInsets = .zero
     
@@ -32,9 +46,7 @@ class GraphDataSource {
     var resetGridValuesHandler: (() -> Void)?
     var redrawHandler: (() -> Void)? {
         didSet {
-            self.calcItem?.cancel()
-            self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc(animated: false) } }
-            calcQueue.sync(execute: self.calcItem!)
+            startRecalc(animated: false)
         }
     }
 
@@ -42,34 +54,49 @@ class GraphDataSource {
         self.graph = graph
         self.dates = graph.dates
         self.range = range
-        
         self.xAxisDataSource = XAxisDataSource(dates: graph.dates, viewport: Viewport())
-        
-        let yLeftDataSource = YAxisDataSource(graph: graph)
-        self.yAxisDataSources = [yLeftDataSource]
-        if graph.yScaled && graph.charts.count == 2 {
-            let yRightDataSource = YAxisDataSource(graph: graph)
-            self.yAxisDataSources.append(yRightDataSource)
-            yLeftDataSource.alignment = .left
-            yRightDataSource.alignment = .right
-        }
+        self.yAxisDataSources = []
         self.chartDataSources = [ChartDataSource]()
         graph.charts.forEach {
             chartDataSources.append(sourceForChart($0))
+        }
+
+        if graph.yScaled && graph.charts.count == 2 {
+            let left = YAxisDataSource(graph: graph, sources: [chartDataSources.first!])
+            let right = YAxisDataSource(graph: graph, sources: [chartDataSources.last!])
+            left.alignment = .left
+            right.alignment = .right
+            left.resetHandler = { [weak self] in
+                self?.recalcYAxis()
+                self?.applyChartChanges(animated: true)
+            }
+            right.resetHandler = { [weak self] in
+                self?.recalcYAxis()
+                self?.applyChartChanges(animated: true)
+            }
+            self.yAxisDataSources = [left, right]
+        } else {
+            let left = YAxisDataSource(graph: graph, sources: chartDataSources)
+            left.resetHandler = { [weak self] in
+                self?.recalcYAxis()
+                self?.applyChartChanges(animated: true)
+            }
+            self.yAxisDataSources = [left]
         }
     }
     
     func setEdgeInsets(insets: UIEdgeInsets) {
         self.insets = insets
-        recalc(animated: false)
+        startRecalc(animated: false)
     }
     
     func setNormalizedTextWidth(textWidth: CGFloat) {
         xAxisDataSource.textWidth = textWidth
     }
 
-    private func recalc(animated: Bool = true) {
+    private func recalcCharts() {
         guard let graph = graph else { return }
+        xAxisDataSource.updateViewportX(range: range)
         chartDataSources.forEach {
             $0.updateViewportX(range: range)
             $0.updatePointsX(insetLeft: insets.left, insetRight: insets.right)
@@ -125,43 +152,39 @@ class GraphDataSource {
                 source.setSumValues(sums)
             }
         }
-        xAxisDataSource.updateViewportX(range: range)
-        updateYAxis()
-        applyChanges(animated: animated)
+        recalcYAxis()
     }
     
-    private func updateYAxis() {
-        yAxisDataSources.indices.forEach { i in
-            var sources: [ChartDataSource]
-            if yAxisDataSources.count == 1 {
-                sources = chartDataSources
-            } else {
-                sources = [chartDataSources[i]]
-            }
-            yAxisDataSources[i].updateViewport(sources: sources)
-            if !animationLock {
-                yAxisDataSources[i].resetValues(sources: sources)
+    private func recalcYAxis() {
+        if lastRecalcYDate == nil {
+            lastRecalcYDate = Date(timeIntervalSince1970: 0)
+        }
+        if Date().timeIntervalSince(lastRecalcYDate!) < yResetInterval {
+            needRecalcY = true
+        }
+        var needReset = false
+        yAxisDataSources.forEach {
+            $0.updateViewport()
+            if $0.needReset {
+                needReset = true
             }
         }
-        if !animationLock {
+        if needReset {
+            yAxisDataSources.forEach {
+                $0.resetValues()
+            }
             resetGrid()
+            lastRecalcYDate = Date()
+            needRecalcY = false
         }
     }
     
-    private func applyChanges(animated: Bool) {
+    private func applyChartChanges(animated: Bool) {
         chartDataSources.forEach { source in
             source.viewport.xLo = source.targetViewport.xLo
             source.viewport.xHi = source.targetViewport.xHi
         }
         if animated {
-            if !animationLock {
-                animationLock = true
-                calcQueue.asyncAfter(deadline: .now() + animationDuration) { [weak self] in
-                    guard let self = self else { return }
-                    self.animationLock = false
-//                    self?.updateYAxis()
-                }
-            }
             viewportAnimator.animate(duration: animationDuration, easing: .easeOutCubic, update: { [weak self] (phase) in
                 guard let self = self else { return }
                 self.chartDataSources.forEach { source in
@@ -178,23 +201,38 @@ class GraphDataSource {
                     source.lastValues.forEach { $0.opacity = $0.lastOpacity + ($0.targetOpacity - $0.lastOpacity) * phase }
                 }
                 self.redraw()
-//            }, finish: { [weak self] in
-//                guard let self = self else { return }
-            }, cancel: { [weak self] in
-                guard let self = self else { return }
-                self.chartDataSources.forEach { source in
-                    source.lastOpacity = source.opacity
-                    source.lastViewport = source.viewport
-                    source.mapLastViewport = source.mapViewport
-                }
-                self.yAxisDataSources.forEach { source in
-                    source.lastViewport = source.viewport
-                    source.values.forEach { $0.lastOpacity = $0.opacity }
-                    source.lastValues.forEach { $0.lastOpacity = $0.opacity }
-                }
+                }, finish: { [weak self] in
+                    guard let self = self else { return }
+                    self.chartDataSources.forEach { source in
+                        source.lastOpacity = source.opacity
+                        source.lastViewport = source.viewport
+                        source.mapLastViewport = source.mapViewport
+                    }
+                    self.yAxisDataSources.forEach { source in
+                        source.lastViewport = source.viewport
+                        source.values.forEach { $0.lastOpacity = $0.opacity }
+                        source.lastValues.forEach { $0.lastOpacity = $0.opacity }
+                    }
+                    if self.needRecalcY {
+                        self.recalcYAxis()
+                        self.applyChartChanges(animated: true)
+                    }
+                    self.redraw()
+                }, cancel: { [weak self] in
+                    guard let self = self else { return }
+                    self.chartDataSources.forEach { source in
+                        source.lastOpacity = source.opacity
+                        source.lastViewport = source.viewport
+                        source.mapLastViewport = source.mapViewport
+                    }
+                    self.yAxisDataSources.forEach { source in
+                        source.lastViewport = source.viewport
+                        source.values.forEach { $0.lastOpacity = $0.opacity }
+                        source.lastValues.forEach { $0.lastOpacity = $0.opacity }
+                    }
+                    self.redraw()
             })
         } else {
-            animationLock = false
             chartDataSources.forEach { source in
                 source.lastOpacity = source.opacity
                 source.opacity = source.targetOpacity
@@ -243,34 +281,26 @@ class GraphDataSource {
             source.visible = visibilities[i]
         }
         deselect()
-        self.calcItem?.cancel()
-        self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
-        calcQueue.sync(execute: self.calcItem!)
+        startRecalc(animated: true)
     }
     
     func changeLowerBound(newLow: CGFloat) {
         self.range = newLow ... range.upperBound
         deselect()
-        self.calcItem?.cancel()
-        self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
-        calcQueue.sync(execute: self.calcItem!)
+        startRecalc(animated: true)
     }
     
     func changeUpperBound(newUp: CGFloat) {
         self.range = range.lowerBound ... newUp
         deselect()
-        self.calcItem?.cancel()
-        self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
-        calcQueue.sync(execute: self.calcItem!)
+        startRecalc(animated: true)
     }
     
     func changePoisition(newLow: CGFloat) {
         let diff = range.upperBound - range.lowerBound
         range = newLow ... newLow + diff
         deselect()
-        self.calcItem?.cancel()
-        self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
-        calcQueue.sync(execute: self.calcItem!)
+        startRecalc(animated: true)
     }
     
     func trySelect(x: CGFloat) {
@@ -287,5 +317,13 @@ class GraphDataSource {
             $0.selectedIndex = nil
         }
         selectionUpdateHandler?()
+    }
+    
+    private func startRecalc(animated: Bool) {
+        if animated {
+            animatedCalcItem.perform()
+        } else {
+            calcItem.perform()
+        }
     }
 }

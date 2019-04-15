@@ -128,6 +128,10 @@ class RangeSlider: UIControl {
 // MARK: - Touches
 
 extension RangeSlider {
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        return self
+    }
 
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         previousLocationX = touch.location(in: thumbView).x

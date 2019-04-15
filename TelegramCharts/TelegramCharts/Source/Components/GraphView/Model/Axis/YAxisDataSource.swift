@@ -19,10 +19,13 @@ enum Alignment {
     case fill
 }
 
+typealias YAxisResetHandler = () -> Void
+
 class YAxisDataSource {
     
-    private weak var graph: Graph?
-    private var gridPositions: [CGFloat]
+    private (set) weak var graph: Graph?
+    private (set) var sources: [ChartDataSource]
+    private (set) var gridPositions: [CGFloat]
     
     private (set) var textMode: YValueTextMode
     private (set) var lastValues: [YValueData]
@@ -30,14 +33,19 @@ class YAxisDataSource {
     
     var color: UIColor? = nil
     var alignment: Alignment = .fill
+    var resetHandler: YAxisResetHandler?
+    var resetNeeded = false
     
     var lastViewport: Viewport
     var viewport: Viewport
     var targetViewport: Viewport
     
-    var viewportChanged: Bool = true
+    var needReset: Bool {
+        return (values.count == 0) || (targetViewport.yHi != viewport.yHi) || (targetViewport.yLo != viewport.yLo)
+    }
     
-    init(graph: Graph) {
+    init(graph: Graph, sources: [ChartDataSource]) {
+        self.sources = sources
         self.graph = graph
         self.viewport = Viewport()
         self.lastViewport = Viewport()
@@ -48,7 +56,7 @@ class YAxisDataSource {
         self.values = []
     }
     
-    func resetValues(sources: [ChartDataSource]) {
+    func resetValues() {
         guard sources.count > 0, let graph = graph else { return }
         lastValues = values
         lastValues.forEach {
@@ -64,18 +72,19 @@ class YAxisDataSource {
             let line = YValueData(value: val)
             values.append(line)
         }
+        return
     }
     
-    func updateViewport(sources: [ChartDataSource]) {
+    func updateViewport() {
         if textMode == .percent {
             targetViewport.yLo = 0
             targetViewport.yHi = 100
         } else {
-            calculateViewport(target: &targetViewport, sources: sources)
+            calculateViewport(target: &targetViewport)
         }
     }
     
-    private func calculateViewport(target: inout Viewport, sources: [ChartDataSource]) {
+    private func calculateViewport(target: inout Viewport) {
         guard sources.count > 0 else { return }
         var newViewport: Viewport? = nil
         sources.forEach { source in

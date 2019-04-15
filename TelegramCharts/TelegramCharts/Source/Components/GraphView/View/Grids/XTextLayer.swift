@@ -46,6 +46,7 @@ class XTextLayer: CALayer {
     
     func updatePositions() {
         guard bounds != .zero, let dataSource = dataSource else { return }
+        guard dataSource.viewport.width > 0 else { return }
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         

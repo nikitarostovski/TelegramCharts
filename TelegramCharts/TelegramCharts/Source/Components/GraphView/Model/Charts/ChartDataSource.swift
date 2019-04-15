@@ -34,7 +34,6 @@ class ChartDataSource {
     var targetOpacity: CGFloat
     var visible: Bool {
         didSet {
-            lastOpacity = opacity
             if visible {
                 targetOpacity = 1
             } else {

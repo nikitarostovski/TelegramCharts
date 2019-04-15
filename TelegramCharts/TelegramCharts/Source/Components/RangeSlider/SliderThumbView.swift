@@ -46,9 +46,6 @@ class SliderThumbView: UIView {
 
     func hitTest(x: CGFloat) -> SliderThumbHitTestResult {
         let point = CGPoint(x: x, y: 0)
-        guard bounds.contains(point) else {
-            return .none
-        }
         let leftX = leftBorder - thumbTouchWidth + thumbWidth
         let rightX = rightBorder - thumbWidth
 
