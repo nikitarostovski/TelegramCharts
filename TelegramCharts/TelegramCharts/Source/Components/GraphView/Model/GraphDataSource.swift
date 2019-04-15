@@ -10,7 +10,7 @@ import UIKit
 
 class GraphDataSource {
     
-    private let calcQueue = DispatchQueue.global(qos: .userInitiated)
+    private let calcQueue = DispatchQueue.global(qos: .utility)
     private lazy var calcItem: DispatchWorkItem = DispatchWorkItem { [weak self] in
         self?.calcQueue.sync {
             self?.recalcCharts()
@@ -66,21 +66,9 @@ class GraphDataSource {
             let right = YAxisDataSource(graph: graph, sources: [chartDataSources.last!])
             left.alignment = .left
             right.alignment = .right
-            left.resetHandler = { [weak self] in
-                self?.recalcYAxis()
-                self?.applyChartChanges(animated: true)
-            }
-            right.resetHandler = { [weak self] in
-                self?.recalcYAxis()
-                self?.applyChartChanges(animated: true)
-            }
             self.yAxisDataSources = [left, right]
         } else {
             let left = YAxisDataSource(graph: graph, sources: chartDataSources)
-            left.resetHandler = { [weak self] in
-                self?.recalcYAxis()
-                self?.applyChartChanges(animated: true)
-            }
             self.yAxisDataSources = [left]
         }
     }
@@ -152,7 +140,7 @@ class GraphDataSource {
                 source.setSumValues(sums)
             }
         }
-        recalcYAxis()
+        let _ = recalcYAxis()
     }
     
     private func recalcYAxis() {
@@ -190,7 +178,11 @@ class GraphDataSource {
                 guard let self = self else { return }
                 self.calcQueue.sync {
                     self.chartDataSources.forEach { source in
-                        source.opacity = min(max(0, source.lastOpacity + (source.targetOpacity - source.lastOpacity) * 3 * phase), 1)
+                        if source.chart.type == .line {
+                            source.opacity = min(max(0, source.lastOpacity + (source.targetOpacity - source.lastOpacity) * 3 * phase), 1)
+                        } else {
+                            source.opacity = source.targetOpacity
+                        }
                         source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
                         source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
                         source.mapViewport.yLo = source.mapLastViewport.yLo + (source.mapTargetViewport.yLo - source.mapLastViewport.yLo) * phase
@@ -219,7 +211,9 @@ class GraphDataSource {
                     }
                     if self.needRecalcY {
                         self.recalcYAxis()
-                        self.applyChartChanges(animated: true)
+                        if !self.needRecalcY {
+                            self.applyChartChanges(animated: true)
+                        }
                     }
                     self.redraw()
                 }

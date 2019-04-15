@@ -19,8 +19,6 @@ enum Alignment {
     case fill
 }
 
-typealias YAxisResetHandler = () -> Void
-
 class YAxisDataSource {
     
     private (set) weak var graph: Graph?
@@ -33,7 +31,6 @@ class YAxisDataSource {
     
     var color: UIColor? = nil
     var alignment: Alignment = .fill
-    var resetHandler: YAxisResetHandler?
     var resetNeeded = false
     
     var lastViewport: Viewport
