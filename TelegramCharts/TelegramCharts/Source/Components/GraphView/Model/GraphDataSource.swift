@@ -161,6 +161,7 @@ class GraphDataSource {
         }
         if Date().timeIntervalSince(lastRecalcYDate!) < yResetInterval {
             needRecalcY = true
+            return
         }
         var needReset = false
         yAxisDataSources.forEach {
@@ -187,22 +188,25 @@ class GraphDataSource {
         if animated {
             viewportAnimator.animate(duration: animationDuration, easing: .easeOutCubic, update: { [weak self] (phase) in
                 guard let self = self else { return }
-                self.chartDataSources.forEach { source in
-                    source.opacity = source.lastOpacity + (source.targetOpacity - source.lastOpacity) * phase
-                    source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
-                    source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
-                    source.mapViewport.yLo = source.mapLastViewport.yLo + (source.mapTargetViewport.yLo - source.mapLastViewport.yLo) * phase
-                    source.mapViewport.yHi = source.mapLastViewport.yHi + (source.mapTargetViewport.yHi - source.mapLastViewport.yHi) * phase
+                self.calcQueue.sync {
+                    self.chartDataSources.forEach { source in
+                        source.opacity = source.lastOpacity + (source.targetOpacity - source.lastOpacity) * phase
+                        source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
+                        source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
+                        source.mapViewport.yLo = source.mapLastViewport.yLo + (source.mapTargetViewport.yLo - source.mapLastViewport.yLo) * phase
+                        source.mapViewport.yHi = source.mapLastViewport.yHi + (source.mapTargetViewport.yHi - source.mapLastViewport.yHi) * phase
+                    }
+                    self.yAxisDataSources.forEach { source in
+                        source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
+                        source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
+                        source.values.forEach { $0.opacity = $0.lastOpacity + ($0.targetOpacity - $0.lastOpacity) * phase }
+                        source.lastValues.forEach { $0.opacity = $0.lastOpacity + ($0.targetOpacity - $0.lastOpacity) * phase }
+                    }
+                    self.redraw()
                 }
-                self.yAxisDataSources.forEach { source in
-                    source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
-                    source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
-                    source.values.forEach { $0.opacity = $0.lastOpacity + ($0.targetOpacity - $0.lastOpacity) * phase }
-                    source.lastValues.forEach { $0.opacity = $0.lastOpacity + ($0.targetOpacity - $0.lastOpacity) * phase }
-                }
-                self.redraw()
-                }, finish: { [weak self] in
-                    guard let self = self else { return }
+            }, finish: { [weak self] in
+                guard let self = self else { return }
+                self.calcQueue.sync {
                     self.chartDataSources.forEach { source in
                         source.lastOpacity = source.opacity
                         source.lastViewport = source.viewport
@@ -218,8 +222,10 @@ class GraphDataSource {
                         self.applyChartChanges(animated: true)
                     }
                     self.redraw()
-                }, cancel: { [weak self] in
-                    guard let self = self else { return }
+                }
+            }, cancel: { [weak self] in
+                guard let self = self else { return }
+                self.calcQueue.sync {
                     self.chartDataSources.forEach { source in
                         source.lastOpacity = source.opacity
                         source.lastViewport = source.viewport
@@ -231,6 +237,7 @@ class GraphDataSource {
                         source.lastValues.forEach { $0.lastOpacity = $0.opacity }
                     }
                     self.redraw()
+                }
             })
         } else {
             chartDataSources.forEach { source in

@@ -91,6 +91,8 @@ class GraphView: UIView {
         (charts as! UIView).frame = chartBounds
         yGrids.forEach { $0.frame = chartBounds }
         yTitles.forEach { $0.frame = chartBounds }
+        yGrids.forEach { $0.resetValues() }
+        yTitles.forEach { $0.resetValues() }
         
         let xTitlesBounds = CGRect(x: insets.left, y: bounds.height - insets.bottom, width: bounds.width - insets.left - insets.right, height: insets.bottom)
         xTitles?.frame = xTitlesBounds
