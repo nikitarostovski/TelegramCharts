@@ -166,6 +166,9 @@ class GraphCell: BaseCell {
                         visibilities[i] = f.isOn
                     }
                     model.dataProvider.setChartsVisibility(visibilities: visibilities)
+                    if #available(iOS 10.0, *) {
+                        UINotificationFeedbackGenerator().notificationOccurred(.success)
+                    }
                 }
                 buttons.append(b)
             }
