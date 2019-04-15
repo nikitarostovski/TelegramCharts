@@ -8,216 +8,73 @@
 
 import UIKit
 
-class FilterButton: UIControl {
+class FilterButton: UIButton {
     
-    // MARK: Public properties
+    var onTap: ((_ button: FilterButton) -> ())?
     
-    /// Line width for the check mark. Default value is 2.
-    var checkLineWidth: CGFloat = 2.0 {
+    private var fillLayer: CAShapeLayer?
+    private var borderLayer: CAShapeLayer?
+    
+    var color: UIColor = .clear {
         didSet {
-            layoutLayers()
+            updateStyle()
         }
     }
-    
-    /// Color for the check mark. Default color is `UIColor.blackColor()`.
-    var checkColor: UIColor = UIColor.black {
+    var isOn: Bool = false {
         didSet {
-            colorLayers()
+            updateStyle()
         }
     }
     
-    /// Line width for the bounding container of the check mark.
-    /// Default value is 2.
-    var containerLineWidth: CGFloat = 2.0 {
-        didSet {
-            layoutLayers()
-        }
-    }
-    
-    /// Color for the bounding container of the check mark.
-    /// Default color is `UIColor.blackColor()`.
-    var containerColor: UIColor = UIColor.black {
-        didSet {
-            colorLayers()
-        }
-    }
-    
-    /// If set to `true`, the bounding container of the check mark will be a circle rather than a box.
-    /// Default value is false
-    var circular: Bool = false {
-        didSet {
-            layoutLayers()
-        }
-    }
-    
-    /// If set to `true`, the container gets a fill color similar to the `containerColor` property.
-    /// Default value is `false`.
-    var containerFillsOnToggleOn: Bool = false {
-        didSet {
-            colorLayers()
-        }
-    }
-    
-    /// A Boolean value that determines the off/on state of the checkbox. If `true`, the checkbox is checked.
-    var on: Bool = false {
-        didSet {
-            colorLayers()
-        }
-    }
-    
-    // MARK: Internal and private properties
-    
-    internal let containerLayer = CAShapeLayer()
-    internal let checkLayer = CAShapeLayer()
-    
-    internal var containerFrame: CGRect {
-        let width = bounds.width
-        let height = bounds.height
-        
-        let x: CGFloat
-        let y: CGFloat
-        
-        let sideLength: CGFloat
-        if width > height {
-            sideLength = height
-            x = (width - sideLength) / 2
-            y = 0
-        } else {
-            sideLength = width
-            x = 0
-            y = (height - sideLength) / 2
-        }
-        
-        let halfLineWidth = containerLineWidth / 2
-        return CGRect(x: x + halfLineWidth, y: y + halfLineWidth, width: sideLength - containerLineWidth, height: sideLength - containerLineWidth)
-    }
-    
-    internal var containerPath: UIBezierPath {
-        if circular {
-            return UIBezierPath(ovalIn: containerFrame)
-        } else {
-            return UIBezierPath(rect: containerFrame)
-        }
-    }
-    internal var checkPath: UIBezierPath {
-        let containerFrame = self.containerFrame
-        
-        // Add an offset for circular checkbox
-        let inset = containerLineWidth / 2
-        let innerRect = containerFrame.insetBy(dx: inset, dy: inset)
-        
-        // Create check path
-        let path = UIBezierPath()
-        
-        let unit = innerRect.width / 33
-        let origin = innerRect.origin
-        let x = origin.x
-        let y = origin.y
-        
-        path.move(to: CGPoint(x: x + (7 * unit), y: y + (18 * unit)))
-        path.addLine(to: CGPoint(x: x + (14 * unit), y: y + (25 * unit)))
-        path.addLine(to: CGPoint(x: x + (27 * unit), y: y + (10 * unit)))
-        
-        return path
-    }
-    
-    static internal let validBoundsOffset: CGFloat = 80
-    
-    // MARK: Initialization
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    open override func awakeFromNib() {
-        customInitialization()
-    }
-    
-    public override init(frame: CGRect) {
+    required init?(coder aDecoder: NSCoder) { fatalError("init(coder:)") }
+    override init(frame: CGRect) {
         super.init(frame: frame)
-        customInitialization()
-    }
-    
-    /**
-     Initializes a new `CheckboxButton` with a set state.
-     
-     - Parameters:
-     - frame: Frame of the receiver
-     - on: On state of the receiver
-     */
-    convenience init(frame: CGRect, on: Bool) {
-        self.init(frame: frame)
-        self.on = on
-    }
-    
-    func customInitialization() {
-        // Initial colors
-        checkLayer.fillColor = UIColor.clear.cgColor
+        fillLayer = CAShapeLayer()
+        fillLayer!.masksToBounds = true
+        fillLayer!.cornerRadius = 4
+        layer.addSublayer(fillLayer!)
         
-        // Color and layout layers
-        colorLayers()
-        layoutLayers()
+        borderLayer = CAShapeLayer()
+        borderLayer!.fillColor = UIColor.clear.cgColor
+        borderLayer!.masksToBounds = true
+        borderLayer!.cornerRadius = 4
+        borderLayer!.lineWidth = 3
+        layer.addSublayer(borderLayer!)
         
-        // Add layers
-        layer.addSublayer(containerLayer)
-        layer.addSublayer(checkLayer)
+        titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        
+        setupButton()
     }
     
-    // MARK: Layout
-    open override func layoutSubviews() {
+    override func layoutSubviews() {
         super.layoutSubviews()
-        
-        // Also layout the layers when laying out subviews
-        layoutLayers()
+        let visibleBounds = layer.bounds.inset(by: UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0))
+        if let fillLayer = fillLayer {
+            fillLayer.frame = visibleBounds
+            fillLayer.path = UIBezierPath(roundedRect: fillLayer.bounds, cornerRadius: fillLayer.cornerRadius).cgPath
+        }
+        if let borderLayer = borderLayer {
+            borderLayer.frame = visibleBounds
+            borderLayer.path = UIBezierPath(roundedRect: borderLayer.bounds, cornerRadius: borderLayer.cornerRadius).cgPath
+        }
     }
     
-    // MARK: Layout layers
-    fileprivate func layoutLayers() {
-        // Set frames, line widths and paths for layers
-        containerLayer.frame = bounds
-        containerLayer.lineWidth = containerLineWidth
-        containerLayer.path = containerPath.cgPath
-        
-        checkLayer.frame = bounds
-        checkLayer.lineWidth = checkLineWidth
-        checkLayer.path = checkPath.cgPath
+    func setupButton() {
+        addTarget(self, action: #selector(touchUp(sender:)), for: [.touchUpInside])
     }
-    // MARK: Color layers
     
-    fileprivate func colorLayers() {
-        containerLayer.strokeColor = containerColor.cgColor
-        
-        if on {
-            containerLayer.fillColor = containerFillsOnToggleOn ? containerColor.cgColor : UIColor.clear.cgColor
-            checkLayer.strokeColor = checkColor.cgColor
+    @objc func touchUp(sender: FilterButton) {
+        onTap?(sender)
+    }
+    
+    private func updateStyle() {
+        borderLayer?.strokeColor = color.cgColor
+        if isOn {
+            fillLayer?.fillColor = color.cgColor
+            setTitleColor(.white, for: .normal)
         } else {
-            containerLayer.fillColor = UIColor.clear.cgColor
-            checkLayer.strokeColor = UIColor.clear.cgColor
-        }
-    }
-    
-    // MARK: Touch tracking
-    
-    open override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        super.beginTracking(touch, with: event)
-        return true
-    }
-    
-    open override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        super.continueTracking(touch, with: event)
-        return true
-    }
-    
-    open override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
-        super.endTracking(touch, with: event)
-        guard let touchLocationInView = touch?.location(in: self) else {
-            return
-        }
-        let offset = type(of: self).validBoundsOffset
-        let validBounds = CGRect(x: bounds.origin.x - offset, y: bounds.origin.y - offset, width: bounds.width + (2 * offset), height: bounds.height + (2 * offset))
-        
-        if validBounds.contains(touchLocationInView) {
-            on = !on
-//            sendActions(for: [UIControlEvents.valueChanged])
+            fillLayer?.fillColor = UIColor.clear.cgColor
+            setTitleColor(color, for: .normal)
         }
     }
 }

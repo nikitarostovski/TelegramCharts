@@ -39,7 +39,7 @@ class TintView: UIView {
     
     private func updateTint(x1: CGFloat, x2: CGFloat) {
         fillLayer?.removeFromSuperlayer()
-        gradientLayer?.removeFromSuperlayer()
+        self.gradientLayer?.removeFromSuperlayer()
         
         fillLayer = CAShapeLayer()
         fillLayer!.fillColor = gradientColor.cgColor

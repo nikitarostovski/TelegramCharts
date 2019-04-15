@@ -80,8 +80,10 @@ class GraphDataSource {
                 source.updatePointsY(offsets: offsets)
                 let sourceOffsets = source.getOffsets()
                 if offsets == nil {
-                    offsets = sourceOffsets
-                } else {
+                    if source.visible {
+                        offsets = sourceOffsets
+                    }
+                } else if source.visible {
                     offsets!.indices.forEach { i in
                         offsets![i] += sourceOffsets[i]
                     }
@@ -94,6 +96,7 @@ class GraphDataSource {
         if !graph.yScaled || graph.stacked {
             var maxViewport: Viewport? = nil
             chartDataSources.forEach {
+                guard $0.visible else { return }
                 if maxViewport == nil {
                     maxViewport = $0.targetViewport
                     return
@@ -160,6 +163,7 @@ class GraphDataSource {
             viewportAnimator.animate(duration: animationDuration, easing: .easeOutCubic, update: { [weak self] (phase) in
                 guard let self = self else { return }
                 self.chartDataSources.forEach { source in
+                    source.opacity = source.lastOpacity + (source.targetOpacity - source.lastOpacity) * phase
                     source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
                     source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
                     source.mapViewport.yLo = source.mapLastViewport.yLo + (source.mapTargetViewport.yLo - source.mapLastViewport.yLo) * phase
@@ -177,6 +181,7 @@ class GraphDataSource {
             }, cancel: { [weak self] in
                 guard let self = self else { return }
                 self.chartDataSources.forEach { source in
+                    source.lastOpacity = source.opacity
                     source.lastViewport = source.viewport
                     source.mapLastViewport = source.mapViewport
                 }
@@ -189,6 +194,8 @@ class GraphDataSource {
         } else {
             animationLock = false
             chartDataSources.forEach { source in
+                source.lastOpacity = source.opacity
+                source.opacity = source.targetOpacity
                 source.lastViewport = source.viewport
                 source.viewport = source.targetViewport
                 source.mapLastViewport = source.mapViewport
@@ -225,6 +232,16 @@ class GraphDataSource {
         case .area:
             return AreaChartDataSource(chart: chart, viewport: Viewport(), visible: true)
         }
+    }
+    
+    func setChartVisibility(index: Int, visible: Bool) {
+        guard index >= 0, index < chartDataSources.count else { return }
+        let source = chartDataSources[index]
+        source.visible = visible
+        deselect()
+        self.calcItem?.cancel()
+        self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }
+        calcQueue.sync(execute: self.calcItem!)
     }
     
     func changeLowerBound(newLow: CGFloat) {

@@ -12,9 +12,9 @@ class FilterButtonContainer: UIView {
     
     private let bottomInset: CGFloat = 16
     private let buttonSpacing: CGFloat = 8
-    private let buttonHeight: CGFloat = 44
+    private let buttonHeight: CGFloat = 36
     
-    var buttons = [UIButton]() {
+    var buttons = [FilterButton]() {
         didSet {
             oldValue.forEach { $0.removeFromSuperview() }
             buttons.forEach { addSubview($0) }
@@ -38,11 +38,12 @@ class FilterButtonContainer: UIView {
         var totalWidth: CGFloat = 0
         buttons.forEach { button in
             button.sizeToFit()
+            button.frame.size.width += 2 * buttonSpacing
             totalWidth += button.frame.width + buttonSpacing
         }
         totalWidth -= buttonSpacing
         let rowCount = Int(totalWidth / width) + 1
-        return CGFloat(rowCount) * (buttonHeight + buttonSpacing) - buttonSpacing + bottomInset
+        return CGFloat(rowCount) * (buttonHeight) - buttonSpacing + bottomInset
     }
     
     private func layoutButtons() {
@@ -50,11 +51,12 @@ class FilterButtonContainer: UIView {
         var curX: CGFloat = 0
         buttons.forEach { button in
             button.sizeToFit()
+            button.frame.size.width += 2 * buttonSpacing
             if curX + button.frame.width + buttonSpacing > bounds.width + buttonSpacing {
                 curX = 0
                 curRow += 1
             }
-            button.frame = CGRect(x: curX, y: CGFloat(curRow) * (buttonHeight + buttonSpacing), width: button.frame.width, height: buttonHeight)
+            button.frame = CGRect(x: curX, y: CGFloat(curRow) * (buttonHeight), width: button.frame.width, height: buttonHeight)
             curX += button.frame.width + buttonSpacing
         }
     }

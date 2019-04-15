@@ -118,13 +118,21 @@ class GraphCell: BaseCell {
             NSLayoutConstraint(item: rangeSlider!, attribute: .trailing, relatedBy: .equal, toItem: mapContainer, attribute: .trailing, multiplier: 1, constant: -mainInsets.right)
         ])
         
-        var buttons = [UIButton]()
+        var buttons = [FilterButton]()
         if model.dataProvider.chartDataSources.count > 1 {
-            for chartSource in model.dataProvider.chartDataSources {
-                let b = UIButton(type: .system)
+            for i in model.dataProvider.chartDataSources.indices {
+                let chartSource = model.dataProvider.chartDataSources[i]
+                let b = FilterButton(type: .system)
                 b.setTitle(chartSource.chart.name, for: .normal)
-                b.backgroundColor = chartSource.chart.color
-                b.tintColor = .white
+                b.color = chartSource.chart.color
+                b.isOn = model.dataProvider.chartDataSources[i].visible
+                b.onTap = { sender in
+                    if #available(iOS 10.0, *) {
+                        UISelectionFeedbackGenerator().selectionChanged()
+                    }
+                    sender.isOn = !sender.isOn
+                    model.dataProvider.setChartVisibility(index: i, visible: sender.isOn)
+                }
                 buttons.append(b)
             }
         }

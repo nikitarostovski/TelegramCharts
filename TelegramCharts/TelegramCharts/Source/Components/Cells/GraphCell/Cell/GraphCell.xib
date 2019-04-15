@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -62,7 +62,7 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Al0-iA-24O" customClass="FilterButtonContainer" customModule="TelegramCharts" customModuleProvider="target">
-                        <rect key="frame" x="16" y="396" width="288" height="105.5"/>
+                        <rect key="frame" x="16" y="392" width="288" height="109.5"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqc-3L-P0j">
@@ -88,7 +88,7 @@
                     <constraint firstItem="Al0-iA-24O" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="HZc-s9-jad"/>
                     <constraint firstItem="vfc-M5-Ryu" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Qlh-oE-VYE"/>
                     <constraint firstItem="bzt-Ap-ywR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="ZEc-tD-7qp"/>
-                    <constraint firstItem="Al0-iA-24O" firstAttribute="top" secondItem="aqc-3L-P0j" secondAttribute="bottom" constant="16" id="fHU-wE-9zn"/>
+                    <constraint firstItem="Al0-iA-24O" firstAttribute="top" secondItem="aqc-3L-P0j" secondAttribute="bottom" constant="12" id="fHU-wE-9zn"/>
                     <constraint firstAttribute="bottom" secondItem="Al0-iA-24O" secondAttribute="bottom" id="iTJ-EK-Wpm"/>
                     <constraint firstAttribute="trailing" secondItem="bzt-Ap-ywR" secondAttribute="trailing" id="l6V-lY-pxq"/>
                     <constraint firstAttribute="trailing" secondItem="Al0-iA-24O" secondAttribute="trailing" constant="16" id="mPv-cr-fxT"/>

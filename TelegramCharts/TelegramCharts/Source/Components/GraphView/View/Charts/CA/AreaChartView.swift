@@ -98,6 +98,7 @@ class AreaChartView: UIView, ChartViewProtocol {
             yHiLast = yHi
         }
         shapeLayer.path = path
+        shapeLayer.opacity = Float(dataSource.opacity)
     }
 }
 

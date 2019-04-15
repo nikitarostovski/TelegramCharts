@@ -84,6 +84,7 @@ class LineChartView: UIView, ChartViewProtocol {
             }
         }
         shapeLayer.path = path
+        shapeLayer.opacity = Float(dataSource.opacity)
     }
 }
 

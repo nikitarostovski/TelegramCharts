@@ -28,7 +28,20 @@ class ChartDataSource {
     var viewport: Viewport
     var lastViewport: Viewport
     var targetViewport: Viewport
-    var visible: Bool
+    
+    var lastOpacity: CGFloat
+    var opacity: CGFloat
+    var targetOpacity: CGFloat
+    var visible: Bool {
+        didSet {
+            lastOpacity = opacity
+            if visible {
+                targetOpacity = 1
+            } else {
+                targetOpacity = 0
+            }
+        }
+    }
     var chart: Chart
     
     var selectedIndex: Int?
@@ -64,6 +77,16 @@ class ChartDataSource {
         mapLastViewport.xHi = 1
         mapTargetViewport.xLo = 0
         mapTargetViewport.xHi = 1
+        
+        if visible {
+            opacity = 1
+            lastOpacity = 1
+            targetOpacity = 1
+        } else {
+            opacity = 0
+            lastOpacity = 0
+            targetOpacity = 0
+        }
     }
     
     func updateViewportX(range: ClosedRange<CGFloat>) {

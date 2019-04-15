@@ -118,6 +118,8 @@ class BarChartView: UIView, ChartViewProtocol {
             shapeLayer.opacity = 1
         }
         shapeLayer.path = path
+        shapeLayer.opacity = Float(dataSource.opacity)
+        selectionLayer.opacity = Float(dataSource.opacity)
     }
 }
 
