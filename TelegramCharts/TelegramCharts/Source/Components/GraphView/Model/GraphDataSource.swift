@@ -24,8 +24,8 @@ class GraphDataSource {
         }
     }
 
-    private let yResetInterval: TimeInterval = 0.25
-    private let animationDuration: TimeInterval = 0.25
+    private let yResetInterval: TimeInterval = 0.3
+    private let animationDuration: TimeInterval = 0.15
     private var viewportAnimator = Animator()
     
     private var lastRecalcYDate: Date?
@@ -190,7 +190,7 @@ class GraphDataSource {
                 guard let self = self else { return }
                 self.calcQueue.sync {
                     self.chartDataSources.forEach { source in
-                        source.opacity = source.lastOpacity + (source.targetOpacity - source.lastOpacity) * phase
+                        source.opacity = min(max(0, source.lastOpacity + (source.targetOpacity - source.lastOpacity) * 3 * phase), 1)
                         source.viewport.yLo = source.lastViewport.yLo + (source.targetViewport.yLo - source.lastViewport.yLo) * phase
                         source.viewport.yHi = source.lastViewport.yHi + (source.targetViewport.yHi - source.lastViewport.yHi) * phase
                         source.mapViewport.yLo = source.mapLastViewport.yLo + (source.mapTargetViewport.yLo - source.mapLastViewport.yLo) * phase

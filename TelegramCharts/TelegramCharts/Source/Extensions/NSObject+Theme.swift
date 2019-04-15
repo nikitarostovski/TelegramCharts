@@ -21,16 +21,7 @@ extension NSObject {
                 return
             }
             if let stylableSelf = self as? Stylable {
-//                let animationDuration = 0.15
-                
-//                CATransaction.begin()
-//                CATransaction.setAnimationDuration(animationDuration)
-                
-//                UIView.animate(withDuration: animationDuration, animations: {
-                    stylableSelf.themeDidUpdate(theme: theme)
-//                })
-                
-//                CATransaction.commit()
+                stylableSelf.themeDidUpdate(theme: theme)
             }
         }
         if let stylableSelf = self as? Stylable {
