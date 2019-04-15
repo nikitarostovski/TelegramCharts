@@ -104,9 +104,11 @@ class GraphDataSource {
                 maxViewport!.yLo = min(maxViewport!.yLo, $0.targetViewport.yLo)
                 maxViewport!.yHi = max(maxViewport!.yHi, $0.targetViewport.yHi)
             }
-            chartDataSources.forEach {
-                $0.targetViewport.yLo = maxViewport!.yLo
-                $0.targetViewport.yHi = maxViewport!.yHi
+            if maxViewport != nil {
+                chartDataSources.forEach {
+                    $0.targetViewport.yLo = maxViewport!.yLo
+                    $0.targetViewport.yHi = maxViewport!.yHi
+                }
             }
         }
         if graph.percentage {
@@ -234,10 +236,12 @@ class GraphDataSource {
         }
     }
     
-    func setChartVisibility(index: Int, visible: Bool) {
-        guard index >= 0, index < chartDataSources.count else { return }
-        let source = chartDataSources[index]
-        source.visible = visible
+    func setChartsVisibility(visibilities: [Bool]) {
+        guard visibilities.count == chartDataSources.count else { return }
+        for i in visibilities.indices {
+            let source = chartDataSources[i]
+            source.visible = visibilities[i]
+        }
         deselect()
         self.calcItem?.cancel()
         self.calcItem = DispatchWorkItem { [weak self] in self?.calcQueue.sync { self?.recalc() } }

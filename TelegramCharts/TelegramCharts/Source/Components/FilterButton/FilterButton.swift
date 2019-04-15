@@ -10,7 +10,12 @@ import UIKit
 
 class FilterButton: UIButton {
     
+    private var setup = false
+    private let animDuration = 0.05
+    private let animInset: CGFloat = 1
+    
     var onTap: ((_ button: FilterButton) -> ())?
+    var onLongTap: ((_ button: FilterButton) -> ())?
     
     private var fillLayer: CAShapeLayer?
     private var borderLayer: CAShapeLayer?
@@ -22,8 +27,33 @@ class FilterButton: UIButton {
     }
     var isOn: Bool = false {
         didSet {
+            guard oldValue != isOn else { return }
             updateStyle()
+            if let fillLayer = fillLayer, setup  {
+                let tapAnim = CABasicAnimation()
+                tapAnim.duration = animDuration
+                tapAnim.autoreverses = true
+                tapAnim.fromValue = fillLayer.bounds
+                tapAnim.toValue = fillLayer.bounds.insetBy(dx: animInset, dy: animInset)
+                fillLayer.add(tapAnim, forKey: "bounds")
+            }
+            if let borderLayer = borderLayer, setup  {
+                let tapAnim = CABasicAnimation()
+                tapAnim.duration = animDuration
+                tapAnim.autoreverses = true
+                tapAnim.fromValue = borderLayer.bounds
+                tapAnim.toValue = borderLayer.bounds.insetBy(dx: animInset, dy: animInset)
+                borderLayer.add(tapAnim, forKey: "bounds")
+            }
         }
+    }
+    
+    func shake() {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.duration = animDuration * 6
+        animation.values = [-animInset * 3, animInset * 3, -animInset * 3, animInset * 3, -animInset * 2, animInset * 2, -animInset, animInset, 0]
+        layer.add(animation, forKey: "shake")
     }
     
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:)") }
@@ -57,14 +87,22 @@ class FilterButton: UIButton {
             borderLayer.frame = visibleBounds
             borderLayer.path = UIBezierPath(roundedRect: borderLayer.bounds, cornerRadius: borderLayer.cornerRadius).cgPath
         }
+        setup = true
     }
     
-    func setupButton() {
+    private func setupButton() {
         addTarget(self, action: #selector(touchUp(sender:)), for: [.touchUpInside])
+        addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longTap(sender:))))
     }
     
     @objc func touchUp(sender: FilterButton) {
         onTap?(sender)
+    }
+    
+    @objc func longTap(sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            onLongTap?(self)
+        }
     }
     
     private func updateStyle() {

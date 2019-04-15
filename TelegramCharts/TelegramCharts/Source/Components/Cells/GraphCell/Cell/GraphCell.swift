@@ -126,12 +126,46 @@ class GraphCell: BaseCell {
                 b.setTitle(chartSource.chart.name, for: .normal)
                 b.color = chartSource.chart.color
                 b.isOn = model.dataProvider.chartDataSources[i].visible
-                b.onTap = { sender in
-                    if #available(iOS 10.0, *) {
-                        UISelectionFeedbackGenerator().selectionChanged()
+                b.onTap = { [weak self] sender in
+                    guard let self = self else { return }
+                    var canSwitch = true
+                    if b.isOn {
+                        var isLast = true
+                        for f in self.filterContainer.buttons {
+                            if f.isOn && f !== b {
+                                isLast = false
+                                break
+                            }
+                        }
+                        canSwitch = !isLast
                     }
-                    sender.isOn = !sender.isOn
-                    model.dataProvider.setChartVisibility(index: i, visible: sender.isOn)
+                    if canSwitch {
+                        if #available(iOS 10.0, *) {
+                            UISelectionFeedbackGenerator().selectionChanged()
+                        }
+                        sender.isOn = !sender.isOn
+                        var visibilities: [Bool] = model.dataProvider.chartDataSources.map { $0.visible }
+                        visibilities[i] = sender.isOn
+                        model.dataProvider.setChartsVisibility(visibilities: visibilities)
+                    } else {
+                        if #available(iOS 10.0, *) {
+                            UINotificationFeedbackGenerator().notificationOccurred(.error)
+                        }
+                        sender.shake()
+                    }
+                }
+                b.onLongTap = { [weak self] sender in
+                    guard let self = self else { return }
+                    var visibilities: [Bool] = model.dataProvider.chartDataSources.map { $0.visible }
+                    sender.isOn = true
+                    for i in self.filterContainer.buttons.indices {
+                        let f = self.filterContainer.buttons[i]
+                        if f !== b {
+                            f.isOn = false
+                        }
+                        visibilities[i] = f.isOn
+                    }
+                    model.dataProvider.setChartsVisibility(visibilities: visibilities)
                 }
                 buttons.append(b)
             }
